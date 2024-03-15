@@ -13,4 +13,5 @@ discord:
   token: token
   channels:
     motivational: channel-id
+    gym-reminder: channel-id
 

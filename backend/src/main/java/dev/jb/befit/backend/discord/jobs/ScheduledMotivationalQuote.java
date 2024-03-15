@@ -25,14 +25,14 @@ public class ScheduledMotivationalQuote {
     @Scheduled(cron = "0 0 8 * * *", zone = "Europe/Amsterdam")
     public void publishMotivationalQuote() {
         var message = motivationalService.getRandomQuote();
-        log.info(message.message(), message.author());
+        log.info("Publishing quote. Message: {}, author: {}", message.message(), message.author());
         client
                 .getChannelById(Snowflake.of(motivationChannelId))
                 .ofType(MessageChannel.class)
                 .flatMap(c -> {
                     var quote = motivationalService.getRandomQuote();
                     var builder = EmbedCreateSpec.builder()
-                            .title("Quote of the day")
+                            .title(":rocket: Quote of the day")
                             .description(quote.message())
                             .footer(String.format("- %s", quote.author()), null)
                             .color(Color.GREEN);
