@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
-public class MotivationCommand implements DiscordCommandHandler {
+public class MotivationCommandHandler implements DiscordCommandHandler {
     private final MotivationalService motivationalService;
 
     @Override
