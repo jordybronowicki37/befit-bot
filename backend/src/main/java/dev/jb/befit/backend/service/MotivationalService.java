@@ -17,10 +17,10 @@ import java.util.Random;
 @Slf4j
 @RequiredArgsConstructor
 public class MotivationalService {
-    private final ResourceLoader resourceLoader;
     private static final Random random = new Random();
-
     private static final String filePath = "quotes.json";
+
+    private final ResourceLoader resourceLoader;
 
     public List<QuoteDto> getAllQuotes() throws IOException {
         var resource = resourceLoader.getResource("classpath:" + filePath);

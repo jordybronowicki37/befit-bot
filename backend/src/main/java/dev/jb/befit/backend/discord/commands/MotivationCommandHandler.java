@@ -6,17 +6,29 @@ import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionApplicationCommandCallbackSpec;
 import discord4j.rest.util.Color;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MotivationCommandHandler implements DiscordCommandHandler {
     private final MotivationalService motivationalService;
+    private final CommandHandlerHelper commandHandlerHelper;
 
     @Override
     public boolean validatePrefix(String message) {
-        return message.startsWith("motivation");
+        try {
+            var commandData = commandHandlerHelper.getCommandConfigFile("motivation");
+            log.info(commandData.name());
+            return message.startsWith(commandData.name());
+        } catch (IOException e) {
+            log.error("Error validating command prefix. A config file was not found.", e);
+            return false;
+        }
     }
 
     @Override
