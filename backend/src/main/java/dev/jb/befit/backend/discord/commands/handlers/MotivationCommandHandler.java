@@ -1,5 +1,6 @@
-package dev.jb.befit.backend.discord.commands;
+package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.service.MotivationalService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
