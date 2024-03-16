@@ -1,6 +1,7 @@
 package dev.jb.befit.backend.discord;
 
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
+import dev.jb.befit.backend.discord.listeners.DiscordEventListener;
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.Event;

@@ -1,4 +1,4 @@
-package dev.jb.befit.backend.discord;
+package dev.jb.befit.backend.discord.listeners;
 
 import discord4j.core.event.domain.Event;
 import org.slf4j.Logger;

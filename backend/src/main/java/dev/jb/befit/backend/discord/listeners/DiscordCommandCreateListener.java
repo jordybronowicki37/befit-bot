@@ -1,6 +1,6 @@
-package dev.jb.befit.backend.discord;
+package dev.jb.befit.backend.discord.listeners;
 
-import dev.jb.befit.backend.discord.commands.DiscordCommandHandler;
+import dev.jb.befit.backend.discord.commands.handlers.DiscordCommandHandler;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
