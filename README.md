@@ -4,22 +4,20 @@
 ## Discord
 ### Commands
 - View all exercises \
-  `!exercises`
-- View all exercises \
-  `!exercise-type {name}`
+  `/exercises`
 - Create a new exercise type \
-  `!new-exercise-type {name} {measurement} {goalType}`
+  `/new-exercise-type {name} {measurement} {goalType}`
 - Log an exercise \
-  `!log {exercise} {value}`
+  `/log {exercise} {value}`
 - View your goals \
-  `!goals`
+  `/goals`
 - View your progress on a goal \
-  `!progress {goalId}`
+  `/progress {goalId}`
 - Create a new goal for yourself \
-  `!new-goal {exercise} {value}`
+  `/new-goal {exercise} {value}`
 - Edit an existing goal \
-  `!edit-goal {goalId} {value}`
+  `/edit-goal {goalId} {value}`
 - Remove a goal of yours \
-  `!remove-goal {goalId}`
+  `/remove-goal {goalId}`
 - Retrieve a random motivational quote \
-  `!motivate`
+  `/motivate`

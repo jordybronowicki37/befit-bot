@@ -42,7 +42,7 @@ public class GlobalCommandRegistrar implements CommandLineRunner {
         }).toList();
 
         applicationService.bulkOverwriteGlobalApplicationCommand(applicationId, commands)
-                .doOnNext(cmd -> log.debug("Successfully registered Global Command " + cmd.name()))
+                .doOnNext(cmd -> log.info("Successfully registered Global Command " + cmd.name()))
                 .doOnError(e -> log.error("Failed to register global commands", e))
                 .subscribe();
     }
