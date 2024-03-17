@@ -1,6 +1,7 @@
 package dev.jb.befit.backend.discord.commands;
 
 import discord4j.common.JacksonResources;
+import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.discordjson.json.ApplicationCommandRequest;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,9 @@ public class GlobalCommandRegistrar implements CommandLineRunner {
             }
         }).toList();
 
-        applicationService.bulkOverwriteGlobalApplicationCommand(applicationId, commands)
+        // TODO Change to global command
+        var guild = Snowflake.of("904759357818957906");
+        applicationService.bulkOverwriteGuildApplicationCommand(applicationId, guild.asLong(), commands)
                 .doOnNext(cmd -> log.info("Successfully registered Global Command " + cmd.name()))
                 .doOnError(e -> log.error("Failed to register global commands", e))
                 .subscribe();
