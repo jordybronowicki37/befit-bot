@@ -1,21 +1,20 @@
 package dev.jb.befit.backend.discord.commands;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import discord4j.common.JacksonResources;
+import discord4j.discordjson.json.ApplicationCommandRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ResourceLoader;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @RequiredArgsConstructor
 public class CommandHandlerHelper {
     private final ResourceLoader resourceLoader;
+    private final JacksonResources d4jMapper = JacksonResources.create();
 
-    public CommandData getCommandConfigFile(String fileName) throws IOException {
+    public ApplicationCommandRequest getCommandConfigFile(String fileName) throws IOException {
         var resource = resourceLoader.getResource("classpath:commands/" + fileName + ".json");
-        var objectMapper = new ObjectMapper();
-        return objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {});
+        return d4jMapper.getObjectMapper().readValue(resource.getContentAsString(StandardCharsets.UTF_8), ApplicationCommandRequest.class);
     }
-
-    public record CommandData(String name, String description) {}
 }
