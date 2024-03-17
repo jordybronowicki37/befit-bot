@@ -38,7 +38,7 @@ public class NewExerciseCommandHandler implements DiscordCommandHandler {
         var builder = EmbedCreateSpec.builder()
                 .title("Your new exercise")
                 .description(String.format("#%d Exercise%n%s", exercise.getId(), exercise.getName()))
-                .color(Color.ORANGE);
+                .color(Color.GREEN);
         return command.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(builder.build()).build());
     }
 }

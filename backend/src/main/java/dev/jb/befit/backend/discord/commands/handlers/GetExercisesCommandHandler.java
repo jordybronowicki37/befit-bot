@@ -37,7 +37,7 @@ public class GetExercisesCommandHandler implements DiscordCommandHandler {
     public Mono<Void> handle(ChatInputInteractionEvent command) {
         var exercises = exerciseService.getAll();
         var builder = EmbedCreateSpec.builder()
-                .title("Motivational quote")
+                .title("All Exercises")
                 .fields(exercises
                         .stream()
                         .map(exercise -> EmbedCreateFields.Field.of(
@@ -46,7 +46,7 @@ public class GetExercisesCommandHandler implements DiscordCommandHandler {
                                 false)
                         )
                         .toList())
-                .color(Color.GREEN);
+                .color(Color.BLUE);
         return command.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(builder.build()).build());
     }
 }
