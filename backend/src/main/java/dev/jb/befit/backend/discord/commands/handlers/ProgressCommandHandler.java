@@ -2,8 +2,11 @@ package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.service.ProgressImageService;
+import dev.jb.befit.backend.service.exceptions.NoProgressMadeException;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
+import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionApplicationCommandCallbackSpec;
+import discord4j.rest.util.Color;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,9 +39,8 @@ public class ProgressCommandHandler implements DiscordCommandHandler {
         var name = command.getOption("name").orElseThrow().getValue().orElseThrow().asString();
         var userId = command.getInteraction().getUser().getId();
 
-        var progressImage = progressImageService.createProgressImage(userId, name);
-
         try {
+            var progressImage = progressImageService.createProgressImage(userId, name);
             var inputStream = new FileInputStream(progressImage);
             return command.reply(
                     InteractionApplicationCommandCallbackSpec.builder()
@@ -47,6 +49,13 @@ public class ProgressCommandHandler implements DiscordCommandHandler {
             );
         } catch (FileNotFoundException e) {
             return Mono.empty();
+        } catch (NoProgressMadeException e) {
+            var embed = EmbedCreateSpec.builder()
+                    .title("Something went wrong")
+                    .description(e.getMessage())
+                    .color(Color.RED)
+                    .build();
+            return command.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(embed).build());
         }
     }
 }

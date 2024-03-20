@@ -51,7 +51,7 @@ public class LogCommandHandler implements DiscordCommandHandler {
         var descriptionBuilder = new StringBuilder();
         descriptionBuilder.append(String.format("Exercise: #%d %s\n", exerciseType.getId(), exerciseType.getName()));
         descriptionBuilder.append(String.format("Log: #%d\n", allExerciseLogs.size()));
-        descriptionBuilder.append(String.format("Value: %d%s\n", exerciseLog.getAmount(), "KG"));
+        descriptionBuilder.append(String.format("Value: %d%s\n", exerciseLog.getAmount(), exerciseType.getMeasurementType().name()));
         if (allExerciseLogs.size() >= 2) {
             descriptionBuilder.append(String.format("Last: %d%s\n", allExerciseLogs.get(allExerciseLogs.size() - 2).getAmount(), "KG"));
         }
@@ -62,11 +62,12 @@ public class LogCommandHandler implements DiscordCommandHandler {
             descriptionBuilder.append("\n:rocket: NEW PR REACHED!");
         }
 
-        var builder = EmbedCreateSpec.builder()
+        var embed = EmbedCreateSpec.builder()
                 .title(":muscle: Logged workout")
                 .description(descriptionBuilder.toString())
                 .footer(motivationalService.getRandomPositiveReinforcement(), null)
-                .color(Color.GREEN);
-        return command.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(builder.build()).build());
+                .color(Color.GREEN)
+                .build();
+        return command.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(embed).build());
     }
 }

@@ -1,7 +1,6 @@
 package dev.jb.befit.backend.discord.commands;
 
 import discord4j.common.JacksonResources;
-import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.discordjson.json.ApplicationCommandRequest;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +17,12 @@ import java.util.Arrays;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class GlobalCommandRegistrar implements CommandLineRunner {
+public class CommandRegistrar implements CommandLineRunner {
     private static final String commandsFilesMatcher = "classpath:commands/*.json";
 
     private final ResourceLoader resourceLoader;
     private final GatewayDiscordClient discordClient;
 
-    //Since this will only run once on startup, blocking is okay.
     protected void registerCommands() throws IOException {
         final var restClient = discordClient.getRestClient();
         final var d4jMapper = JacksonResources.create();
@@ -42,16 +40,18 @@ public class GlobalCommandRegistrar implements CommandLineRunner {
             }
         }).toList();
 
-        // TODO Change to global command
-        var guild = Snowflake.of("904759357818957906");
-        applicationService.bulkOverwriteGuildApplicationCommand(applicationId, guild.asLong(), commands)
-                .doOnNext(cmd -> log.info("Successfully registered Global Command " + cmd.name()))
-                .doOnError(e -> log.error("Failed to register global commands", e))
-                .subscribe();
+        restClient.getGuilds()
+                .doOnNext(g -> log.info("Registering commands for guild " + g.name()))
+                .flatMap(guild ->
+                        applicationService.bulkOverwriteGuildApplicationCommand(applicationId, guild.id().asLong(), commands)
+                                .doOnNext(cmd -> log.info("Successfully registered guild command: " + cmd.name()))
+                                .doOnError(e -> log.error("Failed to register guild command: ", e))
+                ).subscribe();
     }
 
     @Override
     public void run(String... args) throws Exception {
+        log.info("Started registering all guild commands");
         registerCommands();
     }
 }

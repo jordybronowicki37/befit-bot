@@ -34,11 +34,12 @@ public class MotivationCommandHandler implements DiscordCommandHandler {
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent command) {
         var quote = motivationalService.getRandomQuote();
-        var builder = EmbedCreateSpec.builder()
+        var embed = EmbedCreateSpec.builder()
                 .title("Motivational quote")
                 .description(quote.message())
                 .footer(String.format("- %s", quote.author()), null)
-                .color(Color.BLUE);
-        return command.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(builder.build()).build());
+                .color(Color.CYAN)
+                .build();
+        return command.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(embed).build());
     }
 }
