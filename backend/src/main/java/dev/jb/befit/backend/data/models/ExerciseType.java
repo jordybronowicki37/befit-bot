@@ -17,7 +17,7 @@ public class ExerciseType {
     private Long id;
 
     @NonNull
-    @Column(unique = true)
+    @Column(unique = true, length = 64)
     private String name;
 
     @OneToMany(mappedBy = "exerciseType")
@@ -25,6 +25,5 @@ public class ExerciseType {
 
     @NonNull
     @Column(length = 8)
-    @Enumerated(EnumType.STRING)
-    private MeasurementTypes measurementType;
+    private String measurementType;
 }

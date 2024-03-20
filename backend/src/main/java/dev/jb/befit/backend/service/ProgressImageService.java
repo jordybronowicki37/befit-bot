@@ -49,7 +49,7 @@ public class ProgressImageService {
         var chart = ChartFactory.createTimeSeriesChart(
                 String.format("Exercise: %s", exerciseType.getName()),
                 "Time",
-                exerciseType.getMeasurementType().name(),
+                exerciseType.getMeasurementType(),
                 dataset
         );
 

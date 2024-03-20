@@ -1,6 +1,5 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
-import dev.jb.befit.backend.data.models.MeasurementTypes;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.service.ExerciseTypeService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -37,7 +36,7 @@ public class NewExerciseCommandHandler implements DiscordCommandHandler {
         var exerciseName = command.getOption("name").orElseThrow().getValue().orElseThrow().asString();
         var measurementType = command.getOption("measurement").orElseThrow().getValue().orElseThrow().asString();
 
-        var exercise = exerciseService.create(exerciseName, MeasurementTypes.valueOf(measurementType));
+        var exercise = exerciseService.create(exerciseName, measurementType);
         var embed = EmbedCreateSpec.builder()
                 .title("Your new exercise")
                 .addField(

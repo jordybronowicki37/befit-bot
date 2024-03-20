@@ -2,7 +2,6 @@ package dev.jb.befit.backend.service;
 
 import dev.jb.befit.backend.data.ExerciseTypeRepository;
 import dev.jb.befit.backend.data.models.ExerciseType;
-import dev.jb.befit.backend.data.models.MeasurementTypes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ public class ExerciseTypeService {
         return exerciseTypeRepository.findByName(name);
     }
 
-    public ExerciseType create(String name, MeasurementTypes measurementType) {
+    public ExerciseType create(String name, String measurementType) {
         var exerciseType = new ExerciseType(name, measurementType);
         return exerciseTypeRepository.save(exerciseType);
     }

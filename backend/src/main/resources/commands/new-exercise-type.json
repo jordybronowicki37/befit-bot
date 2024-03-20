@@ -16,20 +16,28 @@
       "required": true,
       "choices": [
         {
-          "name": "CM",
-          "value": "CM"
-        },
-        {
-          "name": "KM",
-          "value": "KM"
+          "name": "Amount",
+          "value": "Amount"
         },
         {
           "name": "KG",
           "value": "KG"
         },
         {
-          "name": "S",
-          "value": "S"
+          "name": "Sec",
+          "value": "Sec"
+        },
+        {
+          "name": "KM",
+          "value": "KM"
+        },
+        {
+          "name": "CM",
+          "value": "CM"
+        },
+        {
+          "name": "BPM",
+          "value": "BPM"
         }
       ]
     }

@@ -3,7 +3,6 @@ package dev.jb.befit.backend.data;
 import dev.jb.befit.backend.data.models.DiscordUser;
 import dev.jb.befit.backend.data.models.ExerciseLog;
 import dev.jb.befit.backend.data.models.ExerciseType;
-import dev.jb.befit.backend.data.models.MeasurementTypes;
 import discord4j.common.util.Snowflake;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +30,7 @@ public class DummyDataInitializer implements CommandLineRunner {
     public void run(String... args) {
         log.info("Started dummy-data initialization");
         var user = discordUserRepository.save(new DiscordUser(Snowflake.of(userId)));
-        var benchpress = exerciseTypeRepository.save(new ExerciseType("benchpress", MeasurementTypes.KG));
+        var benchpress = exerciseTypeRepository.save(new ExerciseType("benchpress", "KG"));
 
         var log1 = new ExerciseLog(20, benchpress, user);
         log1.setCreated(LocalDateTime.now().minusDays(8));

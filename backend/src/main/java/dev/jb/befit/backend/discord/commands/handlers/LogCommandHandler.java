@@ -51,9 +51,10 @@ public class LogCommandHandler implements DiscordCommandHandler {
         var descriptionBuilder = new StringBuilder();
         descriptionBuilder.append(String.format("Exercise: #%d %s\n", exerciseType.getId(), exerciseType.getName()));
         descriptionBuilder.append(String.format("Log: #%d\n", allExerciseLogs.size()));
-        descriptionBuilder.append(String.format("Value: %d%s\n", exerciseLog.getAmount(), exerciseType.getMeasurementType().name()));
+        descriptionBuilder.append(String.format("Value: %d%s\n", exerciseLog.getAmount(), exerciseType.getMeasurementType()));
         if (allExerciseLogs.size() >= 2) {
-            descriptionBuilder.append(String.format("Last: %d%s\n", allExerciseLogs.get(allExerciseLogs.size() - 2).getAmount(), "KG"));
+            var previousLog = allExerciseLogs.get(allExerciseLogs.size() - 2);
+            descriptionBuilder.append(String.format("Last: %d%s\n", previousLog.getAmount(), exerciseType.getMeasurementType()));
         }
 
         var exerciseAmounts = new ArrayList<>(allExerciseLogs.stream().map(ExerciseLog::getAmount).toList());
