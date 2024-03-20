@@ -41,7 +41,7 @@ public class GetExercisesCommandHandler implements DiscordCommandHandler {
                         .stream()
                         .map(exercise -> EmbedCreateFields.Field.of(
                                 String.format("#%d Exercise", exercise.getId()),
-                                exercise.getName(),
+                                String.format("%s - %s", exercise.getName(), exercise.getMeasurementType()),
                                 false)
                         )
                         .toList())

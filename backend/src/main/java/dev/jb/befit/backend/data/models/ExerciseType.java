@@ -21,4 +21,9 @@ public class ExerciseType {
 
     @OneToMany(mappedBy = "exerciseType")
     private List<ExerciseLog> exerciseLogs;
+
+    @NonNull
+    @Column(length = 8)
+    @Enumerated(EnumType.STRING)
+    private MeasurementTypes measurementType;
 }

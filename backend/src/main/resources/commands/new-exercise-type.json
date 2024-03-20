@@ -4,9 +4,33 @@
   "options": [
     {
       "name": "name",
-      "description": "The name of the exercise type",
+      "description": "The name of the exercise",
       "type": 3,
       "required": true
+    },
+    {
+      "name": "measurement",
+      "description": "The measurement type of the exercise",
+      "type": 3,
+      "required": true,
+      "choices": [
+        {
+          "name": "CM",
+          "value": "CM"
+        },
+        {
+          "name": "KM",
+          "value": "KM"
+        },
+        {
+          "name": "KG",
+          "value": "KG"
+        },
+        {
+          "name": "S",
+          "value": "S"
+        }
+      ]
     }
   ]
 }

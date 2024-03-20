@@ -3,8 +3,8 @@ package dev.jb.befit.backend.service;
 import dev.jb.befit.backend.data.ExerciseLogRepository;
 import dev.jb.befit.backend.data.ExerciseTypeRepository;
 import dev.jb.befit.backend.data.models.ExerciseLog;
-import dev.jb.befit.backend.data.models.ExerciseType;
 import dev.jb.befit.backend.data.models.User;
+import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,16 +31,7 @@ public class ExerciseLogService {
     }
 
     public ExerciseLog create(User user, String exerciseName, Integer amount) {
-        var exerciseTypeOpt = exerciseTypeRepository.findByName(exerciseName);
-        ExerciseType exerciseType;
-
-        if (exerciseTypeOpt.isEmpty()) {
-            exerciseType = new ExerciseType(exerciseName);
-            exerciseTypeRepository.save(exerciseType);
-        } else {
-            exerciseType = exerciseTypeOpt.get();
-        }
-
+        var exerciseType = exerciseTypeRepository.findByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException("Exercise not found"));
         var exerciseLog = new ExerciseLog(amount, exerciseType, user);
         return exerciseLogRepository.save(exerciseLog);
     }

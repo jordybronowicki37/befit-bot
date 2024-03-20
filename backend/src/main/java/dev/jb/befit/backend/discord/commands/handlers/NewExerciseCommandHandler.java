@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.data.models.MeasurementTypes;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.service.ExerciseTypeService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -33,12 +34,18 @@ public class NewExerciseCommandHandler implements DiscordCommandHandler {
 
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent command) {
-        var name = command.getOption("name").orElseThrow().getValue().orElseThrow().asString();
-        var exercise = exerciseService.create(name);
-        var builder = EmbedCreateSpec.builder()
+        var exerciseName = command.getOption("name").orElseThrow().getValue().orElseThrow().asString();
+        var measurementType = command.getOption("measurement").orElseThrow().getValue().orElseThrow().asString();
+
+        var exercise = exerciseService.create(exerciseName, MeasurementTypes.valueOf(measurementType));
+        var embed = EmbedCreateSpec.builder()
                 .title("Your new exercise")
-                .description(String.format("#%d Exercise%n%s", exercise.getId(), exercise.getName()))
-                .color(Color.GREEN);
-        return command.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(builder.build()).build());
+                .addField(
+                        String.format("#%d Exercise", exercise.getId()),
+                        String.format("%s - %s", exercise.getName(), exercise.getMeasurementType()),
+                        false)
+                .color(Color.GREEN)
+                .build();
+        return command.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(embed).build());
     }
 }

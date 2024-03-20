@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.service;
 
+import dev.jb.befit.backend.service.exceptions.NoProgressMadeException;
 import discord4j.common.util.Snowflake;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,7 @@ public class ProgressImageService {
     public File createProgressImage(Snowflake userId, String exerciseName) {
         var user = userService.getOrCreateDiscordUser(userId);
         var allExerciseLogs = logService.getAllByUserIdAndExerciseName(user, exerciseName);
+        if (allExerciseLogs.isEmpty()) throw new NoProgressMadeException("You have no progress yet for exercise: " + exerciseName);
         var exerciseType = allExerciseLogs.get(0).getExerciseType();
 
         var series = new TimeSeries("Your progress");
@@ -47,7 +49,7 @@ public class ProgressImageService {
         var chart = ChartFactory.createTimeSeriesChart(
                 String.format("Exercise: %s", exerciseType.getName()),
                 "Time",
-                "KG",
+                exerciseType.getMeasurementType().name(),
                 dataset
         );
 
