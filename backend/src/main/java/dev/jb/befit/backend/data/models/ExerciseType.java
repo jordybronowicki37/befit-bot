@@ -19,6 +19,6 @@ public class ExerciseType {
     @NonNull
     private String name;
 
-    @OneToMany
+    @OneToMany(mappedBy = "exerciseType")
     private List<ExerciseLog> exerciseLogs;
 }
