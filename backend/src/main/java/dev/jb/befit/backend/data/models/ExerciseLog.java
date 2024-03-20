@@ -2,23 +2,32 @@ package dev.jb.befit.backend.data.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @RequiredArgsConstructor
-public class ExerciseType {
+public class ExerciseLog {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Setter(AccessLevel.PROTECTED)
     private Long id;
 
-    @NonNull
-    private String name;
+    @CreationTimestamp
+    private LocalDateTime created;
 
-    @OneToMany
-    private List<ExerciseLog> exerciseLogs;
+    @NonNull
+    private Integer amount;
+
+    @NonNull
+    @ManyToOne
+    private ExerciseType exerciseType;
+
+    @NonNull
+    @ManyToOne
+    private User user;
 }
