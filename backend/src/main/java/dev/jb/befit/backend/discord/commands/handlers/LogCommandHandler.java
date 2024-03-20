@@ -41,14 +41,15 @@ public class LogCommandHandler implements DiscordCommandHandler {
     public Mono<Void> handle(ChatInputInteractionEvent command) {
         var name = command.getOption("name").orElseThrow().getValue().orElseThrow().asString();
         var amount = Math.toIntExact(command.getOption("amount").orElseThrow().getValue().orElseThrow().asLong());
+        var userId = command.getInteraction().getUser().getId();
 
-        var user = userService.getOrCreateDiscordUser(command.getInteraction().getUser().getId());
+        var user = userService.getOrCreateDiscordUser(userId);
         var exerciseLog = logService.create(user, name, amount);
-        var exersiceType = exerciseLog.getExerciseType();
+        var exerciseType = exerciseLog.getExerciseType();
         var allExerciseLogs = logService.getAllByUserIdAndExerciseName(user, name);
 
         var descriptionBuilder = new StringBuilder();
-        descriptionBuilder.append(String.format("Exercise: #%d %s\n", exersiceType.getId(), exersiceType.getName()));
+        descriptionBuilder.append(String.format("Exercise: #%d %s\n", exerciseType.getId(), exerciseType.getName()));
         descriptionBuilder.append(String.format("Log: #%d\n", allExerciseLogs.size()));
         descriptionBuilder.append(String.format("Value: %d%s\n", exerciseLog.getAmount(), "KG"));
         if (allExerciseLogs.size() >= 2) {
