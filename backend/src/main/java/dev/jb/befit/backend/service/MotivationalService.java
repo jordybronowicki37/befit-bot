@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 @Service
@@ -18,25 +17,43 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class MotivationalService {
     private static final Random random = new Random();
-    private static final String filePath = "quotes.json";
+    private static final String quotesFilePath = "quotes.json";
+    private static final String positiveReinforcementFilePath = "positive-reinforcement.json";
 
     private final ResourceLoader resourceLoader;
 
-    public List<QuoteDto> getAllQuotes() throws IOException {
-        var resource = resourceLoader.getResource("classpath:" + filePath);
+    private <T> T readResource(String resourcePath) throws IOException {
+        var resource = resourceLoader.getResource("classpath:" + resourcePath);
         var objectMapper = new ObjectMapper();
-        var jsonData = objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Map<String, String>>>() {});
+        return objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {});
+    }
 
-        // Convert the list of maps into a list of Message objects
-        return jsonData.stream()
-                .map(map -> new QuoteDto(map.get("message"), map.get("author")))
-                .toList();
+    private <T> T getRandomItem(List<T> list) {
+        return list.get(random.nextInt(list.size()));
+    }
+
+    public List<QuoteDto> getAllQuotes() throws IOException {
+        return readResource(quotesFilePath);
     }
 
     public QuoteDto getRandomQuote() {
         try {
             var messages = getAllQuotes();
-            return messages.get(random.nextInt(messages.size()));
+            return getRandomItem(messages);
+        } catch (IOException e) {
+            log.error("Failed to retrieve quotes", e);
+            return null;
+        }
+    }
+
+    public List<String> getAllPositiveReinforcements() throws IOException {
+        return readResource(positiveReinforcementFilePath);
+    }
+
+    public String getRandomPositiveReinforcement() {
+        try {
+            var messages = getAllPositiveReinforcements();
+            return getRandomItem(messages);
         } catch (IOException e) {
             log.error("Failed to retrieve quotes", e);
             return null;
