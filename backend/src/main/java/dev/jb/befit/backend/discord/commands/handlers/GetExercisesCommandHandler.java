@@ -25,7 +25,6 @@ public class GetExercisesCommandHandler implements DiscordCommandHandler {
     public boolean validatePrefix(String message) {
         try {
             var commandData = commandHandlerHelper.getCommandConfigFile("get-exercise-types");
-            log.info(commandData.name());
             return message.startsWith(commandData.name());
         } catch (IOException e) {
             log.error("Error validating command prefix. A config file was not found.", e);

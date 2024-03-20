@@ -24,7 +24,6 @@ public class MotivationCommandHandler implements DiscordCommandHandler {
     public boolean validatePrefix(String message) {
         try {
             var commandData = commandHandlerHelper.getCommandConfigFile("motivation");
-            log.info(commandData.name());
             return message.startsWith(commandData.name());
         } catch (IOException e) {
             log.error("Error validating command prefix. A config file was not found.", e);
