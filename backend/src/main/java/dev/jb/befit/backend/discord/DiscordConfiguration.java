@@ -1,6 +1,5 @@
 package dev.jb.befit.backend.discord;
 
-import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordEventListener;
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
-import org.springframework.core.io.ResourceLoader;
 
 import java.util.List;
 
@@ -40,11 +38,5 @@ public class DiscordConfiguration {
         log.debug("Discord client initialized");
 
         return client;
-    }
-
-    @Bean
-    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-    public CommandHandlerHelper getCommandHandlerHelper(ResourceLoader resourceLoader) {
-        return new CommandHandlerHelper(resourceLoader);
     }
 }

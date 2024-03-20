@@ -1,4 +1,5 @@
 {
   "name": "motivation",
-  "description": "Get a random motivational quote"
+  "description": "Get a random motivational quote",
+  "options": []
 }

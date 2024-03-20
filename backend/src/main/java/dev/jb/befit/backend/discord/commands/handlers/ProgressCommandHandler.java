@@ -36,11 +36,11 @@ public class ProgressCommandHandler implements DiscordCommandHandler {
 
     @Override
     public Mono<Void> handle(ChatInputInteractionEvent command) {
-        var name = command.getOption("name").orElseThrow().getValue().orElseThrow().asString();
+        var exerciseName = command.getOption("exercise-name").orElseThrow().getValue().orElseThrow().asString();
         var userId = command.getInteraction().getUser().getId();
 
         try {
-            var progressImage = progressImageService.createProgressImage(userId, name);
+            var progressImage = progressImageService.createProgressImage(userId, exerciseName);
             var inputStream = new FileInputStream(progressImage);
             return command.reply(
                     InteractionApplicationCommandCallbackSpec.builder()

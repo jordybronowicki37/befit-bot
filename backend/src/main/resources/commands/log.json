@@ -3,10 +3,11 @@
   "description": "Log a new exercise",
   "options": [
     {
-      "name": "name",
+      "name": "exercise-name",
       "description": "The name of the exercise type",
       "type": 3,
-      "required": true
+      "required": true,
+      "choices": []
     },
     {
       "name": "amount",

@@ -1,4 +1,5 @@
 {
   "name": "exercises",
-  "description": "Get all exercises"
+  "description": "Get all exercises",
+  "options": []
 }

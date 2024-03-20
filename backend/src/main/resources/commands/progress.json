@@ -3,10 +3,11 @@
   "description": "View your progress on an exercise",
   "options": [
     {
-      "name": "name",
+      "name": "exercise-name",
       "description": "The name of the exercise type",
       "type": 3,
-      "required": true
+      "required": true,
+      "choices": []
     }
   ]
 }
