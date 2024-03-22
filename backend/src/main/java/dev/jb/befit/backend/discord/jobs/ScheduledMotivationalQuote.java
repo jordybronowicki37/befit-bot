@@ -22,7 +22,7 @@ public class ScheduledMotivationalQuote {
     @Value("${discord.channels.motivational}")
     private String motivationChannelId;
 
-    @Scheduled(cron = "0 0 8 * * *", zone = "Europe/Amsterdam")
+    @Scheduled(cron = "${discord.jobs.motivational.cron}", zone = "${discord.jobs.motivational.zone}")
     public void publishMotivationalQuote() {
         var message = motivationalService.getRandomQuote();
         log.info("Publishing quote. Message: {}, author: {}", message.message(), message.author());
