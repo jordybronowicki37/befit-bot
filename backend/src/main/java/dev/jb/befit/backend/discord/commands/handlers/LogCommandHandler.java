@@ -1,7 +1,7 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.data.models.ExerciseLog;
-import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
+import dev.jb.befit.backend.discord.listeners.DiscordEventListener;
 import dev.jb.befit.backend.service.ExerciseLogService;
 import dev.jb.befit.backend.service.MotivationalService;
 import dev.jb.befit.backend.service.UserService;
@@ -14,34 +14,28 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class LogCommandHandler implements DiscordCommandHandler {
+public class LogCommandHandler implements DiscordEventListener<ChatInputInteractionEvent> {
     private final ExerciseLogService logService;
     private final UserService userService;
     private final MotivationalService motivationalService;
-    private final CommandHandlerHelper commandHandlerHelper;
 
     @Override
-    public boolean validatePrefix(String message) {
-        try {
-            var commandData = commandHandlerHelper.getCommandConfigFile("log");
-            return message.startsWith(commandData.name());
-        } catch (IOException e) {
-            log.error("Error validating command prefix. A config file was not found.", e);
-            return false;
-        }
+    public Class<ChatInputInteractionEvent> getEventType() {
+        return ChatInputInteractionEvent.class;
     }
 
     @Override
-    public Mono<Void> handle(ChatInputInteractionEvent command) {
-        var exerciseName = command.getOption("exercise-name").orElseThrow().getValue().orElseThrow().asString();
-        var exerciseAmount = Math.toIntExact(command.getOption("amount").orElseThrow().getValue().orElseThrow().asLong());
-        var userId = command.getInteraction().getUser().getId();
+    public Mono<Void> execute(ChatInputInteractionEvent event) {
+        if (!event.getCommandName().equals("log")) return Mono.empty();
+
+        var exerciseName = event.getOption("exercise-name").orElseThrow().getValue().orElseThrow().asString();
+        var exerciseAmount = Math.toIntExact(event.getOption("amount").orElseThrow().getValue().orElseThrow().asLong());
+        var userId = event.getInteraction().getUser().getId();
 
         var user = userService.getOrCreateDiscordUser(userId);
         var exerciseLog = logService.create(user, exerciseName, exerciseAmount);
@@ -69,6 +63,6 @@ public class LogCommandHandler implements DiscordCommandHandler {
                 .footer(motivationalService.getRandomPositiveReinforcement(), null)
                 .color(Color.GREEN)
                 .build();
-        return command.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(embed).build());
+        return event.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(embed).build());
     }
 }

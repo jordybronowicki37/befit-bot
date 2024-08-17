@@ -1,6 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
-import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
+import dev.jb.befit.backend.discord.listeners.DiscordEventListener;
 import dev.jb.befit.backend.service.ExerciseTypeService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
@@ -11,30 +11,23 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.io.IOException;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class NewExerciseCommandHandler implements DiscordCommandHandler {
+public class NewExerciseCommandHandler implements DiscordEventListener<ChatInputInteractionEvent> {
     private final ExerciseTypeService exerciseService;
-    private final CommandHandlerHelper commandHandlerHelper;
 
     @Override
-    public boolean validatePrefix(String message) {
-        try {
-            var commandData = commandHandlerHelper.getCommandConfigFile("new-exercise-type");
-            return message.startsWith(commandData.name());
-        } catch (IOException e) {
-            log.error("Error validating command prefix. A config file was not found.", e);
-            return false;
-        }
+    public Class<ChatInputInteractionEvent> getEventType() {
+        return ChatInputInteractionEvent.class;
     }
 
     @Override
-    public Mono<Void> handle(ChatInputInteractionEvent command) {
-        var exerciseName = command.getOption("name").orElseThrow().getValue().orElseThrow().asString();
-        var measurementType = command.getOption("measurement").orElseThrow().getValue().orElseThrow().asString();
+    public Mono<Void> execute(ChatInputInteractionEvent event) {
+        if (!event.getCommandName().equals("new-exercise-type")) return Mono.empty();
+
+        var exerciseName = event.getOption("name").orElseThrow().getValue().orElseThrow().asString();
+        var measurementType = event.getOption("measurement").orElseThrow().getValue().orElseThrow().asString();
 
         var exercise = exerciseService.create(exerciseName, measurementType);
         var embed = EmbedCreateSpec.builder()
@@ -45,6 +38,6 @@ public class NewExerciseCommandHandler implements DiscordCommandHandler {
                         false)
                 .color(Color.GREEN)
                 .build();
-        return command.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(embed).build());
+        return event.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(embed).build());
     }
 }

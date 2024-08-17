@@ -1,6 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
-import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
+import dev.jb.befit.backend.discord.listeners.DiscordEventListener;
 import dev.jb.befit.backend.service.ExerciseTypeService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateFields;
@@ -12,28 +12,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.io.IOException;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class GetExercisesCommandHandler implements DiscordCommandHandler {
+public class GetExercisesCommandHandler implements DiscordEventListener<ChatInputInteractionEvent> {
     private final ExerciseTypeService exerciseService;
-    private final CommandHandlerHelper commandHandlerHelper;
 
     @Override
-    public boolean validatePrefix(String message) {
-        try {
-            var commandData = commandHandlerHelper.getCommandConfigFile("get-exercise-types");
-            return message.startsWith(commandData.name());
-        } catch (IOException e) {
-            log.error("Error validating command prefix. A config file was not found.", e);
-            return false;
-        }
+    public Class<ChatInputInteractionEvent> getEventType() {
+        return ChatInputInteractionEvent.class;
     }
 
     @Override
-    public Mono<Void> handle(ChatInputInteractionEvent command) {
+    public Mono<Void> execute(ChatInputInteractionEvent event) {
+        if (!event.getCommandName().equals("exercise-types")) return Mono.empty();
+
         var exercises = exerciseService.getAll();
         var embed = EmbedCreateSpec.builder()
                 .title("All Exercises")
@@ -47,6 +40,6 @@ public class GetExercisesCommandHandler implements DiscordCommandHandler {
                         .toList())
                 .color(Color.GREEN)
                 .build();
-        return command.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(embed).build());
+        return event.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(embed).build());
     }
 }

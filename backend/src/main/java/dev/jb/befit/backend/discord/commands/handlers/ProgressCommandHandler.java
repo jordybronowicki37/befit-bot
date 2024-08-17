@@ -1,6 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
-import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
+import dev.jb.befit.backend.discord.listeners.DiscordEventListener;
 import dev.jb.befit.backend.service.ProgressImageService;
 import dev.jb.befit.backend.service.exceptions.NoProgressMadeException;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -14,35 +14,29 @@ import reactor.core.publisher.Mono;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ProgressCommandHandler implements DiscordCommandHandler {
+public class ProgressCommandHandler implements DiscordEventListener<ChatInputInteractionEvent> {
     private final ProgressImageService progressImageService;
-    private final CommandHandlerHelper commandHandlerHelper;
 
     @Override
-    public boolean validatePrefix(String message) {
-        try {
-            var commandData = commandHandlerHelper.getCommandConfigFile("progress");
-            return message.startsWith(commandData.name());
-        } catch (IOException e) {
-            log.error("Error validating command prefix. A config file was not found.", e);
-            return false;
-        }
+    public Class<ChatInputInteractionEvent> getEventType() {
+        return ChatInputInteractionEvent.class;
     }
 
     @Override
-    public Mono<Void> handle(ChatInputInteractionEvent command) {
-        var exerciseName = command.getOption("exercise-name").orElseThrow().getValue().orElseThrow().asString();
-        var userId = command.getInteraction().getUser().getId();
+    public Mono<Void> execute(ChatInputInteractionEvent event) {
+        if (!event.getCommandName().equals("progress")) return Mono.empty();
+
+        var exerciseName = event.getOption("exercise-name").orElseThrow().getValue().orElseThrow().asString();
+        var userId = event.getInteraction().getUser().getId();
 
         try {
             var progressImage = progressImageService.createProgressImage(userId, exerciseName);
             var inputStream = new FileInputStream(progressImage);
-            return command.reply(
+            return event.reply(
                     InteractionApplicationCommandCallbackSpec.builder()
                             .addFile("progress.png", inputStream)
                             .build()
@@ -55,7 +49,7 @@ public class ProgressCommandHandler implements DiscordCommandHandler {
                     .description(e.getMessage())
                     .color(Color.RED)
                     .build();
-            return command.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(embed).build());
+            return event.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(embed).build());
         }
     }
 }
