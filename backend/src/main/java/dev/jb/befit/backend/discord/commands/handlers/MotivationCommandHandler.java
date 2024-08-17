@@ -4,7 +4,7 @@ import dev.jb.befit.backend.discord.listeners.DiscordEventListener;
 import dev.jb.befit.backend.service.MotivationalService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
-import discord4j.core.spec.InteractionApplicationCommandCallbackSpec;
+import discord4j.core.spec.InteractionReplyEditSpec;
 import discord4j.rest.util.Color;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +26,8 @@ public class MotivationCommandHandler implements DiscordEventListener<ChatInputI
     public Mono<Void> execute(ChatInputInteractionEvent event) {
         if (!event.getCommandName().equals("motivation")) return Mono.empty();
 
+        event.deferReply().block();
+
         var quote = motivationalService.getRandomQuote();
         var embed = EmbedCreateSpec.builder()
                 .title("Motivational quote")
@@ -33,6 +35,6 @@ public class MotivationCommandHandler implements DiscordEventListener<ChatInputI
                 .footer(String.format("- %s", quote.author()), null)
                 .color(Color.CYAN)
                 .build();
-        return event.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(embed).build());
+        return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();
     }
 }

@@ -5,12 +5,14 @@ import dev.jb.befit.backend.discord.listeners.DiscordEventListener;
 import dev.jb.befit.backend.service.ExerciseTypeService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
-import discord4j.core.spec.InteractionApplicationCommandCallbackSpec;
+import discord4j.core.spec.InteractionReplyEditSpec;
 import discord4j.rest.util.Color;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+
+import java.io.IOException;
 
 @Slf4j
 @Service
@@ -31,6 +33,8 @@ public class NewExerciseCommandHandler implements DiscordEventListener<ChatInput
         var exerciseName = event.getOption("name").orElseThrow().getValue().orElseThrow().asString();
         var measurementType = event.getOption("measurement").orElseThrow().getValue().orElseThrow().asString();
 
+        event.deferReply().block();
+
         var exercise = exerciseService.create(exerciseName, measurementType);
         var embed = EmbedCreateSpec.builder()
                 .title("Your new exercise")
@@ -40,12 +44,13 @@ public class NewExerciseCommandHandler implements DiscordEventListener<ChatInput
                         false)
                 .color(Color.GREEN)
                 .build();
-        return event.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(embed).build());
 
         try {
             commandService.updateCommandsWithExerciseNameOptions();
         } catch (IOException e) {
             log.error("Failed to update commands with exercise name", e);
         }
+
+        return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();
     }
 }

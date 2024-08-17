@@ -7,7 +7,7 @@ import dev.jb.befit.backend.service.MotivationalService;
 import dev.jb.befit.backend.service.UserService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
-import discord4j.core.spec.InteractionApplicationCommandCallbackSpec;
+import discord4j.core.spec.InteractionReplyEditSpec;
 import discord4j.rest.util.Color;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +37,8 @@ public class LogCommandHandler implements DiscordEventListener<ChatInputInteract
         var exerciseAmount = Math.toIntExact(event.getOption("amount").orElseThrow().getValue().orElseThrow().asLong());
         var userId = event.getInteraction().getUser().getId();
 
+        event.deferReply().block();
+
         var user = userService.getOrCreateDiscordUser(userId);
         var exerciseLog = logService.create(user, exerciseName, exerciseAmount);
         var exerciseType = exerciseLog.getExerciseType();
@@ -63,6 +65,6 @@ public class LogCommandHandler implements DiscordEventListener<ChatInputInteract
                 .footer(motivationalService.getRandomPositiveReinforcement(), null)
                 .color(Color.GREEN)
                 .build();
-        return event.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(embed).build());
+        return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();
     }
 }

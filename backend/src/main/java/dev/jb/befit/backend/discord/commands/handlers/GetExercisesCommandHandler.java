@@ -5,7 +5,7 @@ import dev.jb.befit.backend.service.ExerciseTypeService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
-import discord4j.core.spec.InteractionApplicationCommandCallbackSpec;
+import discord4j.core.spec.InteractionReplyEditSpec;
 import discord4j.rest.util.Color;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +27,8 @@ public class GetExercisesCommandHandler implements DiscordEventListener<ChatInpu
     public Mono<Void> execute(ChatInputInteractionEvent event) {
         if (!event.getCommandName().equals("exercise-types")) return Mono.empty();
 
+        event.deferReply().block();
+
         var exercises = exerciseService.getAll();
         var embed = EmbedCreateSpec.builder()
                 .title("All Exercises")
@@ -40,6 +42,6 @@ public class GetExercisesCommandHandler implements DiscordEventListener<ChatInpu
                         .toList())
                 .color(Color.GREEN)
                 .build();
-        return event.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(embed).build());
+        return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();
     }
 }

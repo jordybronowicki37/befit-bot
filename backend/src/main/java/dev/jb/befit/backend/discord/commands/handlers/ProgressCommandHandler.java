@@ -5,7 +5,7 @@ import dev.jb.befit.backend.service.ProgressImageService;
 import dev.jb.befit.backend.service.exceptions.NoProgressMadeException;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
-import discord4j.core.spec.InteractionApplicationCommandCallbackSpec;
+import discord4j.core.spec.InteractionReplyEditSpec;
 import discord4j.rest.util.Color;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,17 +30,15 @@ public class ProgressCommandHandler implements DiscordEventListener<ChatInputInt
     public Mono<Void> execute(ChatInputInteractionEvent event) {
         if (!event.getCommandName().equals("progress")) return Mono.empty();
 
+        event.deferReply().block();
+
         var exerciseName = event.getOption("exercise-name").orElseThrow().getValue().orElseThrow().asString();
         var userId = event.getInteraction().getUser().getId();
 
         try {
             var progressImage = progressImageService.createProgressImage(userId, exerciseName);
             var inputStream = new FileInputStream(progressImage);
-            return event.reply(
-                    InteractionApplicationCommandCallbackSpec.builder()
-                            .addFile("progress.png", inputStream)
-                            .build()
-            );
+            return event.editReply(InteractionReplyEditSpec.builder().addFile("progress.png", inputStream).build()).then();
         } catch (FileNotFoundException e) {
             return Mono.empty();
         } catch (NoProgressMadeException e) {
@@ -49,7 +47,7 @@ public class ProgressCommandHandler implements DiscordEventListener<ChatInputInt
                     .description(e.getMessage())
                     .color(Color.RED)
                     .build();
-            return event.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(embed).build());
+            return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();
         }
     }
 }
