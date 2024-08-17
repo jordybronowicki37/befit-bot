@@ -22,10 +22,10 @@ public class MotivationalService {
 
     private final ResourceLoader resourceLoader;
 
-    private <T> T readResource(String resourcePath) throws IOException {
+    private <T> T readResource(String resourcePath, TypeReference<T> cast) throws IOException {
         var resource = resourceLoader.getResource("classpath:" + resourcePath);
         var objectMapper = new ObjectMapper();
-        return objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {});
+        return objectMapper.readValue(resource.getInputStream(), cast);
     }
 
     private <T> T getRandomItem(List<T> list) {
@@ -33,7 +33,7 @@ public class MotivationalService {
     }
 
     public List<QuoteDto> getAllQuotes() throws IOException {
-        return readResource(quotesFilePath);
+        return readResource(quotesFilePath, new TypeReference<>() {});
     }
 
     public QuoteDto getRandomQuote() {
@@ -47,7 +47,7 @@ public class MotivationalService {
     }
 
     public List<String> getAllPositiveReinforcements() throws IOException {
-        return readResource(positiveReinforcementFilePath);
+        return readResource(positiveReinforcementFilePath, new TypeReference<>() {});
     }
 
     public String getRandomPositiveReinforcement() {
