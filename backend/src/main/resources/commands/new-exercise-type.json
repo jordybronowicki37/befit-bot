@@ -6,8 +6,7 @@
       "name": "name",
       "description": "The name of the exercise",
       "type": 3,
-      "required": true,
-      "choices": []
+      "required": true
     },
     {
       "name": "measurement",

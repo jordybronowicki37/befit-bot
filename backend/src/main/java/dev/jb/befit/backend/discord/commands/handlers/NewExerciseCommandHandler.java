@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.discord.commands.CommandService;
 import dev.jb.befit.backend.discord.listeners.DiscordEventListener;
 import dev.jb.befit.backend.service.ExerciseTypeService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -16,6 +17,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class NewExerciseCommandHandler implements DiscordEventListener<ChatInputInteractionEvent> {
     private final ExerciseTypeService exerciseService;
+    private final CommandService commandService;
 
     @Override
     public Class<ChatInputInteractionEvent> getEventType() {
@@ -39,5 +41,11 @@ public class NewExerciseCommandHandler implements DiscordEventListener<ChatInput
                 .color(Color.GREEN)
                 .build();
         return event.reply(InteractionApplicationCommandCallbackSpec.builder().addEmbed(embed).build());
+
+        try {
+            commandService.updateCommandsWithExerciseNameOptions();
+        } catch (IOException e) {
+            log.error("Failed to update commands with exercise name", e);
+        }
     }
 }

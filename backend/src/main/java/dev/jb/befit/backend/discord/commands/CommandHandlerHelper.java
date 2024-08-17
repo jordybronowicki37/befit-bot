@@ -42,13 +42,27 @@ public class CommandHandlerHelper {
         }).toList();
     }
 
+    public List<ApplicationCommandRequest> getAllCommandConfigFilesWithExerciseOptions() throws IOException {
+        var commandFiles = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources(commandsFilesMatcher);
+        return Arrays.stream(commandFiles).map(r -> {
+            try {
+                return d4jMapper.getObjectMapper().readValue(r.getContentAsString(StandardCharsets.UTF_8), ApplicationCommandRequest.class);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).filter(command -> {
+            if(command.options().isAbsent()) return false;
+            return command.options().get().stream().anyMatch(option -> "exercise-name".equals(option.name()));
+        }).toList();
+    }
+
     public void addExerciseOptionsToCommands(List<ApplicationCommandRequest> commands) {
         var exerciseTypes = exerciseTypeService.getAll();
-        log.info("Adding {} exercise options to commands", exerciseTypes.size());
+        log.debug("Adding {} exercise options to commands", exerciseTypes.size());
 
         for (var command : commands) {
             command.options().get().stream()
-                    .filter(option -> option.name().equals("exercise-name"))
+                    .filter(option -> "exercise-name".equals(option.name()))
                     .forEach(option -> {
                         var choices = option.choices().get();
                         for (var exerciseType : exerciseTypes) {
