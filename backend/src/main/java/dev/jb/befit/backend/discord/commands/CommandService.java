@@ -23,7 +23,8 @@ public class CommandService {
     }
 
     public void updateCommandsWithExerciseNameOptions() throws IOException {
-        var commands = commandHandlerHelper.getAllCommandConfigFilesWithExerciseOptions();
+        // TODO only update relevant commands
+        var commands = commandHandlerHelper.getAllCommandConfigFiles();
         commandHandlerHelper.addExerciseOptionsToCommands(commands);
         bulkUpdateCommands(commands);
     }
