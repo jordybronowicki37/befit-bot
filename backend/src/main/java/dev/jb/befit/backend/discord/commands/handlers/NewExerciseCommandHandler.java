@@ -28,10 +28,11 @@ public class NewExerciseCommandHandler implements DiscordEventListener<ChatInput
 
     @Override
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        if (!event.getCommandName().equals("new-exercise-type")) return Mono.empty();
+        var subcommand = event.getOption("create");
+        if (!event.getCommandName().equals("exercises") || subcommand.isEmpty()) return Mono.empty();
 
-        var exerciseName = event.getOption("name").orElseThrow().getValue().orElseThrow().asString();
-        var measurementType = event.getOption("measurement").orElseThrow().getValue().orElseThrow().asString();
+        var exerciseName = subcommand.get().getOption("name").orElseThrow().getValue().orElseThrow().asString();
+        var measurementType = subcommand.get().getOption("measurement").orElseThrow().getValue().orElseThrow().asString();
 
         event.deferReply().block();
 

@@ -25,7 +25,7 @@ public class GetExercisesCommandHandler implements DiscordEventListener<ChatInpu
 
     @Override
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        if (!event.getCommandName().equals("exercise-types")) return Mono.empty();
+        if (!event.getCommandName().equals("exercises") || event.getOption("view").isEmpty()) return Mono.empty();
 
         event.deferReply().block();
 
