@@ -1,13 +1,9 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
-import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
-import dev.jb.befit.backend.discord.listeners.DiscordEventListener;
+import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ProgressImageService;
-import dev.jb.befit.backend.service.exceptions.NoProgressMadeException;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionReplyEditSpec;
-import discord4j.rest.util.Color;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,8 +15,13 @@ import java.io.FileNotFoundException;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ProgressCommandHandler implements DiscordEventListener<ChatInputInteractionEvent> {
+public class ProgressCommandHandler extends DiscordChatInputInteractionEventListener {
     private final ProgressImageService progressImageService;
+
+    @Override
+    public String getCommandNameFilter() {
+        return "progress";
+    }
 
     @Override
     public Class<ChatInputInteractionEvent> getEventType() {
@@ -29,10 +30,6 @@ public class ProgressCommandHandler implements DiscordEventListener<ChatInputInt
 
     @Override
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        if (!CommandHandlerHelper.checkCommandName(event, "progress")) return Mono.empty();
-
-        event.deferReply().block();
-
         var exerciseName = event.getOption("exercise-name").orElseThrow().getValue().orElseThrow().asString();
         var userId = event.getInteraction().getUser().getId();
 
@@ -41,14 +38,7 @@ public class ProgressCommandHandler implements DiscordEventListener<ChatInputInt
             var inputStream = new FileInputStream(progressImage);
             return event.editReply(InteractionReplyEditSpec.builder().addFile("progress.png", inputStream).build()).then();
         } catch (FileNotFoundException e) {
-            return Mono.empty();
-        } catch (NoProgressMadeException e) {
-            var embed = EmbedCreateSpec.builder()
-                    .title("Something went wrong")
-                    .description(e.getMessage())
-                    .color(Color.RED)
-                    .build();
-            return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();
+            throw new RuntimeException(e);
         }
     }
 }

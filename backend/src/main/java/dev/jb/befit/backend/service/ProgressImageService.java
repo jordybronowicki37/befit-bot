@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.service;
 
+import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import dev.jb.befit.backend.service.exceptions.NoProgressMadeException;
 import discord4j.common.util.Snowflake;
 import lombok.RequiredArgsConstructor;
@@ -28,14 +29,16 @@ public class ProgressImageService {
     private static final int WIDTH = 640;
     private static final int HEIGHT = 480;
 
+    private final ExerciseTypeService exerciseTypeService;
     private final ExerciseLogService logService;
     private final UserService userService;
 
     public File createProgressImage(Snowflake userId, String exerciseName) {
         var user = userService.getOrCreateDiscordUser(userId);
+        var exerciseType = exerciseTypeService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
+
         var allExerciseLogs = logService.getAllByUserIdAndExerciseName(user, exerciseName);
-        if (allExerciseLogs.isEmpty()) throw new NoProgressMadeException("You have no progress yet for exercise: " + exerciseName);
-        var exerciseType = allExerciseLogs.get(0).getExerciseType();
+        if (allExerciseLogs.isEmpty()) throw new NoProgressMadeException(exerciseType);
 
         var series = new TimeSeries("Your progress");
         for (var exerciseLog : allExerciseLogs) {

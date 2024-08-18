@@ -2,9 +2,8 @@ package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.data.models.GoalDirection;
 import dev.jb.befit.backend.data.models.MeasurementTypes;
-import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.commands.CommandService;
-import dev.jb.befit.backend.discord.listeners.DiscordEventListener;
+import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ExerciseTypeService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
@@ -20,9 +19,14 @@ import java.io.IOException;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class NewExerciseCommandHandler implements DiscordEventListener<ChatInputInteractionEvent> {
+public class NewExerciseCommandHandler extends DiscordChatInputInteractionEventListener {
     private final ExerciseTypeService exerciseService;
     private final CommandService commandService;
+
+    @Override
+    public String getCommandNameFilter() {
+        return "exercises create";
+    }
 
     @Override
     public Class<ChatInputInteractionEvent> getEventType() {
@@ -31,8 +35,6 @@ public class NewExerciseCommandHandler implements DiscordEventListener<ChatInput
 
     @Override
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        if (!CommandHandlerHelper.checkCommandName(event, "exercises create")) return Mono.empty();
-
         var createSubCommandOptional = event.getOption("create");
         if (createSubCommandOptional.isEmpty()) return Mono.empty();
         var createSubCommand = createSubCommandOptional.get();
@@ -42,8 +44,6 @@ public class NewExerciseCommandHandler implements DiscordEventListener<ChatInput
         var measurementType = MeasurementTypes.valueOf(measurementTypeString);
         var goalDirectionString = createSubCommand.getOption("goal-direction").orElseThrow().getValue().orElseThrow().asString();
         var goalDirection = GoalDirection.valueOf(goalDirectionString);
-
-        event.deferReply().block();
 
         var exercise = exerciseService.create(exerciseName, measurementType, goalDirection);
         var embed = EmbedCreateSpec.builder()

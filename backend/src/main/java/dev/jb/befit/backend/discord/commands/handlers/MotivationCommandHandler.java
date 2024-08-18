@@ -1,7 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
-import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
-import dev.jb.befit.backend.discord.listeners.DiscordEventListener;
+import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.MotivationalService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
@@ -15,8 +14,13 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MotivationCommandHandler implements DiscordEventListener<ChatInputInteractionEvent> {
+public class MotivationCommandHandler extends DiscordChatInputInteractionEventListener {
     private final MotivationalService motivationalService;
+
+    @Override
+    public String getCommandNameFilter() {
+        return "motivation";
+    }
 
     @Override
     public Class<ChatInputInteractionEvent> getEventType() {
@@ -25,10 +29,6 @@ public class MotivationCommandHandler implements DiscordEventListener<ChatInputI
 
     @Override
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        if (!CommandHandlerHelper.checkCommandName(event, "motivation")) return Mono.empty();
-
-        event.deferReply().block();
-
         var quote = motivationalService.getRandomQuote();
         var embed = EmbedCreateSpec.builder()
                 .title("Motivational quote")

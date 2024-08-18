@@ -31,7 +31,7 @@ public class ExerciseLogService {
     }
 
     public ExerciseLog create(User user, String exerciseName, Integer amount) {
-        var exerciseType = exerciseTypeRepository.findByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException("Exercise not found"));
+        var exerciseType = exerciseTypeRepository.findByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
         var exerciseLog = new ExerciseLog(amount, exerciseType, user);
         return exerciseLogRepository.save(exerciseLog);
     }

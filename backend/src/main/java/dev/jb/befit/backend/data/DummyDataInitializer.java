@@ -29,6 +29,7 @@ public class DummyDataInitializer implements CommandLineRunner {
         log.info("Started dummy-data initialization");
         var user = discordUserRepository.save(new DiscordUser(Snowflake.of(userId)));
         var benchpress = exerciseTypeRepository.save(new ExerciseType("benchpress", MeasurementTypes.KG, GoalDirection.INCREASING));
+        exerciseTypeRepository.save(new ExerciseType("running", MeasurementTypes.KM, GoalDirection.INCREASING));
 
         var log1 = new ExerciseLog(20, benchpress, user);
         log1.setCreated(LocalDateTime.now().minusDays(8));

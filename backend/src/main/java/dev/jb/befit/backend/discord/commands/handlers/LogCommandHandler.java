@@ -2,8 +2,7 @@ package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.data.models.ExerciseLog;
 import dev.jb.befit.backend.data.models.GoalDirection;
-import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
-import dev.jb.befit.backend.discord.listeners.DiscordEventListener;
+import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ExerciseLogService;
 import dev.jb.befit.backend.service.MotivationalService;
 import dev.jb.befit.backend.service.UserService;
@@ -22,10 +21,15 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class LogCommandHandler implements DiscordEventListener<ChatInputInteractionEvent> {
+public class LogCommandHandler extends DiscordChatInputInteractionEventListener {
     private final ExerciseLogService logService;
     private final UserService userService;
     private final MotivationalService motivationalService;
+
+    @Override
+    public String getCommandNameFilter() {
+        return "log";
+    }
 
     @Override
     public Class<ChatInputInteractionEvent> getEventType() {
@@ -34,13 +38,9 @@ public class LogCommandHandler implements DiscordEventListener<ChatInputInteract
 
     @Override
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        if (!CommandHandlerHelper.checkCommandName(event, "log")) return Mono.empty();
-
         var exerciseName = event.getOption("exercise-name").orElseThrow().getValue().orElseThrow().asString();
         var exerciseAmount = Math.toIntExact(event.getOption("amount").orElseThrow().getValue().orElseThrow().asLong());
         var userId = event.getInteraction().getUser().getId();
-
-        event.deferReply().block();
 
         var user = userService.getOrCreateDiscordUser(userId);
         var exerciseLog = logService.create(user, exerciseName, exerciseAmount);

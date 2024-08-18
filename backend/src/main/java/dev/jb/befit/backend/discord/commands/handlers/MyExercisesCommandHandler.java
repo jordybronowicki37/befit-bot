@@ -1,6 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
-import dev.jb.befit.backend.discord.listeners.DiscordEventListener;
+import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ExerciseTypeService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateFields;
@@ -15,8 +15,13 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MyExercisesCommandHandler implements DiscordEventListener<ChatInputInteractionEvent> {
+public class MyExercisesCommandHandler extends DiscordChatInputInteractionEventListener {
     private final ExerciseTypeService exerciseService;
+
+    @Override
+    public String getCommandNameFilter() {
+        return "exercises view my";
+    }
 
     @Override
     public Class<ChatInputInteractionEvent> getEventType() {
@@ -25,10 +30,6 @@ public class MyExercisesCommandHandler implements DiscordEventListener<ChatInput
 
     @Override
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        if (!event.getCommandName().equals("exercises") || event.getOption("view").isEmpty()) return Mono.empty();
-
-        event.deferReply().block();
-
         var exercises = exerciseService.getAll();
         var embed = EmbedCreateSpec.builder()
                 .title("All Exercises")

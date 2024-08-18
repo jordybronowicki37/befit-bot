@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -22,7 +23,9 @@ public class ListenerRegistrar <T extends Event> implements CommandLineRunner {
         log.info("Registering listeners");
         for(DiscordEventListener<T> listener : eventListeners) {
             discordClient.on(listener.getEventType())
-                    .flatMap(listener::execute)
+                    .filter(listener::acceptExecution)
+                    .flatMap(listener::preExecute)
+                    .flatMap(e -> Mono.defer(() -> listener.execute(e)).onErrorResume(t -> listener.replyWithErrorMessage(t, e)))
                     .onErrorResume(listener::handleError)
                     .subscribe();
         }
