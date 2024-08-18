@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands;
 
+import dev.jb.befit.backend.data.models.MeasurementTypes;
 import dev.jb.befit.backend.service.ExerciseTypeService;
 import discord4j.common.JacksonResources;
 import discord4j.discordjson.json.ApplicationCommandOptionChoiceData;
@@ -14,6 +15,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -28,37 +31,76 @@ public class CommandHandlerHelper {
 
     public ApplicationCommandRequest getCommandConfigFile(String fileName) throws IOException {
         var resource = resourceLoader.getResource(commandsPath + fileName + ".json");
-        return d4jMapper.getObjectMapper().readValue(resource.getContentAsString(StandardCharsets.UTF_8), ApplicationCommandRequest.class);
+        var command = d4jMapper.getObjectMapper().readValue(resource.getContentAsString(StandardCharsets.UTF_8), ApplicationCommandRequest.class);
+        applyAllOptions(List.of(command));
+        return command;
     }
 
     public List<ApplicationCommandRequest> getAllCommandConfigFiles() throws IOException {
         var commandFiles = ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources(commandsFilesMatcher);
-        return Arrays.stream(commandFiles).map(r -> {
+        var commands = Arrays.stream(commandFiles).map(r -> {
             try {
                 return d4jMapper.getObjectMapper().readValue(r.getContentAsString(StandardCharsets.UTF_8), ApplicationCommandRequest.class);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }).toList();
+        applyAllOptions(commands);
+        return commands;
     }
 
-    public void addExerciseOptionsToCommands(List<ApplicationCommandRequest> commands) {
+    private void applyAllOptions(List<ApplicationCommandRequest> commands) {
+        applyExerciseOptions(commands);
+        applyMeasurementsOptions(commands);
+    }
+
+    private void applyGenericOptions(List<ApplicationCommandRequest> commands, String key, Consumer<List<ApplicationCommandOptionChoiceData>> choicesEditingConsumer) {
+        for (var command : commands) {
+            if (command.options().isAbsent()) continue;
+            command.options().get().stream()
+                    .flatMap(option -> {
+                        // Check for subcommand and extract options
+                        if (option.type() == 1 && !option.options().isAbsent())
+                            return option.options().get().stream();
+                        // Check for subcommand-group with subcommands and extract options
+                        if (option.type() == 2 && !option.options().isAbsent())
+                            return option.options().get().stream().flatMap(subgroup -> subgroup.options().get().stream());
+                        return Stream.of(option);
+                    })
+                    .filter(option -> key.equals(option.name()))
+                    .forEach(option -> {
+                        log.info("applying {} choices to command: {}", key, command.name());
+                        if (option.choices().isAbsent()) return;
+                        var choices = option.choices().get();
+                        choicesEditingConsumer.accept(choices);
+                    });
+        }
+    }
+
+    private void applyExerciseOptions(List<ApplicationCommandRequest> commands) {
         var exerciseTypes = exerciseTypeService.getAll();
         log.debug("Adding {} exercise options to commands", exerciseTypes.size());
 
-        for (var command : commands) {
-            command.options().get().stream()
-                    .filter(option -> "exercise-name".equals(option.name()))
-                    .forEach(option -> {
-                        var choices = option.choices().get();
-                        for (var exerciseType : exerciseTypes) {
-                            choices.add(ApplicationCommandOptionChoiceData.builder()
-                                    .name(exerciseType.getName())
-                                    .value(exerciseType.getName())
-                                    .build()
-                            );
-                        }
-                    });
-        }
+        applyGenericOptions(commands, "exercise-name", choices -> {
+            for (var exerciseType : exerciseTypes) {
+                choices.add(ApplicationCommandOptionChoiceData.builder()
+                        .name(exerciseType.getName())
+                        .value(exerciseType.getName())
+                        .build()
+                );
+            }
+        });
+    }
+
+    private void applyMeasurementsOptions(List<ApplicationCommandRequest> commands) {
+        applyGenericOptions(commands, "measurement-type", choices -> {
+            for (var measurementType : MeasurementTypes.values()) {
+                choices.add(ApplicationCommandOptionChoiceData.builder()
+                        .name(measurementType.getLongName())
+                        .value(measurementType.name())
+                        .build()
+                );
+            }
+        });
     }
 }

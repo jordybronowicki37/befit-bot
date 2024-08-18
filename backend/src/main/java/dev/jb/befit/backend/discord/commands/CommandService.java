@@ -18,14 +18,12 @@ public class CommandService {
 
     public void registerAllCommands() throws IOException {
         var commands = commandHandlerHelper.getAllCommandConfigFiles();
-        commandHandlerHelper.addExerciseOptionsToCommands(commands);
         bulkUpdateCommands(commands);
     }
 
     public void updateCommandsWithExerciseNameOptions() throws IOException {
         // TODO only update relevant commands
         var commands = commandHandlerHelper.getAllCommandConfigFiles();
-        commandHandlerHelper.addExerciseOptionsToCommands(commands);
         bulkUpdateCommands(commands);
     }
 

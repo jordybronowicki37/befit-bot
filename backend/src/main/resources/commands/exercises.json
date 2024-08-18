@@ -5,8 +5,7 @@
     {
       "name": "view",
       "description": "View all exercises",
-      "type": 1,
-      "options": []
+      "type": 1
     },
     {
       "name": "create",
@@ -20,36 +19,11 @@
           "required": true
         },
         {
-          "name": "measurement",
+          "name": "measurement-type",
           "description": "The measurement type of the exercise",
           "type": 3,
           "required": true,
-          "choices": [
-            {
-              "name": "Amount",
-              "value": "Amount"
-            },
-            {
-              "name": "KG",
-              "value": "KG"
-            },
-            {
-              "name": "Sec",
-              "value": "Sec"
-            },
-            {
-              "name": "KM",
-              "value": "KM"
-            },
-            {
-              "name": "CM",
-              "value": "CM"
-            },
-            {
-              "name": "BPM",
-              "value": "BPM"
-            }
-          ]
+          "choices": []
         }
       ]
     }

@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class GetExercisesCommandHandler implements DiscordEventListener<ChatInputInteractionEvent> {
+public class MyExercisesCommandHandler implements DiscordEventListener<ChatInputInteractionEvent> {
     private final ExerciseTypeService exerciseService;
 
     @Override
@@ -35,8 +35,8 @@ public class GetExercisesCommandHandler implements DiscordEventListener<ChatInpu
                 .fields(exercises
                         .stream()
                         .map(exercise -> EmbedCreateFields.Field.of(
-                                String.format("#%d %s", exercise.getId(), exercise.getName()),
-                                String.format("Measurement: %s", exercise.getMeasurementType().getLongName()),
+                                String.format("#%d Exercise", exercise.getId()),
+                                String.format("%s - %s", exercise.getName(), exercise.getMeasurementType()),
                                 false)
                         )
                         .toList())

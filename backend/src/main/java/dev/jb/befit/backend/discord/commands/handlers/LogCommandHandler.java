@@ -47,10 +47,10 @@ public class LogCommandHandler implements DiscordEventListener<ChatInputInteract
         var descriptionBuilder = new StringBuilder();
         descriptionBuilder.append(String.format("Exercise: #%d %s\n", exerciseType.getId(), exerciseType.getName()));
         descriptionBuilder.append(String.format("Log: #%d\n", allExerciseLogs.size()));
-        descriptionBuilder.append(String.format("Value: %d%s\n", exerciseLog.getAmount(), exerciseType.getMeasurementType()));
+        descriptionBuilder.append(String.format("Value: %d %s\n", exerciseLog.getAmount(), exerciseType.getMeasurementType().getShortName()));
         if (allExerciseLogs.size() >= 2) {
             var previousLog = allExerciseLogs.get(allExerciseLogs.size() - 2);
-            descriptionBuilder.append(String.format("Last: %d%s\n", previousLog.getAmount(), exerciseType.getMeasurementType()));
+            descriptionBuilder.append(String.format("Last: %d%s\n", previousLog.getAmount(), exerciseType.getMeasurementType().getShortName()));
         }
 
         var exerciseAmounts = new ArrayList<>(allExerciseLogs.stream().map(ExerciseLog::getAmount).toList());

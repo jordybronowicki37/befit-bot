@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.data.models.MeasurementTypes;
 import dev.jb.befit.backend.discord.commands.CommandService;
 import dev.jb.befit.backend.discord.listeners.DiscordEventListener;
 import dev.jb.befit.backend.service.ExerciseTypeService;
@@ -32,7 +33,8 @@ public class NewExerciseCommandHandler implements DiscordEventListener<ChatInput
         if (!event.getCommandName().equals("exercises") || subcommand.isEmpty()) return Mono.empty();
 
         var exerciseName = subcommand.get().getOption("name").orElseThrow().getValue().orElseThrow().asString();
-        var measurementType = subcommand.get().getOption("measurement").orElseThrow().getValue().orElseThrow().asString();
+        var measurementTypeString = subcommand.get().getOption("measurement-type").orElseThrow().getValue().orElseThrow().asString();
+        var measurementType = MeasurementTypes.valueOf(measurementTypeString);
 
         event.deferReply().block();
 

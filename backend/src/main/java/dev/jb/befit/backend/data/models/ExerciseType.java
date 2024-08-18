@@ -24,6 +24,6 @@ public class ExerciseType {
     private List<ExerciseLog> exerciseLogs;
 
     @NonNull
-    @Column(length = 8)
-    private String measurementType;
+    @Enumerated(EnumType.STRING)
+    private MeasurementTypes measurementType;
 }

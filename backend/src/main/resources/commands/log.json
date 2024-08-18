@@ -13,7 +13,8 @@
       "name": "amount",
       "description": "The amount of the exercise",
       "type": 4,
-      "required": true
+      "required": true,
+      "min_value": 0
     }
   ]
 }
