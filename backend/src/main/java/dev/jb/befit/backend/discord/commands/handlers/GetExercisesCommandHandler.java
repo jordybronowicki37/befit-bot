@@ -32,7 +32,7 @@ public class GetExercisesCommandHandler extends DiscordChatInputInteractionEvent
     public Mono<Void> execute(ChatInputInteractionEvent event) {
         var exercises = exerciseService.getAll();
         var embed = EmbedCreateSpec.builder()
-                .title("All Exercises")
+                .title("All exercises")
                 .fields(exercises
                         .stream()
                         .map(exercise -> EmbedCreateFields.Field.of(

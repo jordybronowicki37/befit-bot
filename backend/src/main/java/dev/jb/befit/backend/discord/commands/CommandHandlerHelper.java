@@ -34,7 +34,7 @@ public class CommandHandlerHelper {
     private final JacksonResources d4jMapper = JacksonResources.create();
     private final ExerciseTypeService exerciseTypeService;
 
-    public static boolean checkCommandName(ChatInputInteractionEvent event, String commandName) {
+    public static String getCommandName(ChatInputInteractionEvent event) {
         var actualCommandNameBuilder = new StringBuilder();
         actualCommandNameBuilder.append(event.getCommandName());
 
@@ -52,7 +52,11 @@ public class CommandHandlerHelper {
             }
         }
 
-        return actualCommandNameBuilder.toString().equals(commandName);
+        return actualCommandNameBuilder.toString();
+    }
+
+    public static boolean checkCommandName(ChatInputInteractionEvent event, String commandName) {
+        return getCommandName(event).equals(commandName);
     }
 
     public ApplicationCommandRequest getCommandConfigFile(String fileName) throws IOException {

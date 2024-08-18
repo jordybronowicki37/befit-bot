@@ -37,7 +37,7 @@ public class ProgressImageService {
         var user = userService.getOrCreateDiscordUser(userId);
         var exerciseType = exerciseTypeService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
 
-        var allExerciseLogs = logService.getAllByUserIdAndExerciseName(user, exerciseName);
+        var allExerciseLogs = logService.getAllByUserAndExerciseName(user, exerciseName);
         if (allExerciseLogs.isEmpty()) throw new NoProgressMadeException(exerciseType);
 
         var series = new TimeSeries("Your progress");

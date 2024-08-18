@@ -11,6 +11,11 @@
           "name": "all",
           "description": "View exercises",
           "type": 1
+        },
+        {
+          "name": "my",
+          "description": "View your exercises",
+          "type": 1
         }
       ]
     },

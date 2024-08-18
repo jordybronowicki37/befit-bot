@@ -45,7 +45,7 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
         var user = userService.getOrCreateDiscordUser(userId);
         var exerciseLog = logService.create(user, exerciseName, exerciseAmount);
         var exerciseType = exerciseLog.getExerciseType();
-        var allExerciseLogs = logService.getAllByUserIdAndExerciseName(user, exerciseName);
+        var allExerciseLogs = logService.getAllByUserAndExerciseName(user, exerciseName);
 
         var workoutTitle = String.format("#%d %s - Log #%d", exerciseType.getId(), exerciseType.getName(), allExerciseLogs.size());
         var descriptionBuilder = new StringBuilder();

@@ -18,7 +18,7 @@ public class ExerciseLogService {
     private final ExerciseLogRepository exerciseLogRepository;
     private final ExerciseTypeRepository exerciseTypeRepository;
 
-    public List<ExerciseLog> getAllByUserId(User user) {
+    public List<ExerciseLog> getAllByUser(User user) {
         return exerciseLogRepository.findAllByUser(user);
     }
 
@@ -26,7 +26,7 @@ public class ExerciseLogService {
         return exerciseLogRepository.findAllByExerciseTypeName(name);
     }
 
-    public List<ExerciseLog> getAllByUserIdAndExerciseName(User user, String name) {
+    public List<ExerciseLog> getAllByUserAndExerciseName(User user, String name) {
         return exerciseLogRepository.findAllByUserAndExerciseTypeName(user, name);
     }
 
