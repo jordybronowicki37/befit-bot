@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.data.models.GoalDirection;
 import dev.jb.befit.backend.data.models.MeasurementTypes;
 import dev.jb.befit.backend.discord.commands.CommandService;
 import dev.jb.befit.backend.discord.listeners.DiscordEventListener;
@@ -35,15 +36,20 @@ public class NewExerciseCommandHandler implements DiscordEventListener<ChatInput
         var exerciseName = subcommand.get().getOption("name").orElseThrow().getValue().orElseThrow().asString();
         var measurementTypeString = subcommand.get().getOption("measurement-type").orElseThrow().getValue().orElseThrow().asString();
         var measurementType = MeasurementTypes.valueOf(measurementTypeString);
+        var goalDirectionString = subcommand.get().getOption("goal-direction").orElseThrow().getValue().orElseThrow().asString();
+        var goalDirection = GoalDirection.valueOf(goalDirectionString);
 
         event.deferReply().block();
 
-        var exercise = exerciseService.create(exerciseName, measurementType);
+        var exercise = exerciseService.create(exerciseName, measurementType, goalDirection);
         var embed = EmbedCreateSpec.builder()
                 .title("Your new exercise")
                 .addField(
-                        String.format("#%d Exercise", exercise.getId()),
-                        String.format("%s - %s", exercise.getName(), exercise.getMeasurementType()),
+                        String.format("#%d %s", exercise.getId(), exercise.getName()),
+                        String.format("Measurement: %s\nGoal direction: %s",
+                                exercise.getMeasurementType().getLongName(),
+                                exercise.getGoalDirection().name().toLowerCase()
+                        ),
                         false)
                 .color(Color.GREEN)
                 .build();

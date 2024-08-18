@@ -36,7 +36,10 @@ public class GetExercisesCommandHandler implements DiscordEventListener<ChatInpu
                         .stream()
                         .map(exercise -> EmbedCreateFields.Field.of(
                                 String.format("#%d %s", exercise.getId(), exercise.getName()),
-                                String.format("Measurement: %s", exercise.getMeasurementType().getLongName()),
+                                String.format("%s - %s",
+                                        exercise.getMeasurementType().getLongName(),
+                                        exercise.getGoalDirection().name().toLowerCase()
+                                ),
                                 false)
                         )
                         .toList())

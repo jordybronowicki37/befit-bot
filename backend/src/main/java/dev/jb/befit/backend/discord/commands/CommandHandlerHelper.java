@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands;
 
+import dev.jb.befit.backend.data.models.GoalDirection;
 import dev.jb.befit.backend.data.models.MeasurementTypes;
 import dev.jb.befit.backend.service.ExerciseTypeService;
 import discord4j.common.JacksonResources;
@@ -52,6 +53,7 @@ public class CommandHandlerHelper {
     private void applyAllOptions(List<ApplicationCommandRequest> commands) {
         applyExerciseOptions(commands);
         applyMeasurementsOptions(commands);
+        applyGoalDirectionOptions(commands);
     }
 
     private void applyGenericOptions(List<ApplicationCommandRequest> commands, String key, Consumer<List<ApplicationCommandOptionChoiceData>> choicesEditingConsumer) {
@@ -98,6 +100,18 @@ public class CommandHandlerHelper {
                 choices.add(ApplicationCommandOptionChoiceData.builder()
                         .name(measurementType.getLongName())
                         .value(measurementType.name())
+                        .build()
+                );
+            }
+        });
+    }
+
+    private void applyGoalDirectionOptions(List<ApplicationCommandRequest> commands) {
+        applyGenericOptions(commands, "goal-direction", choices -> {
+            for (var goalDirection : GoalDirection.values()) {
+                choices.add(ApplicationCommandOptionChoiceData.builder()
+                        .name(goalDirection.name().toLowerCase())
+                        .value(goalDirection.name())
                         .build()
                 );
             }

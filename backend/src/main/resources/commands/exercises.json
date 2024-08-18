@@ -24,6 +24,13 @@
           "type": 3,
           "required": true,
           "choices": []
+        },
+        {
+          "name": "goal-direction",
+          "description": "The direction of the goal",
+          "type": 3,
+          "required": true,
+          "choices": []
         }
       ]
     }

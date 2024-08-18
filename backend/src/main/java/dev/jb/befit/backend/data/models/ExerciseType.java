@@ -26,4 +26,8 @@ public class ExerciseType {
     @NonNull
     @Enumerated(EnumType.STRING)
     private MeasurementTypes measurementType;
+
+    @NonNull
+    @Enumerated(EnumType.STRING)
+    private GoalDirection goalDirection;
 }

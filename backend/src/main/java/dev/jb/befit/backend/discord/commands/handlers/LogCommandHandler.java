@@ -1,6 +1,7 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.data.models.ExerciseLog;
+import dev.jb.befit.backend.data.models.GoalDirection;
 import dev.jb.befit.backend.discord.listeners.DiscordEventListener;
 import dev.jb.befit.backend.service.ExerciseLogService;
 import dev.jb.befit.backend.service.MotivationalService;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -44,27 +46,54 @@ public class LogCommandHandler implements DiscordEventListener<ChatInputInteract
         var exerciseType = exerciseLog.getExerciseType();
         var allExerciseLogs = logService.getAllByUserIdAndExerciseName(user, exerciseName);
 
+        var workoutTitle = String.format("#%d %s - Log #%d", exerciseType.getId(), exerciseType.getName(), allExerciseLogs.size());
         var descriptionBuilder = new StringBuilder();
-        descriptionBuilder.append(String.format("Exercise: #%d %s\n", exerciseType.getId(), exerciseType.getName()));
-        descriptionBuilder.append(String.format("Log: #%d\n", allExerciseLogs.size()));
         descriptionBuilder.append(String.format("Value: %d %s\n", exerciseLog.getAmount(), exerciseType.getMeasurementType().getShortName()));
         if (allExerciseLogs.size() >= 2) {
             var previousLog = allExerciseLogs.get(allExerciseLogs.size() - 2);
-            descriptionBuilder.append(String.format("Last: %d%s\n", previousLog.getAmount(), exerciseType.getMeasurementType().getShortName()));
+            descriptionBuilder.append(String.format("Last: %d %s\n", previousLog.getAmount(), exerciseType.getMeasurementType().getShortName()));
         }
-
-        var exerciseAmounts = new ArrayList<>(allExerciseLogs.stream().map(ExerciseLog::getAmount).toList());
-        exerciseAmounts.remove(exerciseLog.getAmount());
-        if (exerciseAmounts.stream().max(Integer::compareTo).orElse(0) < exerciseLog.getAmount()) {
+        var currentPr = getCurrentPr(allExerciseLogs);
+        if (currentPr != null) {
+            descriptionBuilder.append(String.format("Pr: %d %s\n", currentPr, exerciseType.getMeasurementType().getShortName()));
+        }
+        if (isNewPrReached(allExerciseLogs)) {
             descriptionBuilder.append("\n:rocket: NEW PR REACHED!");
         }
 
         var embed = EmbedCreateSpec.builder()
                 .title(":muscle: Logged workout")
-                .description(descriptionBuilder.toString())
+                .addField(workoutTitle, descriptionBuilder.toString(), false)
                 .footer(motivationalService.getRandomPositiveReinforcement(), null)
                 .color(Color.GREEN)
                 .build();
         return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();
+    }
+
+    private Integer getCurrentPr(List<ExerciseLog> allExerciseLogs) {
+        if (allExerciseLogs.isEmpty()) return null;
+        var exerciseType = allExerciseLogs.get(0).getExerciseType();
+        var exerciseAmounts = allExerciseLogs.stream().map(ExerciseLog::getAmount).toList();
+        if (exerciseType.getGoalDirection().equals(GoalDirection.INCREASING)) {
+            return exerciseAmounts.stream().max(Integer::compareTo).orElse(null);
+        } else {
+            return exerciseAmounts.stream().min(Integer::compareTo).orElse(null);
+        }
+    }
+
+    private boolean isNewPrReached(List<ExerciseLog> allExerciseLogs) {
+        if (allExerciseLogs.isEmpty()) return false;
+        if (allExerciseLogs.size() == 1) return true;
+        var exerciseType = allExerciseLogs.get(0).getExerciseType();
+        var exerciseAmounts = new ArrayList<>(allExerciseLogs.stream().map(ExerciseLog::getAmount).toList());
+        var lastValue = exerciseAmounts.remove(exerciseAmounts.size() - 1);
+
+        if (exerciseType.getGoalDirection().equals(GoalDirection.INCREASING)) {
+            var maxValue = exerciseAmounts.stream().max(Integer::compareTo);
+            return maxValue.filter(integer -> integer < lastValue).isPresent();
+        } else {
+            var minValue = exerciseAmounts.stream().min(Integer::compareTo);
+            return minValue.filter(integer -> integer > lastValue).isPresent();
+        }
     }
 }
