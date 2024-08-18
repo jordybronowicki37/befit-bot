@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordEventListener;
 import dev.jb.befit.backend.service.MotivationalService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -24,7 +25,7 @@ public class MotivationCommandHandler implements DiscordEventListener<ChatInputI
 
     @Override
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        if (!event.getCommandName().equals("motivation")) return Mono.empty();
+        if (!CommandHandlerHelper.checkCommandName(event, "motivation")) return Mono.empty();
 
         event.deferReply().block();
 

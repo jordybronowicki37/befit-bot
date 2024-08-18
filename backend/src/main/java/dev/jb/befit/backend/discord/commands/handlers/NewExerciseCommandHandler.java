@@ -2,6 +2,7 @@ package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.data.models.GoalDirection;
 import dev.jb.befit.backend.data.models.MeasurementTypes;
+import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.commands.CommandService;
 import dev.jb.befit.backend.discord.listeners.DiscordEventListener;
 import dev.jb.befit.backend.service.ExerciseTypeService;
@@ -30,13 +31,16 @@ public class NewExerciseCommandHandler implements DiscordEventListener<ChatInput
 
     @Override
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        var subcommand = event.getOption("create");
-        if (!event.getCommandName().equals("exercises") || subcommand.isEmpty()) return Mono.empty();
+        if (!CommandHandlerHelper.checkCommandName(event, "exercises create")) return Mono.empty();
 
-        var exerciseName = subcommand.get().getOption("name").orElseThrow().getValue().orElseThrow().asString();
-        var measurementTypeString = subcommand.get().getOption("measurement-type").orElseThrow().getValue().orElseThrow().asString();
+        var createSubCommandOptional = event.getOption("create");
+        if (createSubCommandOptional.isEmpty()) return Mono.empty();
+        var createSubCommand = createSubCommandOptional.get();
+
+        var exerciseName = createSubCommand.getOption("name").orElseThrow().getValue().orElseThrow().asString();
+        var measurementTypeString = createSubCommand.getOption("measurement-type").orElseThrow().getValue().orElseThrow().asString();
         var measurementType = MeasurementTypes.valueOf(measurementTypeString);
-        var goalDirectionString = subcommand.get().getOption("goal-direction").orElseThrow().getValue().orElseThrow().asString();
+        var goalDirectionString = createSubCommand.getOption("goal-direction").orElseThrow().getValue().orElseThrow().asString();
         var goalDirection = GoalDirection.valueOf(goalDirectionString);
 
         event.deferReply().block();

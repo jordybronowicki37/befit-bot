@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordEventListener;
 import dev.jb.befit.backend.service.ExerciseTypeService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -25,7 +26,7 @@ public class GetExercisesCommandHandler implements DiscordEventListener<ChatInpu
 
     @Override
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        if (!event.getCommandName().equals("exercises") || event.getOption("view").isEmpty()) return Mono.empty();
+        if (!CommandHandlerHelper.checkCommandName(event, "exercises view all")) return Mono.empty();
 
         event.deferReply().block();
 

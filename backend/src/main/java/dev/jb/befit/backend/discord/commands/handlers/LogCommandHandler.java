@@ -2,6 +2,7 @@ package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.data.models.ExerciseLog;
 import dev.jb.befit.backend.data.models.GoalDirection;
+import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordEventListener;
 import dev.jb.befit.backend.service.ExerciseLogService;
 import dev.jb.befit.backend.service.MotivationalService;
@@ -33,7 +34,7 @@ public class LogCommandHandler implements DiscordEventListener<ChatInputInteract
 
     @Override
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        if (!event.getCommandName().equals("log")) return Mono.empty();
+        if (!CommandHandlerHelper.checkCommandName(event, "log")) return Mono.empty();
 
         var exerciseName = event.getOption("exercise-name").orElseThrow().getValue().orElseThrow().asString();
         var exerciseAmount = Math.toIntExact(event.getOption("amount").orElseThrow().getValue().orElseThrow().asLong());

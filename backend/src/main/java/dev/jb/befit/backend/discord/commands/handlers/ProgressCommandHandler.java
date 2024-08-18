@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordEventListener;
 import dev.jb.befit.backend.service.ProgressImageService;
 import dev.jb.befit.backend.service.exceptions.NoProgressMadeException;
@@ -28,7 +29,7 @@ public class ProgressCommandHandler implements DiscordEventListener<ChatInputInt
 
     @Override
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        if (!event.getCommandName().equals("progress")) return Mono.empty();
+        if (!CommandHandlerHelper.checkCommandName(event, "progress")) return Mono.empty();
 
         event.deferReply().block();
 

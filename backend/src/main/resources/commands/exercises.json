@@ -4,8 +4,15 @@
   "options": [
     {
       "name": "view",
-      "description": "View all exercises",
-      "type": 1
+      "description": "View exercises",
+      "type": 2,
+      "options": [
+        {
+          "name": "all",
+          "description": "View exercises",
+          "type": 1
+        }
+      ]
     },
     {
       "name": "create",
