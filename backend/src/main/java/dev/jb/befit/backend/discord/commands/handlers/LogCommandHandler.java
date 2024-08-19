@@ -4,6 +4,7 @@ import dev.jb.befit.backend.data.models.ExerciseLog;
 import dev.jb.befit.backend.data.models.GoalDirection;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ExerciseLogService;
+import dev.jb.befit.backend.service.GoalService;
 import dev.jb.befit.backend.service.MotivationalService;
 import dev.jb.befit.backend.service.UserService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -25,6 +26,7 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
     private final ExerciseLogService logService;
     private final UserService userService;
     private final MotivationalService motivationalService;
+    private final GoalService goalService;
 
     @Override
     public String getCommandNameFilter() {
@@ -38,8 +40,10 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
         var userId = event.getInteraction().getUser().getId();
 
         var user = userService.getOrCreateDiscordUser(userId);
+        var goal = goalService.getUserActiveGoal(user, exerciseName);
         var exerciseLog = logService.create(user, exerciseName, exerciseAmount);
         var exerciseType = exerciseLog.getExerciseType();
+        var reachedGoal = exerciseLog.getReachedGoal();
         var allExerciseLogs = logService.getAllByUserAndExerciseName(user, exerciseName);
 
         var workoutTitle = String.format("#%d %s - Log #%d", exerciseType.getId(), exerciseType.getName(), allExerciseLogs.size());
@@ -49,12 +53,18 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
             var previousLog = allExerciseLogs.get(allExerciseLogs.size() - 2);
             descriptionBuilder.append(String.format("Last: %d %s\n", previousLog.getAmount(), exerciseType.getMeasurementType().getShortName()));
         }
+        if (goal.isPresent() && reachedGoal == null) {
+            descriptionBuilder.append(String.format("Goal: %d %s\n", goal.get().getAmount(), exerciseType.getMeasurementType().getShortName()));
+        }
         var currentPr = getCurrentPr(allExerciseLogs);
         if (currentPr != null) {
-            descriptionBuilder.append(String.format("Pr: %d %s\n", currentPr, exerciseType.getMeasurementType().getShortName()));
+            descriptionBuilder.append(String.format("Pr: %d %s", currentPr, exerciseType.getMeasurementType().getShortName()));
         }
         if (isNewPrReached(allExerciseLogs)) {
-            descriptionBuilder.append("\n:rocket: NEW PR REACHED!");
+            descriptionBuilder.append("\n\n:rocket: NEW PR REACHED!");
+        }
+        if (reachedGoal != null) {
+            descriptionBuilder.append("\n\n:chart_with_upwards_trend: GOAL COMPLETED!");
         }
 
         var embed = EmbedCreateSpec.builder()
