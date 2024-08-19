@@ -38,7 +38,7 @@ public class ProgressImageService {
 
     public File createPersonalProgressChart(Snowflake userId, String exerciseName) {
         var user = userService.getOrCreateDiscordUser(userId);
-        var goal = goalService.getUserActiveGoal(user, exerciseName);
+        var goal = goalService.getActiveUserGoal(user, exerciseName);
         var exerciseType = exerciseTypeService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
 
         var allExerciseLogs = logService.getAllByUserAndExerciseName(user, exerciseName);

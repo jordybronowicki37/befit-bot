@@ -32,7 +32,11 @@ public class GoalService {
         return goalRepository.findAllByUserAndExerciseTypeName(user, exerciseName);
     }
 
-    public Optional<Goal> getUserActiveGoal(User user, String exerciseName) {
+    public List<Goal> getAllActiveUserGoals(User user) {
+        return getAllByUser(user).stream().filter(g -> g.getStatus().equals(GoalStatus.ACTIVE)).toList();
+    }
+
+    public Optional<Goal> getActiveUserGoal(User user, String exerciseName) {
         var activeUserGoals = getAllByUserAndExerciseName(user, exerciseName).stream().filter(g -> g.getStatus() == GoalStatus.ACTIVE).toList();
         if (activeUserGoals.isEmpty()) return Optional.empty();
         if (activeUserGoals.size() == 1) return Optional.of(activeUserGoals.get(0));
@@ -45,7 +49,7 @@ public class GoalService {
         var exerciseType = exerciseTypeRepository.findByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
 
         // If a goal already exists, change the status to overwritten
-        getUserActiveGoal(user, exerciseName).ifPresent(lastGoal -> {
+        getActiveUserGoal(user, exerciseName).ifPresent(lastGoal -> {
             lastGoal.setStatus(GoalStatus.OVERWRITTEN);
             goalRepository.save(lastGoal);
         });

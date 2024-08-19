@@ -37,7 +37,7 @@ public class ExerciseLogService {
         var exerciseType = exerciseTypeRepository.findByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
         var exerciseLog = new ExerciseLog(amount, exerciseType, user);
 
-        goalService.getUserActiveGoal(user, exerciseName).ifPresent(goal -> {
+        goalService.getActiveUserGoal(user, exerciseName).ifPresent(goal -> {
             boolean isReached;
             if (exerciseType.getGoalDirection().equals(GoalDirection.INCREASING)) {
                 isReached = exerciseLog.getAmount() >= goal.getAmount();

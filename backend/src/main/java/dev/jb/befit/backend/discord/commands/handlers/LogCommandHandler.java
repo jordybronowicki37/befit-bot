@@ -40,7 +40,7 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
         var userId = event.getInteraction().getUser().getId();
 
         var user = userService.getOrCreateDiscordUser(userId);
-        var goal = goalService.getUserActiveGoal(user, exerciseName);
+        var goal = goalService.getActiveUserGoal(user, exerciseName);
         var exerciseLog = logService.create(user, exerciseName, exerciseAmount);
         var exerciseType = exerciseLog.getExerciseType();
         var reachedGoal = exerciseLog.getReachedGoal();
