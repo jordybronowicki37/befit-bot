@@ -9,6 +9,7 @@ import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionReplyEditSpec;
 import discord4j.rest.util.Color;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class NewExerciseCommandHandler extends DiscordChatInputInteractionEventL
     }
 
     @Override
+    @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
         var createSubCommandOptional = event.getOption("create");
         if (createSubCommandOptional.isEmpty()) return Mono.empty();
