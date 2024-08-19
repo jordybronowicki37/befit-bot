@@ -3,6 +3,7 @@ package dev.jb.befit.backend.data.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,11 +22,14 @@ public class ExerciseType {
     private String name;
 
     @OneToMany(mappedBy = "exerciseType")
-    private List<ExerciseLog> exerciseLogs;
+    private List<ExerciseLog> exerciseLogs = new ArrayList<>();
 
     @NonNull
     @Enumerated(EnumType.STRING)
     private MeasurementTypes measurementType;
+
+    @OneToMany(mappedBy = "exerciseType")
+    private List<Goal> goals = new ArrayList<>();
 
     @NonNull
     @Enumerated(EnumType.STRING)
