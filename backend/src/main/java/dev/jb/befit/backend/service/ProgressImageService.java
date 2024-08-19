@@ -2,6 +2,7 @@ package dev.jb.befit.backend.service;
 
 import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import dev.jb.befit.backend.service.exceptions.NoProgressMadeException;
+import dev.jb.befit.backend.service.exceptions.NotEnoughProgressException;
 import discord4j.common.util.Snowflake;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
@@ -32,21 +34,31 @@ public class ProgressImageService {
     private final ExerciseTypeService exerciseTypeService;
     private final ExerciseLogService logService;
     private final UserService userService;
+    private final GoalService goalService;
 
     public File createProgressImage(Snowflake userId, String exerciseName) {
         var user = userService.getOrCreateDiscordUser(userId);
+        var goal = goalService.getUserActiveGoal(user, exerciseName);
         var exerciseType = exerciseTypeService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
 
         var allExerciseLogs = logService.getAllByUserAndExerciseName(user, exerciseName);
         if (allExerciseLogs.isEmpty()) throw new NoProgressMadeException(exerciseType);
+        if (allExerciseLogs.size() == 1) throw new NotEnoughProgressException(exerciseType);
 
-        var series = new TimeSeries("Your progress");
+        var progressSeries = new TimeSeries("Your progress");
         for (var exerciseLog : allExerciseLogs) {
-            var date = Date.from(exerciseLog.getCreated().atZone(ZoneId.systemDefault()).toInstant());
-            series.add(new Millisecond(date), exerciseLog.getAmount());
+            progressSeries.add(getMillisecond(exerciseLog.getCreated()), exerciseLog.getAmount());
         }
+        var dataset = new TimeSeriesCollection(progressSeries);
 
-        var dataset = new TimeSeriesCollection(series);
+        if (goal.isPresent()) {
+            var goalSeries = new TimeSeries("Your goal");
+            var goalStartDate = allExerciseLogs.get(0).getCreated();
+            var goalEndDate = allExerciseLogs.get(allExerciseLogs.size() - 1).getCreated();
+            goalSeries.add(getMillisecond(goalStartDate), goal.get().getAmount());
+            goalSeries.add(getMillisecond(goalEndDate), goal.get().getAmount());
+            dataset.addSeries(goalSeries);
+        }
 
         // Create the chart
         var chart = ChartFactory.createTimeSeriesChart(
@@ -79,5 +91,9 @@ public class ProgressImageService {
             log.error("Error during saving line chart", e);
             throw new RuntimeException(e);
         }
+    }
+
+    private Millisecond getMillisecond(LocalDateTime dateTime) {
+        return new Millisecond(Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant()));
     }
 }
