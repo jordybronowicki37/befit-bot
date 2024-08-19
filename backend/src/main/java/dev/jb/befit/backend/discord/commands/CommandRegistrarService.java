@@ -30,7 +30,6 @@ public class CommandRegistrarService {
     private static final String commandsFilesMatcher = "classpath:commands/*.json";
     private static final String commandsPath = "classpath:commands/%s.json";
 
-    private final CommandHandlerHelper commandHandlerHelper;
     private final GatewayDiscordClient discordClient;
     private final ResourceLoader resourceLoader;
     private final JacksonResources d4jMapper = JacksonResources.create();

@@ -33,4 +33,13 @@ public class CommandHandlerHelper {
     public static boolean checkCommandName(ChatInputInteractionEvent event, String commandName) {
         return getCommandName(event).equals(commandName);
     }
+
+    public static String getLeaderboardValue(Integer position) {
+        return switch (position) {
+            case 1 -> ":first_place:";
+            case 2 -> ":second_place:";
+            case 3 -> ":third_place:";
+            default -> position + "th";
+        };
+    }
 }

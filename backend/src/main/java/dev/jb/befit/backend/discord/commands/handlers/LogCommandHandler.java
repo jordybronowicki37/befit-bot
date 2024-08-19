@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.*;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -59,7 +60,7 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
         if (currentPr != null) {
             descriptionBuilder.append(String.format("Pr: %d %s\n", currentPr, measurementName));
         }
-        descriptionBuilder.append(String.format("Position: %d", ServiceHelper.getLeaderboardPosition(user, exerciseType.getExerciseRecords())));
+        descriptionBuilder.append(String.format("Position: %s", CommandHandlerHelper.getLeaderboardValue(ServiceHelper.getLeaderboardPosition(user, exerciseType.getExerciseRecords()))));
 
         // Add new pr reached congratulations
         if (ServiceHelper.isPRImproved(allExerciseLogs)) {
