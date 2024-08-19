@@ -2,7 +2,7 @@ package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.data.models.GoalDirection;
 import dev.jb.befit.backend.data.models.MeasurementTypes;
-import dev.jb.befit.backend.discord.commands.CommandService;
+import dev.jb.befit.backend.discord.commands.CommandRegistrarService;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ExerciseTypeService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -22,7 +22,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class NewExerciseCommandHandler extends DiscordChatInputInteractionEventListener {
     private final ExerciseTypeService exerciseService;
-    private final CommandService commandService;
+    private final CommandRegistrarService commandRegistrarService;
 
     @Override
     public String getCommandNameFilter() {
@@ -56,7 +56,7 @@ public class NewExerciseCommandHandler extends DiscordChatInputInteractionEventL
                 .build();
 
         try {
-            commandService.updateCommandsWithExerciseNameOptions();
+            commandRegistrarService.updateCommandsWithExerciseNameOptions();
         } catch (IOException e) {
             log.error("Failed to update commands with exercise name", e);
         }

@@ -1,14 +1,7 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
-import dev.jb.befit.backend.data.models.ExerciseLog;
-import dev.jb.befit.backend.data.models.ExerciseRecord;
-import dev.jb.befit.backend.data.models.GoalDirection;
-import dev.jb.befit.backend.data.models.User;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
-import dev.jb.befit.backend.service.ExerciseLogService;
-import dev.jb.befit.backend.service.GoalService;
-import dev.jb.befit.backend.service.MotivationalService;
-import dev.jb.befit.backend.service.UserService;
+import dev.jb.befit.backend.service.*;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionReplyEditSpec;
@@ -18,10 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -66,14 +55,14 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
             descriptionBuilder.append(String.format("Goal: %d %s\n", goal.get().getAmount(), measurementName));
         }
         // Add current pr
-        var currentPr = getCurrentPr(allExerciseLogs);
+        var currentPr = ServiceHelper.getCurrentPr(allExerciseLogs);
         if (currentPr != null) {
             descriptionBuilder.append(String.format("Pr: %d %s\n", currentPr, measurementName));
         }
-        descriptionBuilder.append(String.format("Position: %d", getLeaderboardPosition(user, exerciseType.getExerciseRecords())));
+        descriptionBuilder.append(String.format("Position: %d", ServiceHelper.getLeaderboardPosition(user, exerciseType.getExerciseRecords())));
 
         // Add new pr reached congratulations
-        if (isNewPrReached(allExerciseLogs)) {
+        if (ServiceHelper.isPRImproved(allExerciseLogs)) {
             descriptionBuilder.append("\n\n:rocket: NEW PR REACHED!");
         }
         // Add goal reached congratulations
@@ -88,39 +77,5 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
                 .color(Color.GREEN)
                 .build();
         return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();
-    }
-
-    private Integer getLeaderboardPosition(User user, List<ExerciseRecord> records) {
-        var recordsSorted = records.stream().sorted(Comparator.comparingInt(ExerciseRecord::getAmount)).toList();
-        var userRecord = recordsSorted.stream().filter(r -> r.getUser().getId().equals(user.getId())).findFirst();
-        if (userRecord.isEmpty()) return null;
-        return recordsSorted.size() - recordsSorted.indexOf(userRecord.get());
-    }
-
-    private Integer getCurrentPr(List<ExerciseLog> allExerciseLogs) {
-        if (allExerciseLogs.isEmpty()) return null;
-        var exerciseType = allExerciseLogs.get(0).getExerciseType();
-        var exerciseAmounts = allExerciseLogs.stream().map(ExerciseLog::getAmount).toList();
-        if (exerciseType.getGoalDirection().equals(GoalDirection.INCREASING)) {
-            return exerciseAmounts.stream().max(Integer::compareTo).orElse(null);
-        } else {
-            return exerciseAmounts.stream().min(Integer::compareTo).orElse(null);
-        }
-    }
-
-    private boolean isNewPrReached(List<ExerciseLog> allExerciseLogs) {
-        if (allExerciseLogs.isEmpty()) return false;
-        if (allExerciseLogs.size() == 1) return true;
-        var exerciseType = allExerciseLogs.get(0).getExerciseType();
-        var exerciseAmounts = new ArrayList<>(allExerciseLogs.stream().map(ExerciseLog::getAmount).toList());
-        var lastValue = exerciseAmounts.remove(exerciseAmounts.size() - 1);
-
-        if (exerciseType.getGoalDirection().equals(GoalDirection.INCREASING)) {
-            var maxValue = exerciseAmounts.stream().max(Integer::compareTo);
-            return maxValue.filter(integer -> integer < lastValue).isPresent();
-        } else {
-            var minValue = exerciseAmounts.stream().min(Integer::compareTo);
-            return minValue.filter(integer -> integer > lastValue).isPresent();
-        }
     }
 }

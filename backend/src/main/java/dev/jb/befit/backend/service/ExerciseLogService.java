@@ -3,7 +3,10 @@ package dev.jb.befit.backend.service;
 import dev.jb.befit.backend.data.ExerciseLogRepository;
 import dev.jb.befit.backend.data.ExerciseRecordRepository;
 import dev.jb.befit.backend.data.ExerciseTypeRepository;
-import dev.jb.befit.backend.data.models.*;
+import dev.jb.befit.backend.data.models.ExerciseLog;
+import dev.jb.befit.backend.data.models.ExerciseRecord;
+import dev.jb.befit.backend.data.models.GoalStatus;
+import dev.jb.befit.backend.data.models.User;
 import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,28 +45,12 @@ public class ExerciseLogService {
             exerciseType.getExerciseRecords().add(newRecord);
             exerciseRecordRepository.save(newRecord);
         }
-        else {
-            if (exerciseType.getGoalDirection().equals(GoalDirection.INCREASING)) {
-                if (exerciseLog.getAmount() > exerciseRecord.get().getAmount()) {
-                    exerciseRecord.get().setAmount(exerciseLog.getAmount());
-                }
-            }
-            else {
-                if (exerciseLog.getAmount() < exerciseRecord.get().getAmount()) {
-                    exerciseRecord.get().setAmount(exerciseLog.getAmount());
-                }
-            }
+        else if (ServiceHelper.isRecordImproved(exerciseRecord.get(), exerciseLog)) {
+            exerciseRecord.get().setAmount(exerciseLog.getAmount());
         }
 
         goalService.getActiveUserGoal(user, exerciseName).ifPresent(goal -> {
-            boolean isReached;
-            if (exerciseType.getGoalDirection().equals(GoalDirection.INCREASING)) {
-                isReached = exerciseLog.getAmount() >= goal.getAmount();
-            }
-            else {
-                isReached = exerciseLog.getAmount() <= goal.getAmount();
-            }
-            if (!isReached) return;
+            if (!ServiceHelper.isGoalReached(goal, exerciseLog)) return;
             goal.setStatus(GoalStatus.COMPLETED);
             exerciseLog.setReachedGoal(goal);
         });

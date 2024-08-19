@@ -1,10 +1,10 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.data.models.ExerciseLog;
-import dev.jb.befit.backend.data.models.GoalDirection;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ExerciseLogService;
 import dev.jb.befit.backend.service.GoalService;
+import dev.jb.befit.backend.service.ServiceHelper;
 import dev.jb.befit.backend.service.UserService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateFields;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.Comparator;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -50,7 +49,7 @@ public class MyExercisesCommandHandler extends DiscordChatInputInteractionEventL
                         var exercise = groupedLog.getKey();
                         var goal = goals.stream().filter(g -> g.getExerciseType().getId().equals(exercise.getId())).findFirst();
                         var logs = groupedLog.getValue();
-                        var pr = getCurrentPr(logs);
+                        var pr = ServiceHelper.getCurrentPr(logs);
                         var descriptionBuilder = new StringBuilder();
                         descriptionBuilder.append("Logs: ").append(logs.size());
                         descriptionBuilder.append(String.format("\nPr: %d %s", pr, exercise.getMeasurementType().getShortName()));
@@ -65,16 +64,5 @@ public class MyExercisesCommandHandler extends DiscordChatInputInteractionEventL
                 .color(Color.GREEN)
                 .build();
         return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();
-    }
-
-    private Integer getCurrentPr(List<ExerciseLog> allExerciseLogs) {
-        if (allExerciseLogs.isEmpty()) return null;
-        var exerciseType = allExerciseLogs.get(0).getExerciseType();
-        var exerciseAmounts = allExerciseLogs.stream().map(ExerciseLog::getAmount).toList();
-        if (exerciseType.getGoalDirection().equals(GoalDirection.INCREASING)) {
-            return exerciseAmounts.stream().max(Integer::compareTo).orElse(null);
-        } else {
-            return exerciseAmounts.stream().min(Integer::compareTo).orElse(null);
-        }
     }
 }

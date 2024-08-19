@@ -1,16 +1,13 @@
 package dev.jb.befit.backend.discord.commands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_COMMAND;
 import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_COMMAND_GROUP;
 
-@Slf4j
-@Service
-@RequiredArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommandHandlerHelper {
     public static String getCommandName(ChatInputInteractionEvent event) {
         var actualCommandNameBuilder = new StringBuilder();

@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class CommandRegistrarRunner implements CommandLineRunner {
-    private final CommandService commandService;
+    private final CommandRegistrarService commandRegistrarService;
 
     @Override
     public void run(String... args) throws Exception {
         log.info("Started registering all guild commands");
-        commandService.registerAllCommands();
+        commandRegistrarService.registerAllCommands();
     }
 }

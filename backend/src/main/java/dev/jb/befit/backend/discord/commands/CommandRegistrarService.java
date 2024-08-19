@@ -26,7 +26,7 @@ import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_CO
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CommandService {
+public class CommandRegistrarService {
     private static final String commandsFilesMatcher = "classpath:commands/*.json";
     private static final String commandsPath = "classpath:commands/%s.json";
 
