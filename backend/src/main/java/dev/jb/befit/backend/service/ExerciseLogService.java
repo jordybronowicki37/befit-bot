@@ -1,11 +1,9 @@
 package dev.jb.befit.backend.service;
 
 import dev.jb.befit.backend.data.ExerciseLogRepository;
+import dev.jb.befit.backend.data.ExerciseRecordRepository;
 import dev.jb.befit.backend.data.ExerciseTypeRepository;
-import dev.jb.befit.backend.data.models.ExerciseLog;
-import dev.jb.befit.backend.data.models.GoalDirection;
-import dev.jb.befit.backend.data.models.GoalStatus;
-import dev.jb.befit.backend.data.models.User;
+import dev.jb.befit.backend.data.models.*;
 import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +17,7 @@ import java.util.List;
 public class ExerciseLogService {
     private final ExerciseLogRepository exerciseLogRepository;
     private final ExerciseTypeRepository exerciseTypeRepository;
+    private final ExerciseRecordRepository exerciseRecordRepository;
     private final GoalService goalService;
 
     public List<ExerciseLog> getAllByUser(User user) {
@@ -36,6 +35,25 @@ public class ExerciseLogService {
     public ExerciseLog create(User user, String exerciseName, Integer amount) {
         var exerciseType = exerciseTypeRepository.findByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
         var exerciseLog = new ExerciseLog(amount, exerciseType, user);
+        var exerciseRecord = exerciseType.getExerciseRecords().stream().filter(r -> r.getUser().equals(user)).findFirst();
+
+        if (exerciseRecord.isEmpty()) {
+            var newRecord = new ExerciseRecord(user, exerciseType, amount);
+            exerciseType.getExerciseRecords().add(newRecord);
+            exerciseRecordRepository.save(newRecord);
+        }
+        else {
+            if (exerciseType.getGoalDirection().equals(GoalDirection.INCREASING)) {
+                if (exerciseLog.getAmount() > exerciseRecord.get().getAmount()) {
+                    exerciseRecord.get().setAmount(exerciseLog.getAmount());
+                }
+            }
+            else {
+                if (exerciseLog.getAmount() < exerciseRecord.get().getAmount()) {
+                    exerciseRecord.get().setAmount(exerciseLog.getAmount());
+                }
+            }
+        }
 
         goalService.getActiveUserGoal(user, exerciseName).ifPresent(goal -> {
             boolean isReached;

@@ -33,6 +33,9 @@ public class ExerciseType {
     @OneToMany(mappedBy = "exerciseType")
     private List<Goal> goals = new ArrayList<>();
 
+    @OneToMany(mappedBy = "exerciseType")
+    private List<ExerciseRecord> exerciseRecords = new ArrayList<>();
+
     @NonNull
     @Enumerated(EnumType.STRING)
     private GoalDirection goalDirection;

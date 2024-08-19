@@ -2,6 +2,7 @@ package dev.jb.befit.backend.data;
 
 import dev.jb.befit.backend.data.models.*;
 import discord4j.common.util.Snowflake;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,12 +20,15 @@ import java.util.List;
 public class DummyDataInitializer implements CommandLineRunner {
     private final DiscordUserRepository discordUserRepository;
     private final ExerciseLogRepository exerciseLogRepository;
+    private final ExerciseRecordRepository exerciseRecordRepository;
     private final ExerciseTypeRepository exerciseTypeRepository;
+    private final GoalRepository goalRepository;
 
     @Value("${discord.dummy-user-id}")
     private String userId;
 
     @Override
+    @Transactional
     public void run(String... args) {
         log.info("Started dummy-data initialization");
         var user = discordUserRepository.save(new DiscordUser(Snowflake.of(userId)));
@@ -39,7 +43,11 @@ public class DummyDataInitializer implements CommandLineRunner {
         log3.setCreated(LocalDateTime.now().minusDays(3));
         var log4 = new ExerciseLog(45, benchpress, user);
         log4.setCreated(LocalDateTime.now().minusDays(1));
+
+        exerciseRecordRepository.save(new ExerciseRecord(user, benchpress, 45));
         exerciseLogRepository.saveAll(List.of(log1, log2, log3, log4));
+        goalRepository.save(new Goal(50, benchpress, user));
+
         log.info("Finished dummy-data initialization");
     }
 }
