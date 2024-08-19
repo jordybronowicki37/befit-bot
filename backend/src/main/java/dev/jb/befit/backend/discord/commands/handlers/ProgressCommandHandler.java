@@ -29,7 +29,7 @@ public class ProgressCommandHandler extends DiscordChatInputInteractionEventList
         var userId = event.getInteraction().getUser().getId();
 
         try {
-            var progressImage = progressImageService.createProgressImage(userId, exerciseName);
+            var progressImage = progressImageService.createPersonalProgressChart(userId, exerciseName);
             var inputStream = new FileInputStream(progressImage);
             return event.editReply(InteractionReplyEditSpec.builder().addFile("progress.png", inputStream).build()).then();
         } catch (FileNotFoundException e) {

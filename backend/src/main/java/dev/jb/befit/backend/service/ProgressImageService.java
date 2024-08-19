@@ -36,7 +36,7 @@ public class ProgressImageService {
     private final UserService userService;
     private final GoalService goalService;
 
-    public File createProgressImage(Snowflake userId, String exerciseName) {
+    public File createPersonalProgressChart(Snowflake userId, String exerciseName) {
         var user = userService.getOrCreateDiscordUser(userId);
         var goal = goalService.getUserActiveGoal(user, exerciseName);
         var exerciseType = exerciseTypeService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
@@ -60,15 +60,13 @@ public class ProgressImageService {
             dataset.addSeries(goalSeries);
         }
 
-        // Create the chart
-        var chart = ChartFactory.createTimeSeriesChart(
-                String.format("Exercise: %s", exerciseType.getName()),
-                "Time",
-                exerciseType.getMeasurementType().getLongName(),
-                dataset
-        );
+        return createChart(dataset, String.format("Exercise: %s", exerciseType.getName()), exerciseType.getMeasurementType().getLongName());
+    }
 
-        // Customize the chart (optional)
+    public File createChart(TimeSeriesCollection dataset, String title, String xAxisLabel) {
+        var chart = ChartFactory.createTimeSeriesChart(title, "Time", xAxisLabel, dataset);
+
+        // Set styling
         chart.setBackgroundPaint(Color.white);
         chart.getTitle().setPaint(Color.black);
 
