@@ -23,11 +23,6 @@ public class MotivationCommandHandler extends DiscordChatInputInteractionEventLi
     }
 
     @Override
-    public Class<ChatInputInteractionEvent> getEventType() {
-        return ChatInputInteractionEvent.class;
-    }
-
-    @Override
     public Mono<Void> execute(ChatInputInteractionEvent event) {
         var quote = motivationalService.getRandomQuote();
         var embed = EmbedCreateSpec.builder()

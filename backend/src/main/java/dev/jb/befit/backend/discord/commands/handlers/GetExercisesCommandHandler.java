@@ -24,11 +24,6 @@ public class GetExercisesCommandHandler extends DiscordChatInputInteractionEvent
     }
 
     @Override
-    public Class<ChatInputInteractionEvent> getEventType() {
-        return ChatInputInteractionEvent.class;
-    }
-
-    @Override
     public Mono<Void> execute(ChatInputInteractionEvent event) {
         var exercises = exerciseService.getAll();
         var embed = EmbedCreateSpec.builder()

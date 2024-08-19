@@ -29,11 +29,6 @@ public class NewExerciseCommandHandler extends DiscordChatInputInteractionEventL
     }
 
     @Override
-    public Class<ChatInputInteractionEvent> getEventType() {
-        return ChatInputInteractionEvent.class;
-    }
-
-    @Override
     public Mono<Void> execute(ChatInputInteractionEvent event) {
         var createSubCommandOptional = event.getOption("create");
         if (createSubCommandOptional.isEmpty()) return Mono.empty();

@@ -32,11 +32,6 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
     }
 
     @Override
-    public Class<ChatInputInteractionEvent> getEventType() {
-        return ChatInputInteractionEvent.class;
-    }
-
-    @Override
     public Mono<Void> execute(ChatInputInteractionEvent event) {
         var exerciseName = event.getOption("exercise-name").orElseThrow().getValue().orElseThrow().asString();
         var exerciseAmount = Math.toIntExact(event.getOption("amount").orElseThrow().getValue().orElseThrow().asLong());

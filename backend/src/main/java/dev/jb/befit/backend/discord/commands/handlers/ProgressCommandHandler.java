@@ -24,11 +24,6 @@ public class ProgressCommandHandler extends DiscordChatInputInteractionEventList
     }
 
     @Override
-    public Class<ChatInputInteractionEvent> getEventType() {
-        return ChatInputInteractionEvent.class;
-    }
-
-    @Override
     public Mono<Void> execute(ChatInputInteractionEvent event) {
         var exerciseName = event.getOption("exercise-name").orElseThrow().getValue().orElseThrow().asString();
         var userId = event.getInteraction().getUser().getId();

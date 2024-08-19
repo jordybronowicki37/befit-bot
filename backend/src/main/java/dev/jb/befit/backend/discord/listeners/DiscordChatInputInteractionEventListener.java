@@ -13,6 +13,10 @@ import reactor.core.publisher.Mono;
 public abstract class DiscordChatInputInteractionEventListener implements DiscordEventListener<ChatInputInteractionEvent> {
     public abstract String getCommandNameFilter();
 
+    public Class<ChatInputInteractionEvent> getEventType() {
+        return ChatInputInteractionEvent.class;
+    }
+
     public boolean acceptExecution(ChatInputInteractionEvent event) {
         return CommandHandlerHelper.checkCommandName(event, getCommandNameFilter());
     }

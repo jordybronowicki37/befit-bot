@@ -32,11 +32,6 @@ public class MyExercisesCommandHandler extends DiscordChatInputInteractionEventL
     }
 
     @Override
-    public Class<ChatInputInteractionEvent> getEventType() {
-        return ChatInputInteractionEvent.class;
-    }
-
-    @Override
     public Mono<Void> execute(ChatInputInteractionEvent event) {
         var userId = event.getInteraction().getUser().getId();
         var user = userService.getOrCreateDiscordUser(userId);
