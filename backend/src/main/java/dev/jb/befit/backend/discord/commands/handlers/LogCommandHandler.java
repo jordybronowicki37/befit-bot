@@ -1,7 +1,9 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.data.models.ExerciseLog;
+import dev.jb.befit.backend.data.models.ExerciseRecord;
 import dev.jb.befit.backend.data.models.GoalDirection;
+import dev.jb.befit.backend.data.models.User;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ExerciseLogService;
 import dev.jb.befit.backend.service.GoalService;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -47,24 +50,33 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
         var exerciseType = exerciseLog.getExerciseType();
         var reachedGoal = exerciseLog.getReachedGoal();
         var allExerciseLogs = logService.getAllByUserAndExerciseName(user, exerciseName);
+        var measurementName = exerciseType.getMeasurementType().getShortName();
 
+        // Construct message
         var workoutTitle = String.format("#%d %s - Log #%d", exerciseType.getId(), exerciseType.getName(), allExerciseLogs.size());
         var descriptionBuilder = new StringBuilder();
-        descriptionBuilder.append(String.format("Value: %d %s\n", exerciseLog.getAmount(), exerciseType.getMeasurementType().getShortName()));
+        descriptionBuilder.append(String.format("Value: %d %s\n", exerciseLog.getAmount(), measurementName));
+        // Add last log value
         if (allExerciseLogs.size() >= 2) {
             var previousLog = allExerciseLogs.get(allExerciseLogs.size() - 2);
-            descriptionBuilder.append(String.format("Last: %d %s\n", previousLog.getAmount(), exerciseType.getMeasurementType().getShortName()));
+            descriptionBuilder.append(String.format("Last: %d %s\n", previousLog.getAmount(), measurementName));
         }
+        // Add goal if it is present and not yet reached
         if (goal.isPresent() && reachedGoal == null) {
-            descriptionBuilder.append(String.format("Goal: %d %s\n", goal.get().getAmount(), exerciseType.getMeasurementType().getShortName()));
+            descriptionBuilder.append(String.format("Goal: %d %s\n", goal.get().getAmount(), measurementName));
         }
+        // Add current pr
         var currentPr = getCurrentPr(allExerciseLogs);
         if (currentPr != null) {
-            descriptionBuilder.append(String.format("Pr: %d %s", currentPr, exerciseType.getMeasurementType().getShortName()));
+            descriptionBuilder.append(String.format("Pr: %d %s\n", currentPr, measurementName));
         }
+        descriptionBuilder.append(String.format("Position: %d", getLeaderboardPosition(user, exerciseType.getExerciseRecords())));
+
+        // Add new pr reached congratulations
         if (isNewPrReached(allExerciseLogs)) {
             descriptionBuilder.append("\n\n:rocket: NEW PR REACHED!");
         }
+        // Add goal reached congratulations
         if (reachedGoal != null) {
             descriptionBuilder.append("\n\n:chart_with_upwards_trend: GOAL COMPLETED!");
         }
@@ -76,6 +88,13 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
                 .color(Color.GREEN)
                 .build();
         return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();
+    }
+
+    private Integer getLeaderboardPosition(User user, List<ExerciseRecord> records) {
+        var recordsSorted = records.stream().sorted(Comparator.comparingInt(ExerciseRecord::getAmount)).toList();
+        var userRecord = recordsSorted.stream().filter(r -> r.getUser().getId().equals(user.getId())).findFirst();
+        if (userRecord.isEmpty()) return null;
+        return recordsSorted.size() - recordsSorted.indexOf(userRecord.get());
     }
 
     private Integer getCurrentPr(List<ExerciseLog> allExerciseLogs) {
