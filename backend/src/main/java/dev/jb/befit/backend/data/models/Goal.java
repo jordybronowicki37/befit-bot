@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @RequiredArgsConstructor
-public class ExerciseLog {
+public class Goal {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Setter(AccessLevel.PROTECTED)
@@ -21,12 +21,12 @@ public class ExerciseLog {
     @NonNull
     private Integer amount;
 
+    @Enumerated(EnumType.STRING)
+    private GoalStatus status;
+
     @NonNull
     @ManyToOne
     private ExerciseType exerciseType;
-
-    @OneToOne
-    private Goal reachedGoal;
 
     @NonNull
     @ManyToOne

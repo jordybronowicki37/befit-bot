@@ -1,0 +1,27 @@
+{
+  "name": "goals",
+  "description": "Get, edit or add goals",
+  "options": [
+    {
+      "name": "add",
+      "description": "Adds a goal",
+      "type": 1,
+      "options": [
+        {
+          "name": "exercise-name",
+          "description": "The name of the exercise type",
+          "type": 3,
+          "required": true,
+          "choices": []
+        },
+        {
+          "name": "amount",
+          "description": "The amount of the goal",
+          "type": 4,
+          "required": true,
+          "min_value": 0
+        }
+      ]
+    }
+  ]
+}
