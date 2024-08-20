@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.time.format.DateTimeFormatter;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -55,7 +57,7 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
         // Add last log value
         if (allExerciseLogs.size() >= 2) {
             var previousLog = allExerciseLogs.get(allExerciseLogs.size() - 2);
-            descriptionBuilder.append(String.format("Last: %d %s\n", previousLog.getAmount(), measurementName));
+            descriptionBuilder.append(String.format("Last: %d %s - %s\n", previousLog.getAmount(), measurementName, previousLog.getCreated().format(DateTimeFormatter.ISO_LOCAL_DATE)));
         }
         // Add goal if it is present and not yet reached
         if (goal.isPresent() && reachedGoal == null) {

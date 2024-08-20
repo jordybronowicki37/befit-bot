@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.time.format.DateTimeFormatter;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -45,6 +47,7 @@ public class GetExerciseCommandHandler extends DiscordChatInputInteractionEventL
         var exerciseName = exerciseNameOption.getValue().orElseThrow(() -> new ValueNotFoundException("exercise-name")).asString();
 
         var exercise = exerciseService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
+        var measurement = exercise.getMeasurementType();
         var logs = exerciseLogService.getAllByUserAndExerciseName(user, exerciseName);
         var records = ServiceHelper.sortLeaderboard(exercise.getExerciseRecords());
 
@@ -53,7 +56,7 @@ public class GetExerciseCommandHandler extends DiscordChatInputInteractionEventL
                 .color(Color.GREEN);
 
         var propertiesBuilder = new StringBuilder();
-        propertiesBuilder.append(String.format("\nMeasurement: %s", exercise.getMeasurementType().getLongName()));
+        propertiesBuilder.append(String.format("\nMeasurement: %s", measurement.getLongName()));
         propertiesBuilder.append(String.format("\nGoal type: %s", exercise.getGoalDirection().name().toLowerCase()));
         propertiesBuilder.append(String.format("\nParticipants: %d", records.size()));
         embed.addField("Properties", propertiesBuilder.toString(), false);
@@ -63,13 +66,12 @@ public class GetExerciseCommandHandler extends DiscordChatInputInteractionEventL
             progressDescriptionBuilder.append(String.format("Logs: %d", logs.size()));
 
             var lastLog = logs.get(logs.size() - 1);
-            progressDescriptionBuilder.append(String.format("\nLast: %d %s", lastLog.getAmount(), exercise.getMeasurementType().getShortName()));
-            // TODO add last log time
+            progressDescriptionBuilder.append(String.format("\nLast: %d %s - %s", lastLog.getAmount(), measurement.getShortName(), lastLog.getCreated().format(DateTimeFormatter.ISO_LOCAL_DATE)));
 
             var goal = goalService.getActiveUserGoal(user, exerciseName);
             goal.ifPresent(value -> progressDescriptionBuilder.append(String.format("\nGoal: %d", value.getAmount())));
 
-            progressDescriptionBuilder.append(String.format("\nPr: %d", ServiceHelper.getCurrentPr(logs)));
+            progressDescriptionBuilder.append(String.format("\nPr: %d %s", ServiceHelper.getCurrentPr(logs), measurement.getShortName()));
 
             var leaderBoardPosition = ServiceHelper.getLeaderboardPosition(user, records);
             if (leaderBoardPosition != null) progressDescriptionBuilder.append(String.format("\nPosition: %s", CommandHandlerHelper.getLeaderboardValue(leaderBoardPosition)));
@@ -85,7 +87,7 @@ public class GetExerciseCommandHandler extends DiscordChatInputInteractionEventL
                 recordsDescriptionBuilder.append(String.format("%s %d %s - %s\n",
                         CommandHandlerHelper.getLeaderboardValue(i+1),
                         record.getAmount(),
-                        exercise.getMeasurementType().getShortName(),
+                        measurement.getShortName(),
                         CommandHandlerHelper.getUserStringValue(record.getUser()))
                 );
             }
