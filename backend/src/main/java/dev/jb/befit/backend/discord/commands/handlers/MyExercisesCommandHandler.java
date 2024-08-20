@@ -1,6 +1,7 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.data.models.ExerciseLog;
+import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ExerciseLogService;
 import dev.jb.befit.backend.service.GoalService;
@@ -11,6 +12,7 @@ import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionReplyEditSpec;
 import discord4j.rest.util.Color;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,7 @@ public class MyExercisesCommandHandler extends DiscordChatInputInteractionEventL
     }
 
     @Override
+    @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
         var userId = event.getInteraction().getUser().getId();
         var user = userService.getOrCreateDiscordUser(userId);
@@ -52,8 +55,9 @@ public class MyExercisesCommandHandler extends DiscordChatInputInteractionEventL
                         var pr = ServiceHelper.getCurrentPr(logs);
                         var descriptionBuilder = new StringBuilder();
                         descriptionBuilder.append("Logs: ").append(logs.size());
-                        descriptionBuilder.append(String.format("\nPr: %d %s", pr, exercise.getMeasurementType().getShortName()));
                         goal.ifPresent(g -> descriptionBuilder.append(String.format("\nGoal: %d %s", g.getAmount(), exercise.getMeasurementType().getShortName())));
+                        descriptionBuilder.append(String.format("\nPr: %d %s", pr, exercise.getMeasurementType().getShortName()));
+                        descriptionBuilder.append(String.format("\nPosition: %s", CommandHandlerHelper.getLeaderboardValue(ServiceHelper.getLeaderboardPosition(user, exercise.getExerciseRecords()))));
 
                         return EmbedCreateFields.Field.of(
                             String.format("#%d %s", exercise.getId(), exercise.getName()),

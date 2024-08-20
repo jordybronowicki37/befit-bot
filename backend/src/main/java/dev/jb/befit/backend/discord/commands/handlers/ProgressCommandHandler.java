@@ -4,6 +4,7 @@ import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventLi
 import dev.jb.befit.backend.service.ProgressImageService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.InteractionReplyEditSpec;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class ProgressCommandHandler extends DiscordChatInputInteractionEventList
     }
 
     @Override
+    @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
         var exerciseName = event.getOption("exercise-name").orElseThrow().getValue().orElseThrow().asString();
         var userId = event.getInteraction().getUser().getId();
