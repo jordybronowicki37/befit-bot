@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -14,7 +15,10 @@ public class ServiceHelper {
         if (records.size() < 2) return records;
         var exercise = records.get(0).getExerciseType();
         if (!records.stream().allMatch(r -> r.getExerciseType().equals(exercise))) throw new ExerciseMismatchException();
-        return records.stream().sorted((r1, r2) -> Integer.compare(r2.getAmount(), r1.getAmount())).toList();
+        if (exercise.getGoalDirection().equals(GoalDirection.INCREASING)) {
+            return records.stream().sorted((r1, r2) -> Integer.compare(r2.getAmount(), r1.getAmount())).toList();
+        }
+        return records.stream().sorted(Comparator.comparingInt(ExerciseRecord::getAmount)).toList();
     }
 
     public static Integer getLeaderboardPosition(User user, List<ExerciseRecord> records) {
