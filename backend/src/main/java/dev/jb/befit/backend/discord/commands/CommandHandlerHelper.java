@@ -1,5 +1,8 @@
 package dev.jb.befit.backend.discord.commands;
 
+import dev.jb.befit.backend.data.models.DiscordUser;
+import dev.jb.befit.backend.data.models.User;
+import dev.jb.befit.backend.data.models.WebUser;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -41,5 +44,11 @@ public class CommandHandlerHelper {
             case 3 -> ":third_place:";
             default -> position + "th";
         };
+    }
+
+    public static String getUserStringValue(User user) {
+        if (user instanceof DiscordUser discordUser) return String.format("<@%s>", discordUser.getDiscordId().asString());
+        if (user instanceof WebUser webUser) return String.format("`%s`", webUser.getUsername());
+        return "`unknown`";
     }
 }

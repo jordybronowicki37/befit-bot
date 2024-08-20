@@ -13,6 +13,20 @@
           "type": 1
         },
         {
+          "name": "one",
+          "description": "View a single exercise with more detailed information",
+          "type": 1,
+          "options": [
+            {
+              "name": "exercise-name",
+              "description": "The name of the exercise type",
+              "type": 3,
+              "required": true,
+              "choices": []
+            }
+          ]
+        },
+        {
           "name": "my",
           "description": "View your exercises",
           "type": 1
