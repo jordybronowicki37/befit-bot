@@ -24,7 +24,7 @@ public class Goal {
     private Integer amount;
 
     @Enumerated(EnumType.STRING)
-    private GoalStatus status;
+    private GoalStatus status = GoalStatus.ACTIVE;
 
     @NonNull
     @ManyToOne
