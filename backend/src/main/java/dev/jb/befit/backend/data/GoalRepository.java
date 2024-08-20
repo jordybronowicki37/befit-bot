@@ -11,5 +11,6 @@ import java.util.List;
 public interface GoalRepository extends JpaRepository<Goal, Long> {
     List<Goal> findAllByUser(User user);
     List<Goal> findAllByExerciseTypeName(String name);
+    List<Goal> findAllByUserAndExerciseTypeId(User user, Long id);
     List<Goal> findAllByUserAndExerciseTypeName(User user, String name);
 }

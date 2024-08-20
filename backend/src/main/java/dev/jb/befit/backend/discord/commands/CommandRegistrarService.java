@@ -110,6 +110,7 @@ public class CommandRegistrarService {
 
     private void applyExerciseOptions(List<ApplicationCommandRequest> commands) {
         var exerciseTypes = exerciseTypeService.getAll();
+        if (exerciseTypes.size() > 25) return;
         applyGenericOptions(commands, "exercise-name", choices -> {
             for (var exerciseType : exerciseTypes) {
                 choices.add(ApplicationCommandOptionChoiceData.builder()

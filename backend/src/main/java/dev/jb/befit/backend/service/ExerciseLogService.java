@@ -2,7 +2,6 @@ package dev.jb.befit.backend.service;
 
 import dev.jb.befit.backend.data.ExerciseLogRepository;
 import dev.jb.befit.backend.data.ExerciseRecordRepository;
-import dev.jb.befit.backend.data.ExerciseTypeRepository;
 import dev.jb.befit.backend.data.models.ExerciseLog;
 import dev.jb.befit.backend.data.models.ExerciseRecord;
 import dev.jb.befit.backend.data.models.GoalStatus;
@@ -19,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ExerciseLogService {
     private final ExerciseLogRepository exerciseLogRepository;
-    private final ExerciseTypeRepository exerciseTypeRepository;
+    private final ExerciseTypeService exerciseTypeService;
     private final ExerciseRecordRepository exerciseRecordRepository;
     private final GoalService goalService;
 
@@ -28,15 +27,25 @@ public class ExerciseLogService {
     }
 
     public List<ExerciseLog> getAllByExerciseName(String exerciseName) {
+        if (exerciseName.startsWith("#")) {
+            var idString = exerciseName.substring(1);
+            var id = Long.parseLong(idString);
+            return exerciseLogRepository.findAllByExerciseTypeId(id);
+        }
         return exerciseLogRepository.findAllByExerciseTypeName(exerciseName);
     }
 
     public List<ExerciseLog> getAllByUserAndExerciseName(User user, String exerciseName) {
+        if (exerciseName.startsWith("#")) {
+            var idString = exerciseName.substring(1);
+            var id = Long.parseLong(idString);
+            return exerciseLogRepository.findAllByUserAndExerciseTypeId(user, id);
+        }
         return exerciseLogRepository.findAllByUserAndExerciseTypeName(user, exerciseName);
     }
 
     public ExerciseLog create(User user, String exerciseName, Integer amount) {
-        var exerciseType = exerciseTypeRepository.findByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
+        var exerciseType = exerciseTypeService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
         var exerciseLog = new ExerciseLog(amount, exerciseType, user);
         var exerciseRecord = exerciseType.getExerciseRecords().stream().filter(r -> r.getUser().equals(user)).findFirst();
 

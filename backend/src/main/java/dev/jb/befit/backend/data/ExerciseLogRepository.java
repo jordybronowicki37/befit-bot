@@ -10,6 +10,8 @@ import java.util.List;
 @Repository
 public interface ExerciseLogRepository extends JpaRepository<ExerciseLog, Long> {
     List<ExerciseLog> findAllByUser(User user);
+    List<ExerciseLog> findAllByExerciseTypeId(Long id);
     List<ExerciseLog> findAllByExerciseTypeName(String name);
+    List<ExerciseLog> findAllByUserAndExerciseTypeId(User user, Long id);
     List<ExerciseLog> findAllByUserAndExerciseTypeName(User user, String name);
 }

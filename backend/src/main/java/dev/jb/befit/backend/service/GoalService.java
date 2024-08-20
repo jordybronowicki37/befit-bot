@@ -29,6 +29,11 @@ public class GoalService {
     }
 
     public List<Goal> getAllByUserAndExerciseName(User user, String exerciseName) {
+        if (exerciseName.startsWith("#")) {
+            var idString = exerciseName.substring(1);
+            var id = Long.parseLong(idString);
+            return goalRepository.findAllByUserAndExerciseTypeId(user, id);
+        }
         return goalRepository.findAllByUserAndExerciseTypeName(user, exerciseName);
     }
 
