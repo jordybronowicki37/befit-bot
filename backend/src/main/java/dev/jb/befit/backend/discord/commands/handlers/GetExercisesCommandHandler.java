@@ -1,7 +1,9 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ExerciseTypeService;
+import dev.jb.befit.backend.service.ServiceHelper;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
@@ -32,13 +34,26 @@ public class GetExercisesCommandHandler extends DiscordChatInputInteractionEvent
                 .title("All exercises")
                 .fields(exercises
                         .stream().limit(25)
-                        .map(exercise -> EmbedCreateFields.Field.of(
-                                String.format("#%d %s", exercise.getId(), exercise.getName()),
-                                String.format("%s - %s",
-                                        exercise.getMeasurementType().getLongName(),
-                                        exercise.getGoalDirection().name().toLowerCase()
-                                ),
-                                false)
+                        .map(exercise -> {
+                                    var records = exercise.getExerciseRecords();
+                                    var descriptionBuilder = new StringBuilder();
+                                    descriptionBuilder.append(String.format("Measurement: %s", exercise.getMeasurementType().getLongName()));
+                                    descriptionBuilder.append(String.format("\nDirection: %s", exercise.getGoalDirection().name().toLowerCase()));
+                                    descriptionBuilder.append(String.format("\nParticipants: %d", records.size()));
+                                    if (!records.isEmpty()) {
+                                        var firstPlace = ServiceHelper.sortLeaderboard(records).get(0);
+                                        descriptionBuilder.append(String.format(
+                                                "\n:first_place: %d %s - %s",
+                                                firstPlace.getAmount(),
+                                                exercise.getMeasurementType().getShortName(),
+                                                CommandHandlerHelper.getUserStringValue(firstPlace.getUser())
+                                        ));
+                                    }
+                                    return EmbedCreateFields.Field.of(
+                                            String.format("#%d %s", exercise.getId(), exercise.getName()),
+                                            descriptionBuilder.toString(),
+                                            false);
+                                }
                         )
                         .toList())
                 .color(Color.GREEN)
