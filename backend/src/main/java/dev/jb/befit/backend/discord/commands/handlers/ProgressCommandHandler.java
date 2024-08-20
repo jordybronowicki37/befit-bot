@@ -1,5 +1,7 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.discord.commands.exceptions.OptionNotFoundException;
+import dev.jb.befit.backend.discord.commands.exceptions.ValueNotFoundException;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ProgressImageService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -27,8 +29,9 @@ public class ProgressCommandHandler extends DiscordChatInputInteractionEventList
     @Override
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        var exerciseName = event.getOption("exercise-name").orElseThrow().getValue().orElseThrow().asString();
         var userId = event.getInteraction().getUser().getId();
+        var exerciseNameOption = event.getOption("exercise-name").orElseThrow(() -> new OptionNotFoundException("exercise-name"));
+        var exerciseName = exerciseNameOption.getValue().orElseThrow(() -> new ValueNotFoundException("exercise-name")).asString();
 
         try {
             var progressImage = progressImageService.createPersonalProgressChart(userId, exerciseName);

@@ -3,6 +3,8 @@ package dev.jb.befit.backend.discord.commands.handlers;
 import dev.jb.befit.backend.data.models.GoalDirection;
 import dev.jb.befit.backend.data.models.MeasurementTypes;
 import dev.jb.befit.backend.discord.commands.CommandRegistrarService;
+import dev.jb.befit.backend.discord.commands.exceptions.OptionNotFoundException;
+import dev.jb.befit.backend.discord.commands.exceptions.ValueNotFoundException;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ExerciseTypeService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -32,14 +34,17 @@ public class NewExerciseCommandHandler extends DiscordChatInputInteractionEventL
     @Override
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        var createSubCommandOptional = event.getOption("create");
-        if (createSubCommandOptional.isEmpty()) return Mono.empty();
-        var createSubCommand = createSubCommandOptional.get();
+        var createSubCommand = event.getOption("create").orElseThrow(() -> new OptionNotFoundException("exercise-name"));
 
-        var exerciseName = createSubCommand.getOption("name").orElseThrow().getValue().orElseThrow().asString();
-        var measurementTypeString = createSubCommand.getOption("measurement-type").orElseThrow().getValue().orElseThrow().asString();
+        var exerciseNameOption = createSubCommand.getOption("name").orElseThrow(() -> new OptionNotFoundException("name"));
+        var exerciseName = exerciseNameOption.getValue().orElseThrow(() -> new ValueNotFoundException("name")).asString();
+
+        var measurementTypeOption = createSubCommand.getOption("measurement-type").orElseThrow(() -> new OptionNotFoundException("measurement-type"));
+        var measurementTypeString = measurementTypeOption.getValue().orElseThrow(() -> new ValueNotFoundException("measurement-type")).asString();
         var measurementType = MeasurementTypes.valueOf(measurementTypeString);
-        var goalDirectionString = createSubCommand.getOption("goal-direction").orElseThrow().getValue().orElseThrow().asString();
+
+        var goalDirectionOption = createSubCommand.getOption("goal-direction").orElseThrow(() -> new OptionNotFoundException("goal-direction"));
+        var goalDirectionString = goalDirectionOption.getValue().orElseThrow(() -> new ValueNotFoundException("goal-direction")).asString();
         var goalDirection = GoalDirection.valueOf(goalDirectionString);
 
         var exercise = exerciseService.create(exerciseName, measurementType, goalDirection);

@@ -1,5 +1,7 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.discord.commands.exceptions.OptionNotFoundException;
+import dev.jb.befit.backend.discord.commands.exceptions.ValueNotFoundException;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.GoalService;
 import dev.jb.befit.backend.service.UserService;
@@ -28,13 +30,14 @@ public class GoalCommandHandler extends DiscordChatInputInteractionEventListener
     @Override
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        var subCommandOptional = event.getOption("add");
-        if (subCommandOptional.isEmpty()) return Mono.empty();
-        var subCommand = subCommandOptional.get();
-
-        var exerciseName = subCommand.getOption("exercise-name").orElseThrow().getValue().orElseThrow().asString();
-        var exerciseAmount = Math.toIntExact(subCommand.getOption("amount").orElseThrow().getValue().orElseThrow().asLong());
+        var subCommand = event.getOption("add").orElseThrow(() -> new OptionNotFoundException("view"));
         var userId = event.getInteraction().getUser().getId();
+
+        var exerciseNameOption = subCommand.getOption("exercise-name").orElseThrow(() -> new OptionNotFoundException("exercise-name"));
+        var exerciseName = exerciseNameOption.getValue().orElseThrow(() -> new ValueNotFoundException("exercise-name")).asString();
+
+        var exerciseAmountOption = subCommand.getOption("amount").orElseThrow(() -> new OptionNotFoundException("amount"));
+        var exerciseAmount = Math.toIntExact(exerciseAmountOption.getValue().orElseThrow(() -> new ValueNotFoundException("amount")).asLong());
 
         var user = userService.getOrCreateDiscordUser(userId);
         var goal = goalService.create(user, exerciseName, exerciseAmount);
