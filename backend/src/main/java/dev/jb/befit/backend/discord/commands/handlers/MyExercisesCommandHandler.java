@@ -47,7 +47,7 @@ public class MyExercisesCommandHandler extends DiscordChatInputInteractionEventL
         var embed = EmbedCreateSpec.builder()
                 .title("Your exercises")
                 .fields(sortedGroupedLogs
-                    .stream()
+                    .stream().limit(25)
                     .map(groupedLog -> {
                         var exercise = groupedLog.getKey();
                         var goal = goals.stream().filter(g -> g.getExerciseType().getId().equals(exercise.getId())).findFirst();

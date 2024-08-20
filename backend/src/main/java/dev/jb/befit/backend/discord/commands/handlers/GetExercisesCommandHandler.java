@@ -31,7 +31,7 @@ public class GetExercisesCommandHandler extends DiscordChatInputInteractionEvent
         var embed = EmbedCreateSpec.builder()
                 .title("All exercises")
                 .fields(exercises
-                        .stream()
+                        .stream().limit(25)
                         .map(exercise -> EmbedCreateFields.Field.of(
                                 String.format("#%d %s", exercise.getId(), exercise.getName()),
                                 String.format("%s - %s",
