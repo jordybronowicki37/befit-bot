@@ -1,4 +1,5 @@
 # BeFit
+This cool bot can help you with improving your fitness. It can track your progress, motivate you, manage your goals and compare your progress to others.
 
 ## Discord
 ### Commands
