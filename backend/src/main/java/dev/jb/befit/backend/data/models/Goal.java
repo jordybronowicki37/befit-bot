@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Goal {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "goal_seq")
+    @SequenceGenerator(name = "goal_seq", sequenceName = "goal_seq", allocationSize = 1)
     @Setter(AccessLevel.PROTECTED)
     @EqualsAndHashCode.Include
     private Long id;

@@ -14,7 +14,8 @@ import java.util.List;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ExerciseType {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "exercise_type_seq")
+    @SequenceGenerator(name = "exercise_type_seq", sequenceName = "exercise_type_seq", allocationSize = 1)
     @Setter(AccessLevel.PROTECTED)
     @EqualsAndHashCode.Include
     private Long id;
