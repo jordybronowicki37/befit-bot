@@ -7,11 +7,14 @@ import discord4j.common.JacksonResources;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.discordjson.json.ApplicationCommandOptionChoiceData;
 import discord4j.discordjson.json.ApplicationCommandRequest;
+import discord4j.discordjson.json.UserGuildData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -30,28 +33,44 @@ public class CommandRegistrarService {
     private static final String commandsFilesMatcher = "classpath:commands/*.json";
     private static final String commandsPath = "classpath:commands/%s.json";
 
+    @Value("${discord.guilds.management}")
+    private Long managementGuildId;
+
     private final GatewayDiscordClient discordClient;
     private final ResourceLoader resourceLoader;
     private final JacksonResources d4jMapper = JacksonResources.create();
     private final ExerciseTypeService exerciseTypeService;
 
     public void registerAllCommands() throws IOException {
-        bulkUpdateCommands(getAllCommandConfigFiles());
+        final var guilds = getAllGuilds();
+        final var managementGuilds = guilds.filter(g -> g.id().asLong() == managementGuildId);
+        final var normalGuilds = guilds.filter(g -> g.id().asLong() != managementGuildId);
+
+        var allCommands = getAllCommandConfigFiles();
+        var globalCommands = allCommands.stream().filter(c -> !"management".equals(c.name())).toList();
+
+        bulkUpdateCommands(globalCommands, normalGuilds);
+        bulkUpdateCommands(allCommands, managementGuilds);
     }
 
     public void updateCommandsWithExerciseNameOptions() throws IOException {
         // TODO only update relevant commands
-        bulkUpdateCommands(getAllCommandConfigFiles());
+        registerAllCommands();
     }
 
-    private void bulkUpdateCommands(List<ApplicationCommandRequest> commands) throws IOException {
+    private Flux<UserGuildData> getAllGuilds() {
+        final var restClient = discordClient.getRestClient();
+        return restClient.getGuilds();
+    }
+
+    private void bulkUpdateCommands(List<ApplicationCommandRequest> commands, Flux<UserGuildData> guilds) {
         final var restClient = discordClient.getRestClient();
         final var applicationService = restClient.getApplicationService();
         final var applicationId = restClient.getApplicationId().block();
         assert applicationId != null;
 
-        restClient.getGuilds()
-                .doOnNext(g -> log.debug("Updating commands for guild {}", g.name()))
+        guilds
+                .doOnNext(guild -> log.debug("Updating commands for guild {}", guild.name()))
                 .flatMap(guild ->
                         applicationService.bulkOverwriteGuildApplicationCommand(applicationId, guild.id().asLong(), commands)
                                 .doOnNext(cmd -> log.debug("Successfully updated guild command: {}", cmd.name()))

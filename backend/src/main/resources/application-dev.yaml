@@ -11,6 +11,8 @@ spring:
 
 discord:
   token: token
+  guilds:
+    management: guild-id
   channels:
     motivational: channel-id
     gym-reminder: channel-id
