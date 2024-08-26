@@ -20,7 +20,7 @@ public class ScheduledGymReminder {
     @Value("${discord.channels.gym-reminder}")
     private String gymReminderChannelId;
 
-    @Scheduled(cron = "${discord.jobs.gym-reminder.cron}", zone = "${discord.jobs.gym-reminder.zone}")
+    @Scheduled(cron = "${discord.jobs.gym-reminder.cron}", zone = "${discord.time-zone}")
     public void publishGymReminderQuote() {
         log.info("Publishing gym reminder");
         client

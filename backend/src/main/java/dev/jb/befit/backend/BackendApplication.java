@@ -1,6 +1,7 @@
 package dev.jb.befit.backend;
 
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,13 +15,16 @@ import java.util.TimeZone;
 public class BackendApplication {
     private static ConfigurableApplicationContext context;
 
+    @Value("${discord.time-zone}")
+    private String timeZone;
+
     public static void main(String[] args) {
         context = SpringApplication.run(BackendApplication.class, args);
     }
 
     @PostConstruct
     public void init() {
-        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Amsterdam"));
+        TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
     }
 
     public static void restart() {

@@ -1,8 +1,7 @@
 discord:
+  time-zone: Europe/Amsterdam
   jobs:
     gym-reminder:
       cron: 0 0 19 * * *
-      zone: Europe/Amsterdam
     motivational:
       cron: 0 0 8 * * *
-      zone: Europe/Amsterdam
