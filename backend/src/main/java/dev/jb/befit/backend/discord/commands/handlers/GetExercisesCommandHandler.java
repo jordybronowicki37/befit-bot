@@ -5,6 +5,9 @@ import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventLi
 import dev.jb.befit.backend.service.ExerciseTypeService;
 import dev.jb.befit.backend.service.ServiceHelper;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
+import discord4j.core.object.component.ActionRow;
+import discord4j.core.object.component.Button;
+import discord4j.core.object.reaction.ReactionEmoji;
 import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionReplyEditSpec;
@@ -12,6 +15,7 @@ import discord4j.rest.util.Color;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -19,6 +23,8 @@ import reactor.core.publisher.Mono;
 @Service
 @RequiredArgsConstructor
 public class GetExercisesCommandHandler extends DiscordChatInputInteractionEventListener {
+    private static final int PAGE_SIZE = 5;
+
     private final ExerciseTypeService exerciseService;
 
     @Override
@@ -29,11 +35,16 @@ public class GetExercisesCommandHandler extends DiscordChatInputInteractionEvent
     @Override
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        var exercises = exerciseService.getAll();
+        return event.editReply(getExercisesEditSpec(0)).then();
+    }
+
+    public InteractionReplyEditSpec getExercisesEditSpec(int page) {
+        var exercises = exerciseService.getPage(Pageable.ofSize(PAGE_SIZE).withPage(page));
+
         var embed = EmbedCreateSpec.builder()
                 .title("All exercises")
                 .fields(exercises
-                        .stream().limit(25)
+                        .stream()
                         .map(exercise -> {
                                     var records = exercise.getExerciseRecords();
                                     var descriptionBuilder = new StringBuilder();
@@ -58,6 +69,16 @@ public class GetExercisesCommandHandler extends DiscordChatInputInteractionEvent
                         .toList())
                 .color(Color.GREEN)
                 .build();
-        return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();
+        var previousButton = Button.secondary(String.format("exercises view all$%d", page-1), ReactionEmoji.unicode("⬅"));
+        if (page <= 0) previousButton = previousButton.disabled();
+        var nextButton = Button.secondary(String.format("exercises view all$%d", page+1), ReactionEmoji.unicode("➡"));
+        if (page == exercises.getTotalPages()-1) nextButton = nextButton.disabled();
+
+        var replyEditSpec = InteractionReplyEditSpec.builder().addEmbed(embed);
+        if (!previousButton.isDisabled() || !nextButton.isDisabled()) {
+            replyEditSpec.addComponent(ActionRow.of(previousButton, nextButton));
+        }
+
+        return replyEditSpec.build();
     }
 }

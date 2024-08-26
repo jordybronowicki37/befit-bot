@@ -7,6 +7,8 @@ import dev.jb.befit.backend.data.models.MeasurementTypes;
 import dev.jb.befit.backend.service.exceptions.InvalidExerciseNameException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +22,10 @@ public class ExerciseTypeService {
 
     public List<ExerciseType> getAll() {
         return exerciseTypeRepository.findAll();
+    }
+
+    public Page<ExerciseType> getPage(Pageable pageable) {
+        return exerciseTypeRepository.findAll(pageable);
     }
 
     public Optional<ExerciseType> getByName(String name) {
