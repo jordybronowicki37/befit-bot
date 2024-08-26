@@ -7,7 +7,7 @@
       "description": "The name of the exercise type",
       "type": 3,
       "required": true,
-      "choices": []
+      "autocomplete": true
     },
     {
       "name": "amount",

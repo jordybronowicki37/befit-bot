@@ -99,7 +99,7 @@ public class CommandRegistrarService {
     }
 
     private void applyAllOptions(List<ApplicationCommandRequest> commands) {
-        applyExerciseOptions(commands);
+//        applyExerciseOptions(commands);
         applyMeasurementsOptions(commands);
         applyGoalDirectionOptions(commands);
     }

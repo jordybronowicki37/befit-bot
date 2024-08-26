@@ -28,6 +28,10 @@ public class ExerciseTypeService {
         return exerciseTypeRepository.findAll(pageable);
     }
 
+    public List<ExerciseType> getFiltered(String filter) {
+        return exerciseTypeRepository.findByNameIgnoreCaseContaining(filter);
+    }
+
     public Optional<ExerciseType> getByName(String name) {
         if (name.startsWith("#")) {
             var idString = name.substring(1);
