@@ -1,6 +1,5 @@
 # BeFit
 
-
 ## Discord
 ### Commands
 View all exercises \
@@ -26,3 +25,7 @@ Format: `/motivation`
 ---
 View your progress on a goal \
 Format: `/progress {exercise-name}`
+
+## Deployment
+### RaspberryPi
+Follow the instructions as mentioned in the [how-to](docs/how-to-run-on-raspberrypi-using-docker.md)

@@ -34,3 +34,4 @@ build/
 
 ### Other ###
 /.mvn/
+/.env*.local
