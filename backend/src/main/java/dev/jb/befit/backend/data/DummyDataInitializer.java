@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.IntStream;
 
 @Slf4j
 @Component
@@ -37,36 +36,52 @@ public class DummyDataInitializer implements CommandLineRunner {
         var webUser2 = new WebUser("other-test-user", "other-test@example.com", "12345678");
         userRepository.saveAll(List.of(discordUser, webUser1, webUser2));
 
-        var exercises = IntStream.range(1, 20).mapToObj(i -> new ExerciseType("exercise-"+i, MeasurementTypes.KG, GoalDirection.INCREASING)).toList();
-        exerciseTypeRepository.saveAll(exercises);
-        var myLogs = exercises.stream().map(e -> new ExerciseLog(10, e, discordUser)).toList();
-        exerciseLogRepository.saveAll(myLogs);
-        var myRecords = myLogs.stream().map(e -> new ExerciseRecord(discordUser, e.getExerciseType(), e.getAmount())).toList();
-        exerciseRecordRepository.saveAll(myRecords);
+//        var exercises = IntStream.range(1, 20).mapToObj(i -> new ExerciseType("exercise-"+i, MeasurementTypes.KG, GoalDirection.INCREASING)).toList();
+//        exerciseTypeRepository.saveAll(exercises);
+//        var myLogs = exercises.stream().map(e -> new ExerciseLog(10, e, discordUser)).toList();
+//        exerciseLogRepository.saveAll(myLogs);
+//        var myRecords = myLogs.stream().map(e -> new ExerciseRecord(discordUser, e.getExerciseType(), e.getAmount())).toList();
+//        exerciseRecordRepository.saveAll(myRecords);
 
-        var benchpress = new ExerciseType("Benchpress", MeasurementTypes.KG, GoalDirection.INCREASING);
-        var running = new ExerciseType("running", MeasurementTypes.KM, GoalDirection.INCREASING);
-        exerciseTypeRepository.saveAll(List.of(benchpress, running));
+        var benchpress = new ExerciseType("Bench press", MeasurementTypes.KG, GoalDirection.INCREASING);
+        var pullUp = new ExerciseType("Pull ups", MeasurementTypes.AMOUNT, GoalDirection.INCREASING);
+        var running = new ExerciseType("Running 5km", MeasurementTypes.MINUTES, GoalDirection.DECREASING);
+        var pecFly = new ExerciseType("Pec fly", MeasurementTypes.KG, GoalDirection.INCREASING);
+        var shoulderPress = new ExerciseType("Shoulder press", MeasurementTypes.MINUTES, GoalDirection.INCREASING);
+        var cycling = new ExerciseType("Cycling", MeasurementTypes.KM, GoalDirection.INCREASING);
+        exerciseTypeRepository.saveAll(List.of(benchpress, pullUp, running, pecFly, shoulderPress, cycling));
 
-        var log1 = new ExerciseLog(20, benchpress, discordUser);
-        log1.setCreated(LocalDateTime.now().minusDays(8));
-        var log2 = new ExerciseLog(23, benchpress, discordUser);
-        log2.setCreated(LocalDateTime.now().minusDays(5));
-        var log3 = new ExerciseLog(31, benchpress, discordUser);
-        log3.setCreated(LocalDateTime.now().minusDays(3));
-        var log4 = new ExerciseLog(45, benchpress, discordUser);
-        log4.setCreated(LocalDateTime.now().minusDays(1));
-        var log5 = new ExerciseLog(50, benchpress, webUser1);
-        log5.setCreated(LocalDateTime.now().minusMinutes(120));
-        var log6 = new ExerciseLog(55, benchpress, webUser2);
-        log6.setCreated(LocalDateTime.now().minusMinutes(60));
-        exerciseLogRepository.saveAll(List.of(log1, log2, log3, log4, log5, log6));
+        var benchLog1 = new ExerciseLog(30, benchpress, discordUser);
+        benchLog1.setCreated(LocalDateTime.now().minusDays(30));
+        var benchLog2 = new ExerciseLog(35, benchpress, discordUser);
+        benchLog2.setCreated(LocalDateTime.now().minusDays(27));
+        var benchLog3 = new ExerciseLog(40, benchpress, discordUser);
+        benchLog3.setCreated(LocalDateTime.now().minusDays(20));
+        var benchLog4 = new ExerciseLog(45, benchpress, discordUser);
+        benchLog4.setCreated(LocalDateTime.now().minusDays(15));
+        var benchLog5 = new ExerciseLog(50, benchpress, discordUser);
+        benchLog5.setCreated(LocalDateTime.now().minusDays(8));
+        var benchLog6 = new ExerciseLog(55, benchpress, discordUser);
+        var benchLog7 = new ExerciseLog(35, benchpress, webUser1);
+        var benchLog8 = new ExerciseLog(45, benchpress, webUser2);
+        exerciseRecordRepository.save(new ExerciseRecord(discordUser, benchpress, 55));
+        exerciseRecordRepository.save(new ExerciseRecord(webUser1, benchpress, 35));
+        exerciseRecordRepository.save(new ExerciseRecord(webUser2, benchpress, 45));
+        exerciseLogRepository.saveAll(List.of(benchLog1, benchLog2, benchLog3, benchLog4, benchLog5, benchLog6, benchLog7, benchLog8));
 
-        exerciseRecordRepository.save(new ExerciseRecord(discordUser, benchpress, 45));
-        exerciseRecordRepository.save(new ExerciseRecord(webUser1, benchpress, 50));
-        exerciseRecordRepository.save(new ExerciseRecord(webUser2, benchpress, 55));
+        var pullLog1 = new ExerciseLog(5, pullUp, discordUser);
+        pullLog1.setCreated(LocalDateTime.now().minusDays(3));
+        var pullLog2 = new ExerciseLog(9, pullUp, webUser1);
+        pullLog2.setCreated(LocalDateTime.now().minusDays(3));
+        var cyclingLog1 = new ExerciseLog(10, cycling, discordUser);
+        exerciseLogRepository.saveAll(List.of(pullLog1, pullLog2, cyclingLog1));
 
-        goalRepository.save(new Goal(50, benchpress, discordUser));
+        exerciseRecordRepository.save(new ExerciseRecord(discordUser, pullUp, 5));
+        exerciseRecordRepository.save(new ExerciseRecord(webUser1, pullUp, 9));
+        exerciseRecordRepository.save(new ExerciseRecord(discordUser, cycling, 10));
+
+        goalRepository.save(new Goal(60, benchpress, discordUser));
+        goalRepository.save(new Goal(10, pullUp, discordUser));
 
         log.info("Finished dummy-data initialization");
     }
