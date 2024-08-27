@@ -3,23 +3,96 @@ This cool bot can help you with improving your fitness. It can track your progre
 
 ## Discord
 ### Commands
-* View all exercises \
-  Format: `/exercises view all`
-* View the exercises you are participating in \
-  Format: `/exercises view my`
-* View extended data of a single exercise \
-  Format: `/exercises view one {exercise-name}`
-* Create a new exercise type \
-  Format: `/exercises create {name} {measurement-type} {goal-direction}`
-* Create a new goal for yourself \
-  Format: `/goals add {exercise-name} {amount}`
-* Log an exercise \
-  Format: `/log {exercise-name} {amount}`
-* Retrieve a random motivational quote \
-  Format: `/motivation`
-* View your progress on a goal \
-  Format: `/progress {exercise-name}`
+<details>
+  <summary>View all exercises</summary>
+  
+  >Format: `/exercises view all` \
+  >Example: \
+  >![All exercises command response example](docs/examples/allExercisesCommandExample.png)
+  
+</details>
+
+<details>
+  <summary>View the exercises you are participating in</summary>
+  
+  >Format: `/exercises view my` \
+  >Example: \
+  >![My exercises command response example](docs/examples/myExercisesCommandExample.png)
+  
+</details>
+
+<details>
+  <summary>View extended data of a single exercise</summary>
+  
+  >Format: `/exercises view one {exercise-name}` \
+  >Example: \
+  >![One exercise command response example](docs/examples/oneExercisesCommandExample.png)
+
+</details>
+
+<details>
+  <summary>Create a new exercise type</summary>
+  
+  >Format: `/exercises create {name} {measurement-type} {goal-direction}` \
+  >Example: \
+  >![Create exercise command response example](docs/examples/createExerciseCommandExample.png)
+
+</details>
+
+<details>
+  <summary>Create a new goal for yourself</summary>
+  
+  >Format: `/goals add {exercise-name} {amount}` \
+  >Example: \
+  >![Create goal command response example](docs/examples/addGoalCommandExample.png)
+
+</details>
+
+<details>
+  <summary>Log an exercise</summary>
+  
+  >Format: `/log {exercise-name} {amount}` \
+  >Example: \
+  >![Log command response example](docs/examples/logCommandExample.png)
+
+</details>
+
+<details>
+  <summary>Retrieve a random motivational quote</summary>
+  
+  >Format: `/motivation` \
+  >Example: \
+  >![Motivation command response example](docs/examples/motivationCommandExample.png)
+
+</details>
+
+<details>
+  <summary>View your progress on an exercise</summary>
+  
+  >Format: `/progress {exercise-name}` \
+  >Example: \
+  >![Progress command response example](docs/examples/progressCommandExample.png)
+
+</details>
+
+### Management
+<details>
+  <summary>Restart server</summary>
+
+  >Format: `/management restart`
+
+</details>
+
+<details>
+  <summary>Refresh guild commands</summary>
+
+  >Format: `/management refresh`
+
+</details>
 
 ## Deployment
+### Docker
+Follow the instructions as mentioned in the [how-to](docs/how-to-run-on-docker.md)
+
 ### RaspberryPi
 Follow the instructions as mentioned in the [how-to](docs/how-to-run-on-raspberrypi-using-docker.md)

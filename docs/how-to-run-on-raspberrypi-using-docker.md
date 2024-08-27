@@ -60,6 +60,7 @@
     DISCORD_TOKEN=<TOKEN>
     DISCORD_CHANNELS_MOTIVATIONAL=<CHANNEL-ID>
     DISCORD_CHANNELS_GYM-REMINDER=<CHANNEL-ID>
+    DISCORD_GUILDS_MANAGEMENT=<GUILD-ID>
     ```
 16. On a separate CMD terminal. Copy the code from your local repository to your PI.
     ```
