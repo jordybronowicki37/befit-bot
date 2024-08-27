@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Slf4j
 @Component
@@ -36,7 +37,14 @@ public class DummyDataInitializer implements CommandLineRunner {
         var webUser2 = new WebUser("other-test-user", "other-test@example.com", "12345678");
         userRepository.saveAll(List.of(discordUser, webUser1, webUser2));
 
-        var benchpress = new ExerciseType("benchpress", MeasurementTypes.KG, GoalDirection.INCREASING);
+        var exercises = IntStream.range(1, 20).mapToObj(i -> new ExerciseType("exercise-"+i, MeasurementTypes.KG, GoalDirection.INCREASING)).toList();
+        exerciseTypeRepository.saveAll(exercises);
+        var myLogs = exercises.stream().map(e -> new ExerciseLog(10, e, discordUser)).toList();
+        exerciseLogRepository.saveAll(myLogs);
+        var myRecords = myLogs.stream().map(e -> new ExerciseRecord(discordUser, e.getExerciseType(), e.getAmount())).toList();
+        exerciseRecordRepository.saveAll(myRecords);
+
+        var benchpress = new ExerciseType("Benchpress", MeasurementTypes.KG, GoalDirection.INCREASING);
         var running = new ExerciseType("running", MeasurementTypes.KM, GoalDirection.INCREASING);
         exerciseTypeRepository.saveAll(List.of(benchpress, running));
 
