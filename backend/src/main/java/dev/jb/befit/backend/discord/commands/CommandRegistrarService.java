@@ -2,7 +2,6 @@ package dev.jb.befit.backend.discord.commands;
 
 import dev.jb.befit.backend.data.models.GoalDirection;
 import dev.jb.befit.backend.data.models.MeasurementTypes;
-import dev.jb.befit.backend.service.ExerciseTypeService;
 import discord4j.common.JacksonResources;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.discordjson.json.ApplicationCommandOptionChoiceData;
@@ -39,7 +38,6 @@ public class CommandRegistrarService {
     private final GatewayDiscordClient discordClient;
     private final ResourceLoader resourceLoader;
     private final JacksonResources d4jMapper = JacksonResources.create();
-    private final ExerciseTypeService exerciseTypeService;
 
     public void registerAllCommands() throws IOException {
         final var guilds = getAllGuilds();
@@ -51,11 +49,6 @@ public class CommandRegistrarService {
 
         bulkUpdateCommands(globalCommands, normalGuilds);
         bulkUpdateCommands(allCommands, managementGuilds);
-    }
-
-    public void updateCommandsWithExerciseNameOptions() throws IOException {
-        // TODO only update relevant commands
-        registerAllCommands();
     }
 
     private Flux<UserGuildData> getAllGuilds() {
@@ -99,7 +92,6 @@ public class CommandRegistrarService {
     }
 
     private void applyAllOptions(List<ApplicationCommandRequest> commands) {
-//        applyExerciseOptions(commands);
         applyMeasurementsOptions(commands);
         applyGoalDirectionOptions(commands);
     }
@@ -125,20 +117,6 @@ public class CommandRegistrarService {
                         choicesEditingConsumer.accept(choices);
                     });
         }
-    }
-
-    private void applyExerciseOptions(List<ApplicationCommandRequest> commands) {
-        var exerciseTypes = exerciseTypeService.getAll();
-        if (exerciseTypes.size() > 25) return;
-        applyGenericOptions(commands, "exercise-name", choices -> {
-            for (var exerciseType : exerciseTypes) {
-                choices.add(ApplicationCommandOptionChoiceData.builder()
-                        .name(exerciseType.getName())
-                        .value(exerciseType.getName())
-                        .build()
-                );
-            }
-        });
     }
 
     private void applyMeasurementsOptions(List<ApplicationCommandRequest> commands) {

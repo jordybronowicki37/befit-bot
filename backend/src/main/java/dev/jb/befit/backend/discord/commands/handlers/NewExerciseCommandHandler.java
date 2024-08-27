@@ -2,7 +2,6 @@ package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.data.models.GoalDirection;
 import dev.jb.befit.backend.data.models.MeasurementTypes;
-import dev.jb.befit.backend.discord.commands.CommandRegistrarService;
 import dev.jb.befit.backend.discord.commands.exceptions.OptionNotFoundException;
 import dev.jb.befit.backend.discord.commands.exceptions.ValueNotFoundException;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
@@ -17,14 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.io.IOException;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class NewExerciseCommandHandler extends DiscordChatInputInteractionEventListener {
     private final ExerciseTypeService exerciseService;
-    private final CommandRegistrarService commandRegistrarService;
 
     @Override
     public String getCommandNameFilter() {
@@ -59,12 +55,6 @@ public class NewExerciseCommandHandler extends DiscordChatInputInteractionEventL
                         false)
                 .color(Color.GREEN)
                 .build();
-
-        try {
-            commandRegistrarService.updateCommandsWithExerciseNameOptions();
-        } catch (IOException e) {
-            log.error("Failed to update commands with exercise name", e);
-        }
 
         return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();
     }
