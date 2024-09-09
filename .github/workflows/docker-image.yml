@@ -13,9 +13,11 @@ env:
 
 jobs:
   build-and-publish:
+    runs-on: ubuntu-latest
+    
     permissions:
       packages: write
-    runs-on: ubuntu-latest
+      contents: read
 
     steps:
     - uses: actions/checkout@v4
@@ -23,6 +25,6 @@ jobs:
       run: docker build . --file Dockerfile --tag $IMAGE_NAME:${{ inputs.version }}
       working-directory: backend
     - name: Login to Container registry
-      run: docker login ghcr.io -u ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }}
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
     - name: Publish the Docker image
-      run: docker push $IMAGE_NAME:${{ inputs.version }}
+      run: docker push ghcr.io/${{ github.actor }}/$IMAGE_NAME:${{ inputs.version }}
