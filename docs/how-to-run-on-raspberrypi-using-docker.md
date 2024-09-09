@@ -47,13 +47,18 @@
     ```
     sudo docker run hello-world
     ```
-14. Create a new directory for your code projects. For example on the path `home/pi/Code`.
+14. Create a new file for you environment variables.
     ```
-    mkdir Code
+    touch .env.local
     ```
-15. Add a file for the environment variables. On the path `befit/backend` create a file with the name `.env.local`, inside op the file add the variables seen below and specify the values.
+15. Open the file in a text editor of your choosing. Like for example `vi`.
     ```
-    SPRING_PROFILES_ACTIVE=dev
+    vi .env.local
+    ```
+16. Enter insert mode in `vi` by pressing the `i` key.
+17. Inside the file add the variables seen below and specify the values.
+    ```
+    SPRING_PROFILES_ACTIVE=prod
     SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/befit
     SPRING_DATASOURCE_USERNAME=<DATABASE-USERNAME>
     SPRING_DATASOURCE_PASSWORD=<DATABASE-PASSWORD>
@@ -62,23 +67,17 @@
     DISCORD_CHANNELS_GYM-REMINDER=<CHANNEL-ID>
     DISCORD_GUILDS_MANAGEMENT=<GUILD-ID>
     ```
-16. On a separate CMD terminal. Copy the code from your local repository to your PI.
+18. Exit insert mode in `vi` by pressing the `ESC` key.
+19. Save changes and exit `vi` by typing `:wq`.
+20. Pull the Docker image.
     ```
-    rsync -r -e "ssh -p 22" <LOCAL-PATH>/befit pi@<IP-ADDRESS>:/home/pi/Code
+    sudo docker pull ghcr.io/jordybronowicki37/befit:latest
     ```
-17. Navigate into the project folder.
-    ```
-    cd Code/befit/backend
-    ```
-18. Build the Docker image
-    ```
-    sudo docker build -t befit .
-    ```
-19. Create a custom docker network
+21. Create a custom docker network.
     ```
     sudo docker network create befit
     ```
-20. Create a container for the database.
+22. Create a container for the database.
     ```
     sudo docker run -d --name postgres \
         --network befit \
@@ -90,11 +89,11 @@
         -v postgres-data:/var/lib/postgresql/data \
         postgres:latest
     ```
-21. Create a container for the `befit` image we just created.
+23. Create a container for the `befit` image.
     ```
     sudo docker run -d --name befit \
         --network befit \
         --restart on-failure \
         --env-file .env.local \
-        befit
+        ghcr.io/jordybronowicki37/befit
     ```

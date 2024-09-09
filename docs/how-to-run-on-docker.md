@@ -1,8 +1,8 @@
-# How to run the Befit-bot on Docker
+# How to build and run the Befit-bot on Docker
 
-1. Add a file for the environment variables. On the path `befit/backend` create a file with the name `.env.local`, inside op the file add the variables seen below and specify the values.
+1. Add a file for the environment variables. On the path `befit/backend` create a file with the name `.env.local`, inside of the file add the variables seen below and specify the values.
    ```
-   SPRING_PROFILES_ACTIVE=dev
+   SPRING_PROFILES_ACTIVE=prod
    SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/befit
    SPRING_DATASOURCE_USERNAME=<DATABASE-USERNAME>
    SPRING_DATASOURCE_PASSWORD=<DATABASE-PASSWORD>
@@ -11,10 +11,17 @@
    DISCORD_CHANNELS_GYM-REMINDER=<CHANNEL-ID>
    DISCORD_GUILDS_MANAGEMENT=<GUILD-ID>
    ```
-2. Build the Docker image
-   ```
-   sudo docker build -t befit .
-   ```
+2. Get an image by either:
+   1. Building the image yourself
+      ```
+      sudo docker build -t befit .
+      ```
+   2. Pulling the image from GitHub
+      ```
+      sudo docker pull ghcr.io/jordybronowicki37/befit:latest
+      sudo docker tag ghcr.io/jordybronowicki37/befit:latest befit
+      sudo docker rmi ghcr.io/jordybronowicki37/befit:latest
+      ```
 3. Create a custom docker network
    ```
    sudo docker network create befit

@@ -2,7 +2,7 @@
 This cool bot can help you with improving your fitness. It can track your progress, motivate you, manage your goals and compare your progress to others.
 
 ## Discord
-### Commands
+### Global Commands
 <details>
   <summary>View all exercises</summary>
   
@@ -75,7 +75,7 @@ This cool bot can help you with improving your fitness. It can track your progre
 
 </details>
 
-### Management
+### Management Commands
 <details>
   <summary>Restart server</summary>
 
