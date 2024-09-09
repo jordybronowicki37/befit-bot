@@ -10,6 +10,7 @@ on:
 
 env:
   IMAGE_NAME: befit
+  REGISTRY_URL: ghcr.io
 
 jobs:
   build-and-publish:
@@ -19,12 +20,15 @@ jobs:
       packages: write
       contents: read
 
+    env:
+      IMAGE_TAG: $REGISTRY_URL/${{ github.actor }}/$IMAGE_NAME:${{ inputs.version }}
+
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag $IMAGE_NAME:${{ inputs.version }}
+      run: docker build . --file Dockerfile --tag $IMAGE_TAG
       working-directory: backend
     - name: Login to Container registry
-      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login $REGISTRY_URL -u ${{ github.actor }} --password-stdin
     - name: Publish the Docker image
-      run: docker push ghcr.io/${{ github.actor }}/$IMAGE_NAME:${{ inputs.version }}
+      run: docker push $IMAGE_TAG
