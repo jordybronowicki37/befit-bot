@@ -20,7 +20,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build ./backend --file Dockerfile --tag $IMAGE_NAME:${{ inputs.version }}
+      run: docker build . --file Dockerfile --tag $IMAGE_NAME:${{ inputs.version }}
+      working-directory: backend
     - name: Login to Container registry
       run: docker login ghcr.io -u ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }}
     - name: Publish the Docker image
