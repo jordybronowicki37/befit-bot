@@ -20,15 +20,12 @@ jobs:
       packages: write
       contents: read
 
-    env:
-      IMAGE_TAG: $REGISTRY_URL/${{ github.actor }}/$IMAGE_NAME:${{ inputs.version }}
-
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag $IMAGE_TAG
+      run: docker build . --file Dockerfile --tag $REGISTRY_URL/${{ github.actor }}/$IMAGE_NAME:${{ inputs.version }}
       working-directory: backend
-    - name: Login to Container registry
+    - name: Login to Container Registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login $REGISTRY_URL -u ${{ github.actor }} --password-stdin
     - name: Publish the Docker image
-      run: docker push $IMAGE_TAG
+      run: docker push $REGISTRY_URL/${{ github.actor }}/$IMAGE_NAME:${{ inputs.version }}
