@@ -1,7 +1,7 @@
 # How to build and run the Befit-bot on Docker
 
 1. Add a file for the environment variables. On the path `befit/backend` create a file with the name `.env.local`, inside of the file add the variables seen below and specify the values.
-   ```
+   ```shell
    SPRING_PROFILES_ACTIVE=prod
    SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/befit
    SPRING_DATASOURCE_USERNAME=<DATABASE-USERNAME>
@@ -13,21 +13,21 @@
    ```
 2. Get an image by either:
    1. Building the image yourself
-      ```
+      ```shell
       sudo docker build -t befit .
       ```
    2. Pulling the image from GitHub
-      ```
+      ```shell
       sudo docker pull ghcr.io/jordybronowicki37/befit:latest
       sudo docker tag ghcr.io/jordybronowicki37/befit:latest befit
       sudo docker rmi ghcr.io/jordybronowicki37/befit:latest
       ```
 3. Create a custom docker network
-   ```
+   ```shell
    sudo docker network create befit
    ```
 4. Create a container for the database.
-   ```
+   ```shell
    sudo docker run -d --name postgres \
        --network befit \
        --restart on-failure \
@@ -39,7 +39,7 @@
        postgres:latest
    ```
 5. Create a container for the `befit` image we just created.
-   ```
+   ```shell
    sudo docker run -d --name befit \
        --network befit \
        --restart on-failure \
