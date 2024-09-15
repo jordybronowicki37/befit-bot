@@ -23,7 +23,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag $REGISTRY_URL/${{ github.actor }}/$IMAGE_NAME:${{ inputs.version }}
+      run: docker buildx build --platform linux/arm64/v8,linux/amd64 --file Dockerfile --tag $REGISTRY_URL/${{ github.actor }}/$IMAGE_NAME:${{ inputs.version }} .
       working-directory: backend
     - name: Login to Container Registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login $REGISTRY_URL -u ${{ github.actor }} --password-stdin
