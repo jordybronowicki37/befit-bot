@@ -29,6 +29,7 @@ sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-buildx-plug
 
 # Setting up env file.
 ENV_FILE_PATH=~/.befit.env.local
+if [ ! -e "$ENV_FILE_PATH" ]; then
 cat <<EOF > $ENV_FILE_PATH
 SPRING_PROFILES_ACTIVE=prod
 SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/befit
@@ -39,6 +40,7 @@ DISCORD_CHANNELS_MOTIVATIONAL=<CHANNEL-ID>
 DISCORD_CHANNELS_GYM-REMINDER=<CHANNEL-ID>
 DISCORD_GUILDS_MANAGEMENT=<GUILD-ID>
 EOF
+fi
 
 # Open the config file in Nano
 nano -m $ENV_FILE_PATH
