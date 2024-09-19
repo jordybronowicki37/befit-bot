@@ -63,11 +63,21 @@ public class DummyDataInitializer implements CommandLineRunner {
         benchLog5.setCreated(LocalDateTime.now().minusDays(8));
         var benchLog6 = new ExerciseLog(55, benchpress, discordUser);
         var benchLog7 = new ExerciseLog(35, benchpress, webUser1);
-        var benchLog8 = new ExerciseLog(45, benchpress, webUser2);
+        benchLog7.setCreated(LocalDateTime.now().minusDays(18));
+        var benchLog8 = new ExerciseLog(40, benchpress, webUser1);
+        benchLog8.setCreated(LocalDateTime.now().minusDays(7));
+        var benchLog9 = new ExerciseLog(45, benchpress, webUser1);
+        benchLog9.setCreated(LocalDateTime.now().minusDays(4));
+        var benchLog10 = new ExerciseLog(55, benchpress, webUser2);
+        benchLog10.setCreated(LocalDateTime.now().minusDays(13));
+        var benchLog11 = new ExerciseLog(50, benchpress, webUser2);
+        benchLog11.setCreated(LocalDateTime.now().minusDays(8));
+        var benchLog12 = new ExerciseLog(60, benchpress, webUser2);
+        benchLog12.setCreated(LocalDateTime.now().minusDays(5));
         exerciseRecordRepository.save(new ExerciseRecord(discordUser, benchpress, 55));
-        exerciseRecordRepository.save(new ExerciseRecord(webUser1, benchpress, 35));
-        exerciseRecordRepository.save(new ExerciseRecord(webUser2, benchpress, 45));
-        exerciseLogRepository.saveAll(List.of(benchLog1, benchLog2, benchLog3, benchLog4, benchLog5, benchLog6, benchLog7, benchLog8));
+        exerciseRecordRepository.save(new ExerciseRecord(webUser1, benchpress, 45));
+        exerciseRecordRepository.save(new ExerciseRecord(webUser2, benchpress, 60));
+        exerciseLogRepository.saveAll(List.of(benchLog1, benchLog2, benchLog3, benchLog4, benchLog5, benchLog6, benchLog7, benchLog8, benchLog9, benchLog10, benchLog11, benchLog12));
 
         var pullLog1 = new ExerciseLog(5, pullUp, discordUser);
         pullLog1.setCreated(LocalDateTime.now().minusDays(3));

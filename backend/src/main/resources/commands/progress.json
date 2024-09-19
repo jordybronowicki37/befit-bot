@@ -8,6 +8,22 @@
       "type": 3,
       "required": true,
       "autocomplete": true
+    },
+    {
+      "name": "view-mode",
+      "description": "The visualisation mode",
+      "type": 3,
+      "required": false,
+      "choices": [
+        {
+          "name": "Own progress",
+          "value": "own"
+        },
+        {
+          "name": "All participants",
+          "value": "all"
+        }
+      ]
     }
   ]
 }

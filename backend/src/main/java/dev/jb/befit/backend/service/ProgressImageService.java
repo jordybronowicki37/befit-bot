@@ -1,9 +1,14 @@
 package dev.jb.befit.backend.service;
 
+import dev.jb.befit.backend.data.models.DiscordUser;
+import dev.jb.befit.backend.data.models.ExerciseLog;
+import dev.jb.befit.backend.data.models.User;
+import dev.jb.befit.backend.data.models.WebUser;
 import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import dev.jb.befit.backend.service.exceptions.NoProgressMadeException;
 import dev.jb.befit.backend.service.exceptions.NotEnoughProgressException;
 import discord4j.common.util.Snowflake;
+import discord4j.core.GatewayDiscordClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jfree.chart.ChartFactory;
@@ -23,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,6 +41,7 @@ public class ProgressImageService {
     private final ExerciseLogService logService;
     private final UserService userService;
     private final GoalService goalService;
+    private final GatewayDiscordClient discordClient;
 
     public File createPersonalProgressChart(Snowflake userId, String exerciseName) {
         var user = userService.getOrCreateDiscordUser(userId);
@@ -45,11 +52,12 @@ public class ProgressImageService {
         if (allExerciseLogs.isEmpty()) throw new NoProgressMadeException(exerciseType);
         if (allExerciseLogs.size() == 1) throw new NotEnoughProgressException(exerciseType);
 
+        var dataset = new TimeSeriesCollection();
         var progressSeries = new TimeSeries("Your progress");
         for (var exerciseLog : allExerciseLogs) {
             progressSeries.add(getMillisecond(exerciseLog.getCreated()), exerciseLog.getAmount());
         }
-        var dataset = new TimeSeriesCollection(progressSeries);
+        dataset.addSeries(progressSeries);
 
         if (goal.isPresent()) {
             var goalSeries = new TimeSeries("Your goal");
@@ -58,6 +66,29 @@ public class ProgressImageService {
             goalSeries.add(getMillisecond(goalStartDate), goal.get().getAmount());
             goalSeries.add(getMillisecond(goalEndDate), goal.get().getAmount());
             dataset.addSeries(goalSeries);
+        }
+
+        return createChart(dataset, String.format("Exercise: %s", exerciseType.getName()), exerciseType.getMeasurementType().getLongName());
+    }
+
+    public File createGlobalProgressChart(String exerciseName) {
+        var exerciseType = exerciseTypeService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
+
+        var allExerciseLogs = logService.getAllByExerciseName(exerciseName);
+        if (allExerciseLogs.isEmpty()) throw new NoProgressMadeException(exerciseType);
+        if (allExerciseLogs.size() == 1) throw new NotEnoughProgressException(exerciseType);
+
+        var groupedLogs = allExerciseLogs.stream().collect(Collectors.groupingBy(ExerciseLog::getUser));
+
+        var dataset = new TimeSeriesCollection();
+        for (var userExerciseLogGroup : groupedLogs.entrySet()) {
+            var userExerciseLogs = userExerciseLogGroup.getValue();
+            if (userExerciseLogs.size() <= 1) continue;
+            var progressSeries = new TimeSeries(getUsername(userExerciseLogGroup.getKey()));
+            for (var exerciseLog : userExerciseLogs) {
+                progressSeries.add(getMillisecond(exerciseLog.getCreated()), exerciseLog.getAmount());
+            }
+            dataset.addSeries(progressSeries);
         }
 
         return createChart(dataset, String.format("Exercise: %s", exerciseType.getName()), exerciseType.getMeasurementType().getLongName());
@@ -89,6 +120,21 @@ public class ProgressImageService {
             log.error("Error during saving line chart", e);
             throw new RuntimeException(e);
         }
+    }
+
+    private String getUsername(User user) {
+        if (user instanceof DiscordUser discordUser) {
+            var actualDiscordUser = discordClient.getUserById(discordUser.getDiscordId()).block();
+            if (actualDiscordUser == null) {
+                log.error("Discord user not found with id: {}", discordUser.getDiscordId());
+                return "Unknown discord user";
+            }
+            return actualDiscordUser.getUsername();
+        }
+        if (user instanceof WebUser webUser) {
+            return webUser.getUsername();
+        }
+        return "Unknown user";
     }
 
     private Millisecond getMillisecond(LocalDateTime dateTime) {
