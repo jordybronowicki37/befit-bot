@@ -15,9 +15,10 @@ public enum MeasurementTypes {
     CM("cm", "centimeters", DISTANCE),
     KMH("km/h", "kilometers per hour", SPEED),
     AMOUNT("x", "times", MeasurementCategory.AMOUNT),
-    HOURS("h", "hours", TIME),
-    MINUTES("m", "minutes", TIME),
-    SECONDS("s", "seconds", TIME),
+    HOURS("hrs", "hours", TIME),
+    MINUTES("min", "minutes", TIME),
+    SECONDS("sec", "seconds", TIME),
+    CALORIES("cal", "calories", MeasurementCategory.AMOUNT),
     BPM("bpm", "beats per minute", MeasurementCategory.AMOUNT);
 
     private final String shortName;
