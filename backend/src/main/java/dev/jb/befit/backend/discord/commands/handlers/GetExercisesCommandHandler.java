@@ -72,7 +72,7 @@ public class GetExercisesCommandHandler extends DiscordChatInputInteractionEvent
         var previousButton = Button.secondary(String.format("exercises view all$%d", page-1), ReactionEmoji.unicode("⬅"));
         if (page <= 0) previousButton = previousButton.disabled();
         var nextButton = Button.secondary(String.format("exercises view all$%d", page+1), ReactionEmoji.unicode("➡"));
-        if (page == exercises.getTotalPages()-1) nextButton = nextButton.disabled();
+        if (page == exercises.getTotalPages()-1 || exercises.getTotalPages() == 0) nextButton = nextButton.disabled();
 
         var replyEditSpec = InteractionReplyEditSpec.builder().addEmbed(embed);
         if (!previousButton.isDisabled() || !nextButton.isDisabled()) {
