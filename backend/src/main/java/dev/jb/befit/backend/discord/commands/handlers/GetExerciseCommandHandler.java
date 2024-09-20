@@ -1,8 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
-import dev.jb.befit.backend.discord.commands.exceptions.OptionNotFoundException;
-import dev.jb.befit.backend.discord.commands.exceptions.ValueNotFoundException;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.*;
 import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
@@ -40,11 +38,9 @@ public class GetExerciseCommandHandler extends DiscordChatInputInteractionEventL
         var userId = event.getInteraction().getUser().getId();
         var user = userService.getOrCreateDiscordUser(userId);
 
-        var subCommandGroup = event.getOption("view").orElseThrow(() -> new OptionNotFoundException("view"));
-        var subCommand = subCommandGroup.getOption("one").orElseThrow(() -> new OptionNotFoundException("one"));
-
-        var exerciseNameOption = subCommand.getOption("exercise-name").orElseThrow(() -> new OptionNotFoundException("exercise-name"));
-        var exerciseName = exerciseNameOption.getValue().orElseThrow(() -> new ValueNotFoundException("exercise-name")).asString();
+        var subCommandGroup = CommandHandlerHelper.getOption(event, "view");
+        var subCommand = CommandHandlerHelper.getOption(subCommandGroup, "one");
+        var exerciseName = CommandHandlerHelper.getOptionValue(subCommand, "exercise-name");
 
         var exercise = exerciseService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
         var measurement = exercise.getMeasurementType();

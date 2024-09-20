@@ -1,9 +1,9 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputAutoCompleteEventListener;
 import dev.jb.befit.backend.service.ExerciseTypeService;
 import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
-import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.discordjson.json.ApplicationCommandOptionChoiceData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +25,7 @@ public class ExerciseTypeAutoCompleteHandler extends DiscordChatInputAutoComplet
 
     @Override
     public Mono<Void> execute(ChatInputAutoCompleteEvent event) {
-        var filter = event.getFocusedOption().getValue()
-                .map(ApplicationCommandInteractionOptionValue::asString)
-                .orElse("");
+        var filter = CommandHandlerHelper.getAutocompleteOptionFilter(event);
         var exercises = exerciseTypeService.getFiltered(filter);
         var suggestions = new ArrayList<ApplicationCommandOptionChoiceData>();
         exercises.stream().limit(25).forEach(e -> suggestions.add(ApplicationCommandOptionChoiceData.builder().name(e.getName()).value(e.getName()).build()));

@@ -2,8 +2,7 @@ package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.data.models.GoalDirection;
 import dev.jb.befit.backend.data.models.MeasurementTypes;
-import dev.jb.befit.backend.discord.commands.exceptions.OptionNotFoundException;
-import dev.jb.befit.backend.discord.commands.exceptions.ValueNotFoundException;
+import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ExerciseTypeService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -30,18 +29,11 @@ public class NewExerciseCommandHandler extends DiscordChatInputInteractionEventL
     @Override
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        var createSubCommand = event.getOption("create").orElseThrow(() -> new OptionNotFoundException("exercise-name"));
+        var subCommand = CommandHandlerHelper.getOption(event, "create");
 
-        var exerciseNameOption = createSubCommand.getOption("name").orElseThrow(() -> new OptionNotFoundException("name"));
-        var exerciseName = exerciseNameOption.getValue().orElseThrow(() -> new ValueNotFoundException("name")).asString();
-
-        var measurementTypeOption = createSubCommand.getOption("measurement-type").orElseThrow(() -> new OptionNotFoundException("measurement-type"));
-        var measurementTypeString = measurementTypeOption.getValue().orElseThrow(() -> new ValueNotFoundException("measurement-type")).asString();
-        var measurementType = MeasurementTypes.valueOf(measurementTypeString);
-
-        var goalDirectionOption = createSubCommand.getOption("goal-direction").orElseThrow(() -> new OptionNotFoundException("goal-direction"));
-        var goalDirectionString = goalDirectionOption.getValue().orElseThrow(() -> new ValueNotFoundException("goal-direction")).asString();
-        var goalDirection = GoalDirection.valueOf(goalDirectionString);
+        var exerciseName = CommandHandlerHelper.getOptionValue(subCommand, "name");
+        var measurementType = MeasurementTypes.valueOf(CommandHandlerHelper.getOptionValue(subCommand, "measurement-type"));
+        var goalDirection = GoalDirection.valueOf(CommandHandlerHelper.getOptionValue(subCommand, "goal-direction"));
 
         var exercise = exerciseService.create(exerciseName, measurementType, goalDirection);
         var embed = EmbedCreateSpec.builder()

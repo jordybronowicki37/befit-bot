@@ -1,12 +1,10 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.commands.exceptions.InvalidValueException;
-import dev.jb.befit.backend.discord.commands.exceptions.OptionNotFoundException;
-import dev.jb.befit.backend.discord.commands.exceptions.ValueNotFoundException;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ProgressImageService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.spec.InteractionReplyEditSpec;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -32,9 +30,8 @@ public class ProgressCommandHandler extends DiscordChatInputInteractionEventList
     @Override
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        var exerciseNameOption = event.getOption("exercise-name").orElseThrow(() -> new OptionNotFoundException("exercise-name"));
-        var exerciseName = exerciseNameOption.getValue().orElseThrow(() -> new ValueNotFoundException("exercise-name")).asString();
-        var viewMode = event.getOption("view-mode").map(v -> v.getValue().map(ApplicationCommandInteractionOptionValue::asString).orElse("own")).orElse("own");
+        var exerciseName = CommandHandlerHelper.getOptionValue(event, "exercise-name");
+        var viewMode = CommandHandlerHelper.getOptionalOptionValue(event, "view-mode", "own");
 
         try {
             File progressImage;
