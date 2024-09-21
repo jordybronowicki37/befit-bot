@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ENV_FILE_PATH=~/.befit.env.local
 
 # Clear existing container and image
