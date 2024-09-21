@@ -8,26 +8,20 @@ import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
 @Slf4j
-public class ScheduledMotivationalQuote {
+public class ScheduledJobMotivationalQuoteService {
     private final GatewayDiscordClient client;
     private final MotivationalService motivationalService;
 
-    @Value("${discord.channels.motivational}")
-    private String motivationChannelId;
-
-    @Scheduled(cron = "${discord.jobs.motivational.cron}", zone = "${discord.time-zone}")
-    public void publishMotivationalQuote() {
+    public void publishMotivationalQuote(Snowflake motivationChannelId) {
         var message = motivationalService.getRandomQuote();
         log.info("Publishing quote. Message: {}, author: {}", message.message(), message.author());
         client
-                .getChannelById(Snowflake.of(motivationChannelId))
+                .getChannelById(motivationChannelId)
                 .ofType(MessageChannel.class)
                 .flatMap(c -> {
                     var quote = motivationalService.getRandomQuote();

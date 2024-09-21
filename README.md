@@ -69,7 +69,7 @@ This cool bot can help you with improving your fitness. It can track your progre
 <details>
   <summary>View your progress on an exercise</summary>
   
-  >Format: `/progress {exercise-name}` \
+  >Format: `/progress {exercise-name} ?{view-mode}` \
   >Example: \
   >![Progress command response example](docs/examples/progressCommandExample.png)
 
@@ -87,6 +87,20 @@ This cool bot can help you with improving your fitness. It can track your progre
   <summary>Refresh guild commands</summary>
 
   >Format: `/management refresh`
+
+</details>
+
+<details>
+  <summary>Add scheduled job</summary>
+
+  >Format: `/management jobs add {channel-id} {job-type} {cron-expression} ?{timezone-id}`
+
+</details>
+
+<details>
+  <summary>Remove scheduled job</summary>
+
+  >Format: `/management jobs remove {scheduled-job}`
 
 </details>
 

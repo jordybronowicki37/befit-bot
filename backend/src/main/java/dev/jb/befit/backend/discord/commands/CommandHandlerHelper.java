@@ -11,10 +11,12 @@ import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_COMMAND;
 import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_COMMAND_GROUP;
 
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommandHandlerHelper {
     public static String getCommandName(ChatInputInteractionEvent event) {
@@ -92,7 +94,7 @@ public class CommandHandlerHelper {
 
     public static String getAutocompleteOptionFilter(ChatInputAutoCompleteEvent event) {
         return event.getFocusedOption().getValue()
-                .map(ApplicationCommandInteractionOptionValue::asString)
+                .map(ApplicationCommandInteractionOptionValue::getRaw)
                 .orElse("");
     }
 

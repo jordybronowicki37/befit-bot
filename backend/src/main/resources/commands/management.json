@@ -13,6 +13,68 @@
       "description": "Refreshes the commands",
       "type": 1,
       "options": []
+    },
+    {
+      "name": "jobs",
+      "description": "Manage jobs",
+      "type": 2,
+      "options": [
+        {
+          "name": "add",
+          "description": "Add a job",
+          "type": 1,
+          "options": [
+            {
+              "name": "channel-id",
+              "description": "The target channel",
+              "type": 3,
+              "required": true
+            },
+            {
+              "name": "job-type",
+              "description": "The job type",
+              "type": 3,
+              "required": true,
+              "choices": [
+                {
+                  "name": "Gym reminder",
+                  "value": "GYM_REMINDER"
+                },
+                {
+                  "name": "Motivational message",
+                  "value": "MOTIVATIONAL_MESSAGE"
+                }
+              ]
+            },
+            {
+              "name": "cron",
+              "description": "The cron expression",
+              "type": 3,
+              "required": true
+            },
+            {
+              "name": "timezone-id",
+              "description": "The timezone id",
+              "type": 3,
+              "required": false
+            }
+          ]
+        },
+        {
+          "name": "remove",
+          "description": "Remove a job",
+          "type": 1,
+          "options": [
+            {
+              "name": "scheduled-job",
+              "description": "The target job",
+              "type": 4,
+              "required": true,
+              "autocomplete": true
+            }
+          ]
+        }
+      ]
     }
   ]
 }

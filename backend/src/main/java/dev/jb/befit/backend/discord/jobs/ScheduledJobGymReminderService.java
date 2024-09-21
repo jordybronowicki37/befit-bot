@@ -7,24 +7,18 @@ import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
 @Slf4j
-public class ScheduledGymReminder {
+public class ScheduledJobGymReminderService {
     private final GatewayDiscordClient client;
 
-    @Value("${discord.channels.gym-reminder}")
-    private String gymReminderChannelId;
-
-    @Scheduled(cron = "${discord.jobs.gym-reminder.cron}", zone = "${discord.time-zone}")
-    public void publishGymReminderQuote() {
+    public void publishGymReminderQuote(Snowflake gymReminderChannelId) {
         log.info("Publishing gym reminder");
         client
-                .getChannelById(Snowflake.of(gymReminderChannelId))
+                .getChannelById(gymReminderChannelId)
                 .ofType(MessageChannel.class)
                 .flatMap(c -> {
                     var builder = EmbedCreateSpec.builder()
