@@ -33,14 +33,14 @@ public class GoalCommandHandler extends DiscordChatInputInteractionEventListener
 
         var subCommand = CommandHandlerHelper.getOption(event, "add");
         var exerciseName = CommandHandlerHelper.getOptionValue(subCommand, "exercise-name");
-        var exerciseAmount = CommandHandlerHelper.getOptionValueAsInt(subCommand, "amount");
+        var exerciseAmount = CommandHandlerHelper.getOptionValueAsDouble(subCommand, "amount");
 
         var user = userService.getOrCreateDiscordUser(userId);
         var goal = goalService.create(user, exerciseName, exerciseAmount);
         var exerciseType = goal.getExerciseType();
 
         var workoutTitle = String.format("Exercise #%d %s", exerciseType.getId(), exerciseType.getName());
-        var description = String.format("Amount: %d\nStatus: %s", exerciseAmount, goal.getStatus().name().toLowerCase());
+        var description = String.format("Amount: %s\nStatus: %s", CommandHandlerHelper.formatDouble(exerciseAmount), goal.getStatus().name().toLowerCase());
 
         var embed = EmbedCreateSpec.builder()
                 .title(":chart_with_upwards_trend: New goal set")

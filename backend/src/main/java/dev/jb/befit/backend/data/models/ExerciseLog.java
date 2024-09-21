@@ -22,7 +22,7 @@ public class ExerciseLog {
     private LocalDateTime created = LocalDateTime.now();
 
     @NonNull
-    private Integer amount;
+    private Double amount;
 
     @NonNull
     @ManyToOne

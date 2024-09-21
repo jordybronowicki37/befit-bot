@@ -62,12 +62,12 @@ public class GetExerciseCommandHandler extends DiscordChatInputInteractionEventL
             progressDescriptionBuilder.append(String.format("Logs: %d", logs.size()));
 
             var lastLog = logs.get(logs.size() - 1);
-            progressDescriptionBuilder.append(String.format("\nLast: %d %s - %s", lastLog.getAmount(), measurement.getShortName(), lastLog.getCreated().format(DateTimeFormatter.ISO_LOCAL_DATE)));
+            progressDescriptionBuilder.append(String.format("\nLast: %s %s - %s", CommandHandlerHelper.formatDouble(lastLog.getAmount()), measurement.getShortName(), lastLog.getCreated().format(DateTimeFormatter.ISO_LOCAL_DATE)));
 
             var goal = goalService.getActiveUserGoal(user, exerciseName);
-            goal.ifPresent(value -> progressDescriptionBuilder.append(String.format("\nGoal: %d", value.getAmount())));
+            goal.ifPresent(value -> progressDescriptionBuilder.append(String.format("\nGoal: %s", CommandHandlerHelper.formatDouble(value.getAmount()))));
 
-            progressDescriptionBuilder.append(String.format("\nPr: %d %s", ServiceHelper.getCurrentPr(logs), measurement.getShortName()));
+            progressDescriptionBuilder.append(String.format("\nPr: %s %s", CommandHandlerHelper.formatDouble(ServiceHelper.getCurrentPr(logs)), measurement.getShortName()));
 
             var leaderBoardPosition = ServiceHelper.getLeaderboardPosition(user, records);
             if (leaderBoardPosition != null) progressDescriptionBuilder.append(String.format("\nPosition: %s", CommandHandlerHelper.getLeaderboardValue(leaderBoardPosition)));
@@ -80,9 +80,9 @@ public class GetExerciseCommandHandler extends DiscordChatInputInteractionEventL
             for (int i = 0; i < records.size(); i++) {
                 if (i == LEADER_BOARD_MAX_SIZE) break;
                 var record = records.get(i);
-                recordsDescriptionBuilder.append(String.format("%s %d %s - %s\n",
+                recordsDescriptionBuilder.append(String.format("%s %s %s - %s\n",
                         CommandHandlerHelper.getLeaderboardValue(i+1),
-                        record.getAmount(),
+                        CommandHandlerHelper.formatDouble(record.getAmount()),
                         measurement.getShortName(),
                         CommandHandlerHelper.getUserStringValue(record.getUser()))
                 );

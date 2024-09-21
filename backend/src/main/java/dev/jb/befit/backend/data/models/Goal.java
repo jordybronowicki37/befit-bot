@@ -22,7 +22,7 @@ public class Goal {
     private LocalDateTime created = LocalDateTime.now();
 
     @NonNull
-    private Integer amount;
+    private Double amount;
 
     @Enumerated(EnumType.STRING)
     private GoalStatus status = GoalStatus.ACTIVE;

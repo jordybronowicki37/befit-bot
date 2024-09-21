@@ -50,7 +50,7 @@ public class GoalService {
         return Optional.of(activeUserGoals.get(activeUserGoals.size() - 1));
     }
 
-    public Goal create(User user, String exerciseName, Integer amount) {
+    public Goal create(User user, String exerciseName, Double amount) {
         var exerciseType = exerciseTypeRepository.findByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
 
         // If a goal already exists, change the status to overwritten

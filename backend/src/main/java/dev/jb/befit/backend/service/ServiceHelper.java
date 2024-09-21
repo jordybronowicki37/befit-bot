@@ -16,9 +16,9 @@ public class ServiceHelper {
         var exercise = records.get(0).getExerciseType();
         if (!records.stream().allMatch(r -> r.getExerciseType().equals(exercise))) throw new ExerciseMismatchException();
         if (exercise.getGoalDirection().equals(GoalDirection.INCREASING)) {
-            return records.stream().sorted((r1, r2) -> Integer.compare(r2.getAmount(), r1.getAmount())).toList();
+            return records.stream().sorted((r1, r2) -> Double.compare(r2.getAmount(), r1.getAmount())).toList();
         }
-        return records.stream().sorted(Comparator.comparingInt(ExerciseRecord::getAmount)).toList();
+        return records.stream().sorted(Comparator.comparingDouble(ExerciseRecord::getAmount)).toList();
     }
 
     public static Integer getLeaderboardPosition(User user, List<ExerciseRecord> records) {
@@ -28,15 +28,15 @@ public class ServiceHelper {
         return recordsSorted.indexOf(userRecord.get()) + 1;
     }
 
-    public static Integer getCurrentPr(List<ExerciseLog> allExerciseLogs) {
+    public static Double getCurrentPr(List<ExerciseLog> allExerciseLogs) {
         if (allExerciseLogs.isEmpty()) return null;
         var exerciseType = allExerciseLogs.get(0).getExerciseType();
         if (!allExerciseLogs.stream().allMatch(l -> l.getExerciseType() == exerciseType)) throw new ExerciseMismatchException();
         var exerciseAmounts = allExerciseLogs.stream().map(ExerciseLog::getAmount).toList();
         if (exerciseType.getGoalDirection().equals(GoalDirection.INCREASING)) {
-            return exerciseAmounts.stream().max(Integer::compareTo).orElse(null);
+            return exerciseAmounts.stream().max(Double::compareTo).orElse(null);
         } else {
-            return exerciseAmounts.stream().min(Integer::compareTo).orElse(null);
+            return exerciseAmounts.stream().min(Double::compareTo).orElse(null);
         }
     }
 
@@ -50,10 +50,10 @@ public class ServiceHelper {
         var lastValue = exerciseAmounts.remove(exerciseAmounts.size() - 1);
 
         if (exerciseType.getGoalDirection().equals(GoalDirection.INCREASING)) {
-            var maxValue = exerciseAmounts.stream().max(Integer::compareTo);
+            var maxValue = exerciseAmounts.stream().max(Double::compareTo);
             return maxValue.filter(integer -> integer < lastValue).isPresent();
         } else {
-            var minValue = exerciseAmounts.stream().min(Integer::compareTo);
+            var minValue = exerciseAmounts.stream().min(Double::compareTo);
             return minValue.filter(integer -> integer > lastValue).isPresent();
         }
     }

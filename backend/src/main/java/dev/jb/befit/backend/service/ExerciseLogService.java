@@ -44,7 +44,7 @@ public class ExerciseLogService {
         return exerciseLogRepository.findAllByUserAndExerciseTypeName(user, exerciseName);
     }
 
-    public ExerciseLog create(User user, String exerciseName, Integer amount) {
+    public ExerciseLog create(User user, String exerciseName, Double amount) {
         var exerciseType = exerciseTypeService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
         var exerciseLog = new ExerciseLog(amount, exerciseType, user);
         var exerciseRecord = exerciseType.getExerciseRecords().stream().filter(r -> r.getUser().equals(user)).findFirst();

@@ -54,8 +54,8 @@ public class GetExercisesCommandHandler extends DiscordChatInputInteractionEvent
                                     if (!records.isEmpty()) {
                                         var firstPlace = ServiceHelper.sortLeaderboard(records).get(0);
                                         descriptionBuilder.append(String.format(
-                                                "\n:first_place: %d %s - %s",
-                                                firstPlace.getAmount(),
+                                                "\n:first_place: %s %s - %s",
+                                                CommandHandlerHelper.formatDouble(firstPlace.getAmount()),
                                                 exercise.getMeasurementType().getShortName(),
                                                 CommandHandlerHelper.getUserStringValue(firstPlace.getUser())
                                         ));

@@ -76,9 +76,10 @@ public class MyExercisesCommandHandler extends DiscordChatInputInteractionEventL
                             var pr = ServiceHelper.getCurrentPr(logs);
                             var descriptionBuilder = new StringBuilder();
                             descriptionBuilder.append("Logs: ").append(logs.size());
-                            goal.ifPresent(g -> descriptionBuilder.append(String.format("\nGoal: %d %s", g.getAmount(), exercise.getMeasurementType().getShortName())));
-                            descriptionBuilder.append(String.format("\nPr: %d %s", pr, exercise.getMeasurementType().getShortName()));
-                            descriptionBuilder.append(String.format("\nPosition: %s", CommandHandlerHelper.getLeaderboardValue(ServiceHelper.getLeaderboardPosition(user, exercise.getExerciseRecords()))));
+                            goal.ifPresent(g -> descriptionBuilder.append(String.format("\nGoal: %s %s", CommandHandlerHelper.formatDouble(g.getAmount()), exercise.getMeasurementType().getShortName())));
+                            descriptionBuilder.append(String.format("\nPr: %s %s", CommandHandlerHelper.formatDouble(pr), exercise.getMeasurementType().getShortName()));
+                            var leaderBoardPos = ServiceHelper.getLeaderboardPosition(user, exercise.getExerciseRecords());
+                            if (leaderBoardPos != null) descriptionBuilder.append(String.format("\nPosition: %s", CommandHandlerHelper.getLeaderboardValue(leaderBoardPos)));
 
                             return EmbedCreateFields.Field.of(
                                     String.format("#%d %s", exercise.getId(), exercise.getName()),

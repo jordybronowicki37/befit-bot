@@ -13,6 +13,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.text.DecimalFormat;
+
 import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_COMMAND;
 import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_COMMAND_GROUP;
 
@@ -68,6 +70,14 @@ public class CommandHandlerHelper {
         return getOptionValueRaw(getOption(event, optionName)).asLong();
     }
 
+    public static Double getOptionValueAsDouble(ApplicationCommandInteractionOption subCommand, String optionName) {
+        return getOptionValueRaw(getOption(subCommand, optionName)).asDouble();
+    }
+
+    public static Double getOptionValueAsDouble(ChatInputInteractionEvent event, String optionName) {
+        return getOptionValueRaw(getOption(event, optionName)).asDouble();
+    }
+
     public static Integer getOptionValueAsInt(ApplicationCommandInteractionOption subCommand, String optionName) {
         return Math.toIntExact(getOptionValueAsLong(subCommand, optionName));
     }
@@ -96,6 +106,11 @@ public class CommandHandlerHelper {
         return event.getFocusedOption().getValue()
                 .map(ApplicationCommandInteractionOptionValue::getRaw)
                 .orElse("");
+    }
+
+    public static String formatDouble(Double num) {
+        var format = new DecimalFormat("0.##");
+        return format.format(num);
     }
 
     public static String getLeaderboardValue(Integer position) {

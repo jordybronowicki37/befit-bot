@@ -12,7 +12,7 @@
     {
       "name": "amount",
       "description": "The amount of the exercise",
-      "type": 4,
+      "type": 10,
       "required": true,
       "min_value": 0
     }

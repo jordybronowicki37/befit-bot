@@ -35,7 +35,7 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
         var userId = event.getInteraction().getUser().getId();
 
         var exerciseName = CommandHandlerHelper.getOptionValue(event, "exercise-name");
-        var exerciseAmount = CommandHandlerHelper.getOptionValueAsInt(event, "amount");
+        var exerciseAmount = CommandHandlerHelper.getOptionValueAsDouble(event, "amount");
 
         var user = userService.getOrCreateDiscordUser(userId);
         var goal = goalService.getActiveUserGoal(user, exerciseName);
@@ -48,22 +48,23 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
         // Construct message
         var workoutTitle = String.format("#%d %s - Log #%d", exerciseType.getId(), exerciseType.getName(), allExerciseLogs.size());
         var descriptionBuilder = new StringBuilder();
-        descriptionBuilder.append(String.format("Value: %d %s\n", exerciseLog.getAmount(), measurementName));
+        descriptionBuilder.append(String.format("Value: %s %s\n", CommandHandlerHelper.formatDouble(exerciseLog.getAmount()), measurementName));
         // Add last log value
         if (allExerciseLogs.size() >= 2) {
             var previousLog = allExerciseLogs.get(allExerciseLogs.size() - 2);
-            descriptionBuilder.append(String.format("Last: %d %s - %s\n", previousLog.getAmount(), measurementName, previousLog.getCreated().format(DateTimeFormatter.ISO_LOCAL_DATE)));
+            descriptionBuilder.append(String.format("Last: %s %s - %s\n", CommandHandlerHelper.formatDouble(previousLog.getAmount()), measurementName, previousLog.getCreated().format(DateTimeFormatter.ISO_LOCAL_DATE)));
         }
         // Add goal if it is present and not yet reached
         if (goal.isPresent() && reachedGoal == null) {
-            descriptionBuilder.append(String.format("Goal: %d %s\n", goal.get().getAmount(), measurementName));
+            descriptionBuilder.append(String.format("Goal: %s %s\n", CommandHandlerHelper.formatDouble(goal.get().getAmount()), measurementName));
         }
         // Add current pr
         var currentPr = ServiceHelper.getCurrentPr(allExerciseLogs);
         if (currentPr != null) {
-            descriptionBuilder.append(String.format("Pr: %d %s\n", currentPr, measurementName));
+            descriptionBuilder.append(String.format("Pr: %s %s\n", CommandHandlerHelper.formatDouble(currentPr), measurementName));
         }
-        descriptionBuilder.append(String.format("Position: %s", CommandHandlerHelper.getLeaderboardValue(ServiceHelper.getLeaderboardPosition(user, exerciseType.getExerciseRecords()))));
+        var leaderboardPos = ServiceHelper.getLeaderboardPosition(user, exerciseType.getExerciseRecords());
+        if (leaderboardPos != null) descriptionBuilder.append(String.format("Position: %s", CommandHandlerHelper.getLeaderboardValue(leaderboardPos)));
 
         // Add new pr reached congratulations
         if (ServiceHelper.isPRImproved(allExerciseLogs)) {

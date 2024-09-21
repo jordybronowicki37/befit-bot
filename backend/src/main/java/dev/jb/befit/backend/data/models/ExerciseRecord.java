@@ -26,7 +26,7 @@ public class ExerciseRecord {
     private ExerciseType exerciseType;
 
     @NonNull
-    private Integer amount;
+    private Double amount;
 
     @Embeddable
     @Getter
