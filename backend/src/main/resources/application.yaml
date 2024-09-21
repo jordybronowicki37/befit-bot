@@ -1,7 +1,0 @@
-discord:
-  time-zone: Europe/Amsterdam
-  jobs:
-    gym-reminder:
-      cron: 0 0 19 * * *
-    motivational:
-      cron: 0 0 8 * * *
