@@ -1,4 +1,4 @@
-name: Build and Publich Docker Image
+name: Build and Publish Docker Image
 
 on:
   workflow_dispatch:
@@ -23,9 +23,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: install buildx
-      uses: docker/setup-buildx-action@v1
+      uses: docker/setup-buildx-action@v3
     - name: Login to Container Registry
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login $REGISTRY_URL -u ${{ github.actor }} --password-stdin
-    - name: Build the Docker image
+    - name: Build and push the Docker image
       run: docker buildx build --push --platform linux/arm64/v8,linux/amd64 --file Dockerfile --tag $REGISTRY_URL/${{ github.actor }}/$IMAGE_NAME:${{ inputs.version }} .
       working-directory: backend
