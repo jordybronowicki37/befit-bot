@@ -109,7 +109,7 @@ public class CommandHandlerHelper {
     }
 
     public static String formatDouble(Double num) {
-        var format = new DecimalFormat("0.##");
+        var format = new DecimalFormat("0.###");
         return format.format(num);
     }
 
