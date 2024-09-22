@@ -131,7 +131,7 @@ public class ProgressImageService {
         chart.draw(graphics, chartArea, chartRenderingInfo);
 
         // Add user avatars
-        userTimeSeriesMap.entrySet().forEach(v -> insertUserAvatar(chart, chartRenderingInfo, graphics, chartArea, v));
+        userTimeSeriesMap.entrySet().forEach(v -> insertUserAvatar(chart, chartRenderingInfo, graphics, v));
 
         // Save the image to file
         try {
@@ -144,7 +144,7 @@ public class ProgressImageService {
         }
     }
 
-    private void insertUserAvatar(JFreeChart chart, ChartRenderingInfo chartRenderingInfo, Graphics2D graphics, Rectangle2D.Double chartArea, Map.Entry<User, TimeSeries> userTimeSeriesMap) {
+    private void insertUserAvatar(JFreeChart chart, ChartRenderingInfo chartRenderingInfo, Graphics2D graphics, Map.Entry<User, TimeSeries> userTimeSeriesMap) {
         var user = userTimeSeriesMap.getKey();
         var timeSeries = userTimeSeriesMap.getValue();
         if (user == null) return;
