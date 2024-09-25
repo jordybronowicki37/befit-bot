@@ -1,4 +1,4 @@
-package dev.jb.befit.backend.discord.commands;
+package dev.jb.befit.backend.discord.registration;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

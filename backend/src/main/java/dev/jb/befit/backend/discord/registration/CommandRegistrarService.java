@@ -1,4 +1,4 @@
-package dev.jb.befit.backend.discord.commands;
+package dev.jb.befit.backend.discord.registration;
 
 import dev.jb.befit.backend.data.models.GoalDirection;
 import dev.jb.befit.backend.data.models.MeasurementTypes;
