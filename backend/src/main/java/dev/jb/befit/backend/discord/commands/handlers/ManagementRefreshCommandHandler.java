@@ -1,7 +1,7 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
-import dev.jb.befit.backend.discord.commands.CommandRegistrarService;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
+import dev.jb.befit.backend.discord.registration.CommandRegistrarService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.InteractionReplyEditSpec;
 import lombok.RequiredArgsConstructor;

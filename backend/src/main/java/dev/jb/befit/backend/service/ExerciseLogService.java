@@ -6,6 +6,7 @@ import dev.jb.befit.backend.data.models.ExerciseLog;
 import dev.jb.befit.backend.data.models.ExerciseRecord;
 import dev.jb.befit.backend.data.models.GoalStatus;
 import dev.jb.befit.backend.data.models.User;
+import dev.jb.befit.backend.service.dto.LogCreationStatus;
 import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ public class ExerciseLogService {
     private final ExerciseTypeService exerciseTypeService;
     private final ExerciseRecordRepository exerciseRecordRepository;
     private final GoalService goalService;
+    private final UserService userService;
 
     public List<ExerciseLog> getAllByUser(User user) {
         return exerciseLogRepository.findAllByUser(user);
@@ -44,26 +46,51 @@ public class ExerciseLogService {
         return exerciseLogRepository.findAllByUserAndExerciseTypeName(user, exerciseName);
     }
 
-    public ExerciseLog create(User user, String exerciseName, Double amount) {
+    public LogCreationStatus create(User user, String exerciseName, Double amount) {
         var exerciseType = exerciseTypeService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
+        var allExistingLogs = getAllByUserAndExerciseName(user, exerciseName);
         var exerciseLog = new ExerciseLog(amount, exerciseType, user);
-        var exerciseRecord = exerciseType.getExerciseRecords().stream().filter(r -> r.getUser().equals(user)).findFirst();
+        var exerciseRecord = exerciseType.getExerciseRecords().stream().filter(r -> r.getUser().equals(user)).findFirst().orElse(null);
 
-        if (exerciseRecord.isEmpty()) {
+        long earnedXp = 10;
+        var newRecordReached = false;
+        var goalReached = false;
+
+        if (exerciseRecord == null) {
             var newRecord = new ExerciseRecord(user, exerciseType, amount);
             exerciseType.getExerciseRecords().add(newRecord);
-            exerciseRecordRepository.save(newRecord);
-        }
-        else if (ServiceHelper.isRecordImproved(exerciseRecord.get(), exerciseLog)) {
-            exerciseRecord.get().setAmount(exerciseLog.getAmount());
+            exerciseRecord = exerciseRecordRepository.save(newRecord);
+            earnedXp += 50;
+        } else if (ServiceHelper.isRecordImproved(exerciseRecord, exerciseLog)) {
+            exerciseRecord.setAmount(exerciseLog.getAmount());
+            exerciseRecord = exerciseRecordRepository.save(exerciseRecord);
+            newRecordReached = true;
+            earnedXp += 100;
         }
 
-        goalService.getActiveUserGoal(user, exerciseName).ifPresent(goal -> {
-            if (!ServiceHelper.isGoalReached(goal, exerciseLog)) return;
-            goal.setStatus(GoalStatus.COMPLETED);
-            exerciseLog.setReachedGoal(goal);
-        });
+        var goalOpt = goalService.getActiveUserGoal(user, exerciseName);
+        if (goalOpt.isPresent()) {
+            var goal = goalOpt.get();
+            if (ServiceHelper.isGoalReached(goal, exerciseLog)) {
+                goal.setStatus(GoalStatus.COMPLETED);
+                exerciseLog.setReachedGoal(goal);
+                earnedXp += 50;
+                goalReached = true;
+            }
+        }
 
-        return exerciseLogRepository.save(exerciseLog);
+        userService.addExperience(user.getId(), earnedXp);
+        var newExerciseLog = exerciseLogRepository.save(exerciseLog);
+        return new LogCreationStatus(
+                newExerciseLog,
+                allExistingLogs.stream().skip(allExistingLogs.isEmpty() ? 0 : allExistingLogs.size()-1).findFirst().orElse(null),
+                allExistingLogs.size() + 1,
+                exerciseRecord,
+                goalOpt.orElse(null),
+                earnedXp,
+                allExistingLogs.isEmpty(),
+                newRecordReached,
+                goalReached
+        );
     }
 }

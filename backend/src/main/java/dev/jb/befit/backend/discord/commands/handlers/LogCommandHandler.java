@@ -2,7 +2,10 @@ package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
-import dev.jb.befit.backend.service.*;
+import dev.jb.befit.backend.service.ExerciseLogService;
+import dev.jb.befit.backend.service.MotivationalService;
+import dev.jb.befit.backend.service.ServiceHelper;
+import dev.jb.befit.backend.service.UserService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionReplyEditSpec;
@@ -22,7 +25,6 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
     private final ExerciseLogService logService;
     private final UserService userService;
     private final MotivationalService motivationalService;
-    private final GoalService goalService;
 
     @Override
     public String getCommandNameFilter() {
@@ -38,49 +40,73 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
         var exerciseAmount = CommandHandlerHelper.getOptionValueAsDouble(event, "amount");
 
         var user = userService.getOrCreateDiscordUser(userId);
-        var goal = goalService.getActiveUserGoal(user, exerciseName);
-        var exerciseLog = logService.create(user, exerciseName, exerciseAmount);
+        var logCreationStatus = logService.create(user, exerciseName, exerciseAmount);
+        var exerciseLog = logCreationStatus.log();
         var exerciseType = exerciseLog.getExerciseType();
-        var reachedGoal = exerciseLog.getReachedGoal();
-        var allExerciseLogs = logService.getAllByUserAndExerciseName(user, exerciseName);
+        var goal = logCreationStatus.goal();
         var measurementName = exerciseType.getMeasurementType().getShortName();
 
-        // Construct message
-        var workoutTitle = String.format("#%d %s - Log #%d", exerciseType.getId(), exerciseType.getName(), allExerciseLogs.size());
-        var descriptionBuilder = new StringBuilder();
-        descriptionBuilder.append(String.format("Value: %s %s\n", CommandHandlerHelper.formatDouble(exerciseLog.getAmount()), measurementName));
-        // Add last log value
-        if (allExerciseLogs.size() >= 2) {
-            var previousLog = allExerciseLogs.get(allExerciseLogs.size() - 2);
-            descriptionBuilder.append(String.format("Last: %s %s - %s\n", CommandHandlerHelper.formatDouble(previousLog.getAmount()), measurementName, previousLog.getCreated().format(DateTimeFormatter.ISO_LOCAL_DATE)));
-        }
-        // Add goal if it is present and not yet reached
-        if (goal.isPresent() && reachedGoal == null) {
-            descriptionBuilder.append(String.format("Goal: %s %s\n", CommandHandlerHelper.formatDouble(goal.get().getAmount()), measurementName));
-        }
-        // Add current pr
-        var currentPr = ServiceHelper.getCurrentPr(allExerciseLogs);
-        if (currentPr != null) {
-            descriptionBuilder.append(String.format("Pr: %s %s\n", CommandHandlerHelper.formatDouble(currentPr), measurementName));
-        }
-        var leaderboardPos = ServiceHelper.getLeaderboardPosition(user, exerciseType.getExerciseRecords());
-        if (leaderboardPos != null) descriptionBuilder.append(String.format("Position: %s", CommandHandlerHelper.getLeaderboardValue(leaderboardPos)));
-
-        // Add new pr reached congratulations
-        if (ServiceHelper.isPRImproved(allExerciseLogs)) {
-            descriptionBuilder.append("\n\n:rocket: NEW PR REACHED!");
-        }
-        // Add goal reached congratulations
-        if (reachedGoal != null) {
-            descriptionBuilder.append("\n\n:chart_with_upwards_trend: GOAL COMPLETED!");
-        }
-
+        // Construct embed
         var embed = EmbedCreateSpec.builder()
                 .title(":muscle: Logged workout")
-                .addField(workoutTitle, descriptionBuilder.toString(), false)
                 .footer(motivationalService.getRandomPositiveReinforcement(), null)
-                .color(Color.GREEN)
-                .build();
-        return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();
+                .color(Color.GREEN);
+
+        // Construct main description
+        {
+            var workoutTitle = String.format("#%d %s - Log #%d", exerciseType.getId(), exerciseType.getName(), logCreationStatus.amountOfLogs());
+            var descriptionBuilder = new StringBuilder();
+            descriptionBuilder.append(String.format("Value: %s %s\n", CommandHandlerHelper.formatDouble(exerciseLog.getAmount()), measurementName));
+            // Add last log value
+            if (logCreationStatus.lastLog() != null) {
+                var previousLog = logCreationStatus.lastLog();
+                descriptionBuilder.append(String.format("Last: %s %s - %s\n", CommandHandlerHelper.formatDouble(previousLog.getAmount()), measurementName, previousLog.getCreated().format(DateTimeFormatter.ISO_LOCAL_DATE)));
+            }
+            // Add goal if it is present and not yet reached
+            if (goal != null && !logCreationStatus.goalReached()) {
+                descriptionBuilder.append(String.format("Goal: %s %s\n", CommandHandlerHelper.formatDouble(goal.getAmount()), measurementName));
+            }
+            // Add current pr
+            var currentPr = logCreationStatus.record();
+            if (currentPr != null) {
+                descriptionBuilder.append(String.format("Pr: %s %s\n", CommandHandlerHelper.formatDouble(currentPr.getAmount()), measurementName));
+            }
+            var leaderboardPos = ServiceHelper.getLeaderboardPosition(user, exerciseType.getExerciseRecords());
+            if (leaderboardPos != null)
+                descriptionBuilder.append(String.format("Position: %s", CommandHandlerHelper.getLeaderboardValue(leaderboardPos)));
+            embed.addField(workoutTitle, descriptionBuilder.toString(), false);
+        }
+
+        // Add user congratulations
+        {
+            var descriptionBuilder = new StringBuilder();
+            var anyIsApplied = false;
+            // Add new pr reached congratulations
+            if (logCreationStatus.firstLog()) {
+                descriptionBuilder.append(":sparkles: New exercise started!\n");
+                anyIsApplied = true;
+            }
+            // Add new pr reached congratulations
+            if (logCreationStatus.newRecordReached()) {
+                descriptionBuilder.append(":rocket: New PR reached!\n");
+                anyIsApplied = true;
+            }
+            // Add goal reached congratulations
+            if (logCreationStatus.goalReached()) {
+                descriptionBuilder.append(":chart_with_upwards_trend: Goal completed!\n");
+                anyIsApplied = true;
+            }
+            if (anyIsApplied) embed.addField("Congratulations", descriptionBuilder.toString(), false);
+        }
+
+        // Add user xp field
+        {
+            var userXp = user.getXp();
+            var xpLevelData = UserService.getLevelData(userXp);
+            var levelDescription = String.format(":dizzy: Level: %d - %dxp - %dxp required for next level", xpLevelData.level(), userXp, xpLevelData.xpRemainingInLevel());
+            embed.addField("Experience", levelDescription, false);
+        }
+
+        return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed.build()).build()).then();
     }
 }

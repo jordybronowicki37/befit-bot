@@ -32,6 +32,7 @@ public class DummyDataInitializer implements CommandLineRunner {
     public void run(String... args) {
         log.info("Started dummy-data initialization");
         var discordUser = new DiscordUser(Snowflake.of(userId));
+        discordUser.setXp(810L);
         var webUser1 = new WebUser("test-user", "test@example.com", "12345678");
         var webUser2 = new WebUser("other-test-user", "other-test@example.com", "12345678");
         userRepository.saveAll(List.of(discordUser, webUser1, webUser2));

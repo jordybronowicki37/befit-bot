@@ -19,6 +19,7 @@ import java.util.Optional;
 public class GoalService {
     private final GoalRepository goalRepository;
     private final ExerciseTypeRepository exerciseTypeRepository;
+    private final UserService userService;
 
     public List<Goal> getAllByUser(User user) {
         return goalRepository.findAllByUser(user);
@@ -58,6 +59,8 @@ public class GoalService {
             lastGoal.setStatus(GoalStatus.OVERWRITTEN);
             goalRepository.save(lastGoal);
         });
+
+        userService.addExperience(user, 20L);
 
         var goal = new Goal(amount, exerciseType, user);
         goal.setStatus(GoalStatus.ACTIVE);

@@ -1,7 +1,9 @@
 package dev.jb.befit.backend.data.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -26,4 +28,10 @@ public abstract class User {
 
     @CreationTimestamp
     private LocalDateTime created;
+
+    @NonNull
+    @Min(0)
+    @Setter
+    @ColumnDefault("0")
+    private Long xp;
 }
