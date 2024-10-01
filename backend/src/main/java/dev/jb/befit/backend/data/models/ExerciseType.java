@@ -29,7 +29,7 @@ public class ExerciseType {
 
     @NonNull
     @Enumerated(EnumType.STRING)
-    private MeasurementTypes measurementType;
+    private MeasurementType measurementType;
 
     @OneToMany(mappedBy = "exerciseType")
     private List<Goal> goals = new ArrayList<>();

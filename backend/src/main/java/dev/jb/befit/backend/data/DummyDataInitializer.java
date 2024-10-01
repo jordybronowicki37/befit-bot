@@ -44,12 +44,12 @@ public class DummyDataInitializer implements CommandLineRunner {
 //        var myRecords = myLogs.stream().map(e -> new ExerciseRecord(discordUser, e.getExerciseType(), e.getAmount())).toList();
 //        exerciseRecordRepository.saveAll(myRecords);
 
-        var benchpress = new ExerciseType("Bench press", MeasurementTypes.KG, GoalDirection.INCREASING);
-        var pullUp = new ExerciseType("Pull ups", MeasurementTypes.AMOUNT, GoalDirection.INCREASING);
-        var running = new ExerciseType("Running 5km", MeasurementTypes.MINUTES, GoalDirection.DECREASING);
-        var pecFly = new ExerciseType("Pec fly", MeasurementTypes.KG, GoalDirection.INCREASING);
-        var shoulderPress = new ExerciseType("Shoulder press", MeasurementTypes.MINUTES, GoalDirection.INCREASING);
-        var cycling = new ExerciseType("Cycling", MeasurementTypes.KM, GoalDirection.INCREASING);
+        var benchpress = new ExerciseType("Bench press", MeasurementType.KG, GoalDirection.INCREASING);
+        var pullUp = new ExerciseType("Pull ups", MeasurementType.AMOUNT, GoalDirection.INCREASING);
+        var running = new ExerciseType("Running 5km", MeasurementType.MINUTES, GoalDirection.DECREASING);
+        var pecFly = new ExerciseType("Pec fly", MeasurementType.KG, GoalDirection.INCREASING);
+        var shoulderPress = new ExerciseType("Shoulder press", MeasurementType.MINUTES, GoalDirection.INCREASING);
+        var cycling = new ExerciseType("Cycling", MeasurementType.KM, GoalDirection.INCREASING);
         exerciseTypeRepository.saveAll(List.of(benchpress, pullUp, running, pecFly, shoulderPress, cycling));
 
         var benchLog1 = new ExerciseLog(30d, benchpress, discordUser);

@@ -1,7 +1,7 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.data.models.GoalDirection;
-import dev.jb.befit.backend.data.models.MeasurementTypes;
+import dev.jb.befit.backend.data.models.MeasurementType;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ExerciseTypeService;
@@ -32,7 +32,7 @@ public class NewExerciseCommandHandler extends DiscordChatInputInteractionEventL
         var subCommand = CommandHandlerHelper.getOption(event, "create");
 
         var exerciseName = CommandHandlerHelper.getOptionValue(subCommand, "name");
-        var measurementType = MeasurementTypes.valueOf(CommandHandlerHelper.getOptionValue(subCommand, "measurement-type"));
+        var measurementType = MeasurementType.valueOf(CommandHandlerHelper.getOptionValue(subCommand, "measurement-type"));
         var goalDirection = GoalDirection.valueOf(CommandHandlerHelper.getOptionValue(subCommand, "goal-direction"));
 
         var exercise = exerciseService.create(exerciseName, measurementType, goalDirection);

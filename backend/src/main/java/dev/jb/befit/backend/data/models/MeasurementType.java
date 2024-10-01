@@ -7,7 +7,7 @@ import static dev.jb.befit.backend.data.models.MeasurementCategory.*;
 
 @Getter
 @RequiredArgsConstructor
-public enum MeasurementTypes {
+public enum MeasurementType {
     KG("kg", "kilograms", WEIGHT),
     G("g", "grams", WEIGHT),
     KM("km", "kilometers", DISTANCE),

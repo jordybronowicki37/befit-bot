@@ -1,7 +1,7 @@
 package dev.jb.befit.backend.discord.registration;
 
 import dev.jb.befit.backend.data.models.GoalDirection;
-import dev.jb.befit.backend.data.models.MeasurementTypes;
+import dev.jb.befit.backend.data.models.MeasurementType;
 import discord4j.common.JacksonResources;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.discordjson.json.ApplicationCommandOptionChoiceData;
@@ -120,7 +120,7 @@ public class CommandRegistrarService {
     }
 
     private void applyMeasurementsOptions(List<ApplicationCommandRequest> commands) {
-        var measurementTypes = MeasurementTypes.values();
+        var measurementTypes = MeasurementType.values();
         applyGenericOptions(commands, "measurement-type", choices -> {
             for (var measurementType : measurementTypes) {
                 choices.add(ApplicationCommandOptionChoiceData.builder()
