@@ -7,7 +7,6 @@ import java.io.Serializable;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @RequiredArgsConstructor
 @IdClass(ExerciseRecord.ExerciseRecordId.class)
@@ -26,6 +25,7 @@ public class ExerciseRecord {
     private ExerciseType exerciseType;
 
     @NonNull
+    @Setter
     private Double amount;
 
     @Embeddable

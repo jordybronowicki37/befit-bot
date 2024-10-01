@@ -2,12 +2,12 @@ package dev.jb.befit.backend.data.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -19,7 +19,9 @@ public class ExerciseLog {
     @EqualsAndHashCode.Include
     private Long id;
 
-    private LocalDateTime created = LocalDateTime.now();
+    @CreationTimestamp
+    @Setter
+    private LocalDateTime created;
 
     @NonNull
     private Double amount;
@@ -28,6 +30,7 @@ public class ExerciseLog {
     @ManyToOne
     private ExerciseType exerciseType;
 
+    @Setter
     @OneToOne
     private Goal reachedGoal;
 

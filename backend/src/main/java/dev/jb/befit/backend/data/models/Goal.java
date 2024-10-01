@@ -2,12 +2,12 @@ package dev.jb.befit.backend.data.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -19,12 +19,14 @@ public class Goal {
     @EqualsAndHashCode.Include
     private Long id;
 
-    private LocalDateTime created = LocalDateTime.now();
+    @CreationTimestamp
+    private LocalDateTime created;
 
     @NonNull
     private Double amount;
 
     @Enumerated(EnumType.STRING)
+    @Setter
     private GoalStatus status = GoalStatus.ACTIVE;
 
     @NonNull
