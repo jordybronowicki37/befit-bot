@@ -1,0 +1,11 @@
+{
+  "name": "achievements",
+  "description": "See your achievements",
+  "options": [
+    {
+      "name": "all",
+      "description": "See all achievements",
+      "type": 1
+    }
+  ]
+}

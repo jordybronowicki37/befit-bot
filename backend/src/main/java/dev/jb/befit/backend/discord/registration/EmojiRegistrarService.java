@@ -20,7 +20,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -34,12 +36,18 @@ public class EmojiRegistrarService {
     private final GatewayDiscordClient discordClient;
     private final ResourceLoader resourceLoader;
 
+    private final Map<AchievementIcon, Snowflake> achievementEmojiIds = new HashMap<>();
+    private final Map<AchievementIcon, Snowflake> lockedAchievementEmojiIds = new HashMap<>();
+
     public void registerEmojis() throws IOException {
         var managementGuild = discordClient.getGuildById(Snowflake.of(managementGuildId)).timeout(Duration.ofSeconds(5)).block();
         if (managementGuild == null) throw new NullPointerException("Failed to get management guild");
 
         var existingEmojis = managementGuild.getEmojis().collectList().timeout(Duration.ofSeconds(5)).block();
         if (existingEmojis == null) throw new NullPointerException("Failed to get existing emojis of management guild");
+
+        achievementEmojiIds.clear();
+        lockedAchievementEmojiIds.clear();
 
         var emojiFiles = getAllEmojiFiles();
         for (var file : emojiFiles) {
@@ -48,18 +56,32 @@ public class EmojiRegistrarService {
             var emojiName = achievement.get().getDisplayName();
             var lockedEmojiName = emojiName + "_locked";
 
-            if (existingEmojis.stream().noneMatch(e -> e.getName().equals(emojiName))) {
+            var foundEmoji = existingEmojis.stream().filter(e -> e.getName().equals(emojiName)).findFirst();
+            Snowflake emojiId;
+            if (foundEmoji.isEmpty()) {
                 var achievementImage = Image.ofRaw(Files.readAllBytes(file.toPath()), Image.Format.PNG);
                 log.info("Adding achievement emoji with name: {}", emojiName);
-                managementGuild.createEmoji(emojiName, achievementImage).timeout(Duration.ofSeconds(5)).block();
+                var newEmoji = managementGuild.createEmoji(emojiName, achievementImage).timeout(Duration.ofSeconds(5)).block();
+                assert newEmoji != null;
+                emojiId = newEmoji.getId();
+            } else {
+                emojiId = foundEmoji.get().getId();
             }
+            achievementEmojiIds.put(achievement.get(), emojiId);
 
-            if (existingEmojis.stream().noneMatch(e -> e.getName().equals(lockedEmojiName))) {
+            var foundLockedEmoji = existingEmojis.stream().filter(e -> e.getName().equals(lockedEmojiName)).findFirst();
+            Snowflake lockedEmojiId;
+            if (foundLockedEmoji.isEmpty()) {
                 var lockedAchievementFile = grayScaleImage(file);
                 var lockedAchievementImage = Image.ofRaw(Files.readAllBytes(lockedAchievementFile.toPath()), Image.Format.PNG);
                 log.info("Adding locked achievement emoji with name: {}", lockedEmojiName);
-                managementGuild.createEmoji(lockedEmojiName, lockedAchievementImage).timeout(Duration.ofSeconds(5)).block();
+                var newEmoji = managementGuild.createEmoji(lockedEmojiName, lockedAchievementImage).timeout(Duration.ofSeconds(5)).block();
+                assert newEmoji != null;
+                lockedEmojiId = newEmoji.getId();
+            } else {
+                lockedEmojiId = foundLockedEmoji.get().getId();
             }
+            lockedAchievementEmojiIds.put(achievement.get(), lockedEmojiId);
         }
     }
 
@@ -86,7 +108,12 @@ public class EmojiRegistrarService {
         log.info("Removed all emojis from management guild");
     }
 
-    public File grayScaleImage(File file) throws IOException {
+    public Snowflake getEmojiId(AchievementIcon achievementIcon, boolean locked) {
+        if (locked) return lockedAchievementEmojiIds.get(achievementIcon);
+        return achievementEmojiIds.get(achievementIcon);
+    }
+
+    private File grayScaleImage(File file) throws IOException {
         var image = ImageIO.read(file);
         var grayscaleImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
