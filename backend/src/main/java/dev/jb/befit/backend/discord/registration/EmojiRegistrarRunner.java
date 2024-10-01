@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class CommandRegistrarRunner implements CommandLineRunner {
-    private final CommandRegistrarService commandRegistrarService;
+public class EmojiRegistrarRunner implements CommandLineRunner {
+    private final EmojiRegistrarService emojiRegistrarService;
 
     @Override
     public void run(String... args) throws Exception {
-        log.info("Started registering all guild commands");
-        commandRegistrarService.registerAllCommands();
-        log.info("Finished registering all guild commands");
+        log.info("Started registering all custom emojis");
+        emojiRegistrarService.registerEmojis();
+        log.info("Finished registering all custom emojis");
     }
 }
