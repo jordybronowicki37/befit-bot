@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.*;
@@ -20,8 +21,6 @@ import java.time.format.DateTimeFormatter;
 @Service
 @RequiredArgsConstructor
 public class GetExerciseCommandHandler extends DiscordChatInputInteractionEventListener {
-    private final static Integer LEADER_BOARD_MAX_SIZE = 3;
-
     private final ExerciseTypeService exerciseService;
     private final ExerciseLogService exerciseLogService;
     private final GoalService goalService;
@@ -29,7 +28,7 @@ public class GetExerciseCommandHandler extends DiscordChatInputInteractionEventL
 
     @Override
     public String getCommandNameFilter() {
-        return "exercises view one";
+        return CommandConstants.CommandExercisesViewOne;
     }
 
     @Override
@@ -38,9 +37,8 @@ public class GetExerciseCommandHandler extends DiscordChatInputInteractionEventL
         var userId = event.getInteraction().getUser().getId();
         var user = userService.getOrCreateDiscordUser(userId);
 
-        var subCommandGroup = CommandHandlerHelper.getOption(event, "view");
-        var subCommand = CommandHandlerHelper.getOption(subCommandGroup, "one");
-        var exerciseName = CommandHandlerHelper.getOptionValue(subCommand, "exercise-name");
+        var subCommand = CommandHandlerHelper.getSubCommand(event, getCommandNameFilter());
+        var exerciseName = CommandHandlerHelper.getOptionValue(subCommand, CommandConstants.AutoCompletePropExerciseName);
 
         var exercise = exerciseService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
         var measurement = exercise.getMeasurementType();
@@ -78,7 +76,7 @@ public class GetExerciseCommandHandler extends DiscordChatInputInteractionEventL
         if (!records.isEmpty()) {
             var recordsDescriptionBuilder = new StringBuilder();
             for (int i = 0; i < records.size(); i++) {
-                if (i == LEADER_BOARD_MAX_SIZE) break;
+                if (i == CommandConstants.PageSize) break;
                 var record = records.get(i);
                 recordsDescriptionBuilder.append(String.format("%s %s %s - %s\n",
                         CommandHandlerHelper.getLeaderboardValue(i+1),

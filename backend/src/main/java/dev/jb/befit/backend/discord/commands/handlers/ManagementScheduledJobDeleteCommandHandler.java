@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ScheduledJobService;
@@ -18,14 +19,13 @@ public class ManagementScheduledJobDeleteCommandHandler extends DiscordChatInput
 
     @Override
     public String getCommandNameFilter() {
-        return "management jobs remove";
+        return CommandConstants.CommandManagementJobsRemove;
     }
 
     @Override
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        var subCommandGroup = CommandHandlerHelper.getOption(event, "jobs");
-        var subCommand = CommandHandlerHelper.getOption(subCommandGroup, "remove");
-        var jobId = CommandHandlerHelper.getOptionValueAsLong(subCommand, "scheduled-job");
+        var subCommand = CommandHandlerHelper.getOption(event, getCommandNameFilter());
+        var jobId = CommandHandlerHelper.getOptionValueAsLong(subCommand, CommandConstants.AutoCompletePropScheduledJob);
 
         scheduledJobService.delete(jobId);
 

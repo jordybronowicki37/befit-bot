@@ -1,6 +1,7 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.BackendApplication;
+import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.InteractionReplyEditSpec;
@@ -15,7 +16,7 @@ import reactor.core.publisher.Mono;
 public class ManagementRestartCommandHandler extends DiscordChatInputInteractionEventListener {
     @Override
     public String getCommandNameFilter() {
-        return "management restart";
+        return CommandConstants.CommandManagementRestart;
     }
 
     @Override

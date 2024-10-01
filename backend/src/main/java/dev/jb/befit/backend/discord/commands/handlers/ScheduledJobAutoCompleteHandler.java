@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.jobs.JobScheduler;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputAutoCompleteEventListener;
@@ -22,12 +23,11 @@ public class ScheduledJobAutoCompleteHandler extends DiscordChatInputAutoComplet
 
     @Override
     public String getCommandNameFilter() {
-        return "scheduled-job";
+        return CommandConstants.AutoCompletePropScheduledJob;
     }
 
     @Override
     public Mono<Void> execute(ChatInputAutoCompleteEvent event) {
-        // TODO make use of filter
         var filter = CommandHandlerHelper.getAutocompleteOptionFilter(event);
 
         var jobs = jobScheduler.getScheduledTasks();
@@ -42,7 +42,7 @@ public class ScheduledJobAutoCompleteHandler extends DiscordChatInputAutoComplet
                     return ApplicationCommandOptionChoiceData.builder().name(channelName).value(jobId).build();
                 })
                 .filter(v -> v.name().contains(filter))
-                .limit(25)
+                .limit(CommandConstants.SearchResultsSize)
                 .toList();
         var suggestions = new ArrayList<ApplicationCommandOptionChoiceData>(sug);
         return event.respondWithSuggestions(suggestions);

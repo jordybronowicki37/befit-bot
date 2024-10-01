@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.commands.exceptions.InvalidValueException;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
@@ -24,13 +25,13 @@ public class ProgressCommandHandler extends DiscordChatInputInteractionEventList
 
     @Override
     public String getCommandNameFilter() {
-        return "progress";
+        return CommandConstants.CommandProgress;
     }
 
     @Override
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        var exerciseName = CommandHandlerHelper.getOptionValue(event, "exercise-name");
+        var exerciseName = CommandHandlerHelper.getOptionValue(event, CommandConstants.AutoCompletePropExerciseName);
         var viewMode = CommandHandlerHelper.getOptionalOptionValue(event, "view-mode", "own");
 
         try {

@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.listeners.DiscordButtonInteractionEventListener;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import jakarta.transaction.Transactional;
@@ -16,7 +17,7 @@ public class GetExercisesPaginationButtonHandler extends DiscordButtonInteractio
 
     @Override
     public String getCommandNameFilter() {
-        return "exercises view all";
+        return CommandConstants.CommandExercisesViewAll;
     }
 
     @Override

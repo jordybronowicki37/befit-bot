@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputAutoCompleteEventListener;
 import dev.jb.befit.backend.service.ExerciseTypeService;
@@ -20,7 +21,7 @@ public class ExerciseTypeAutoCompleteHandler extends DiscordChatInputAutoComplet
 
     @Override
     public String getCommandNameFilter() {
-        return "exercise-name";
+        return CommandConstants.AutoCompletePropExerciseName;
     }
 
     @Override
@@ -28,7 +29,7 @@ public class ExerciseTypeAutoCompleteHandler extends DiscordChatInputAutoComplet
         var filter = CommandHandlerHelper.getAutocompleteOptionFilter(event);
         var exercises = exerciseTypeService.getFiltered(filter);
         var suggestions = new ArrayList<ApplicationCommandOptionChoiceData>();
-        exercises.stream().limit(25).forEach(e -> suggestions.add(ApplicationCommandOptionChoiceData.builder().name(e.getName()).value(e.getName()).build()));
+        exercises.stream().limit(CommandConstants.SearchResultsSize).forEach(e -> suggestions.add(ApplicationCommandOptionChoiceData.builder().name(e.getName()).value(e.getName()).build()));
         return event.respondWithSuggestions(suggestions);
     }
 }

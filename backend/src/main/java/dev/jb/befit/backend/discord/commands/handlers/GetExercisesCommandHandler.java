@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ExerciseTypeService;
@@ -23,13 +24,11 @@ import reactor.core.publisher.Mono;
 @Service
 @RequiredArgsConstructor
 public class GetExercisesCommandHandler extends DiscordChatInputInteractionEventListener {
-    private static final int PAGE_SIZE = 5;
-
     private final ExerciseTypeService exerciseService;
 
     @Override
     public String getCommandNameFilter() {
-        return "exercises view all";
+        return CommandConstants.CommandExercisesViewAll;
     }
 
     @Override
@@ -39,7 +38,7 @@ public class GetExercisesCommandHandler extends DiscordChatInputInteractionEvent
     }
 
     public InteractionReplyEditSpec getExercisesEditSpec(int page) {
-        var exercises = exerciseService.getPage(Pageable.ofSize(PAGE_SIZE).withPage(page));
+        var exercises = exerciseService.getPage(Pageable.ofSize(CommandConstants.PageSize).withPage(page));
 
         var embed = EmbedCreateSpec.builder()
                 .title("All exercises")
@@ -69,9 +68,9 @@ public class GetExercisesCommandHandler extends DiscordChatInputInteractionEvent
                         .toList())
                 .color(Color.GREEN)
                 .build();
-        var previousButton = Button.secondary(String.format("exercises view all$%d", page-1), ReactionEmoji.unicode("⬅"));
+        var previousButton = Button.secondary(String.format("%s$%d", getCommandNameFilter(), page-1), ReactionEmoji.unicode("⬅"));
         if (page <= 0) previousButton = previousButton.disabled();
-        var nextButton = Button.secondary(String.format("exercises view all$%d", page+1), ReactionEmoji.unicode("➡"));
+        var nextButton = Button.secondary(String.format("%s$%d", getCommandNameFilter(), page+1), ReactionEmoji.unicode("➡"));
         if (page == exercises.getTotalPages()-1 || exercises.getTotalPages() == 0) nextButton = nextButton.disabled();
 
         var replyEditSpec = InteractionReplyEditSpec.builder().addEmbed(embed);

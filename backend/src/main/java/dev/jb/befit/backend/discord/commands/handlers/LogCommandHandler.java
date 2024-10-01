@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ExerciseLogService;
@@ -28,7 +29,7 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
 
     @Override
     public String getCommandNameFilter() {
-        return "log";
+        return CommandConstants.CommandLog;
     }
 
     @Override
@@ -36,7 +37,7 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
     public Mono<Void> execute(ChatInputInteractionEvent event) {
         var userId = event.getInteraction().getUser().getId();
 
-        var exerciseName = CommandHandlerHelper.getOptionValue(event, "exercise-name");
+        var exerciseName = CommandHandlerHelper.getOptionValue(event, CommandConstants.AutoCompletePropExerciseName);
         var exerciseAmount = CommandHandlerHelper.getOptionValueAsDouble(event, "amount");
 
         var user = userService.getOrCreateDiscordUser(userId);

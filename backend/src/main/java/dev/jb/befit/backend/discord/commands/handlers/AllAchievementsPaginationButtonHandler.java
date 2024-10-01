@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.listeners.DiscordButtonInteractionEventListener;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import jakarta.transaction.Transactional;
@@ -16,7 +17,7 @@ public class AllAchievementsPaginationButtonHandler extends DiscordButtonInterac
 
     @Override
     public String getCommandNameFilter() {
-        return "achievements all";
+        return CommandConstants.CommandAchievementsAll;
     }
 
     @Override

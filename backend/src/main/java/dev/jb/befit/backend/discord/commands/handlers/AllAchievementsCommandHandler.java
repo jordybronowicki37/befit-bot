@@ -1,6 +1,7 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.data.models.AchievementIcon;
+import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.discord.registration.EmojiRegistrarService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -22,13 +23,11 @@ import java.util.Comparator;
 @Service
 @RequiredArgsConstructor
 public class AllAchievementsCommandHandler extends DiscordChatInputInteractionEventListener {
-    private static final long PAGE_SIZE = 5;
-
     private final EmojiRegistrarService emojiRegistrarService;
 
     @Override
     public String getCommandNameFilter() {
-        return "achievements all";
+        return CommandConstants.CommandAchievementsAll;
     }
 
     @Override
@@ -37,12 +36,13 @@ public class AllAchievementsCommandHandler extends DiscordChatInputInteractionEv
     }
 
     public InteractionReplyEditSpec getAchievementsEditSpec(long page) {
+        var pageSize = CommandConstants.PageSize;
         var description = new StringBuilder();
         var allAchievements = AchievementIcon.values();
         Arrays.stream(allAchievements)
                 .sorted(Comparator.comparing(AchievementIcon::getTitle))
-                .skip(page * PAGE_SIZE)
-                .limit(PAGE_SIZE)
+                .skip(page * pageSize)
+                .limit(pageSize)
                 .forEach(a -> {
                     var emoji = emojiRegistrarService.getEmojiId(a, false);
                     var title = String.format("# <:%s:%s> %s\n%s\n", a.getDisplayName(), emoji.asString(), a.getTitle(), a.getDescription());
@@ -54,10 +54,10 @@ public class AllAchievementsCommandHandler extends DiscordChatInputInteractionEv
                 .color(Color.CYAN)
                 .build();
 
-        var previousButton = Button.secondary(String.format("achievements all$%d", page-1), ReactionEmoji.unicode("⬅"));
+        var previousButton = Button.secondary(String.format("%s$%d", getCommandNameFilter(), page-1), ReactionEmoji.unicode("⬅"));
         if (page <= 0) previousButton = previousButton.disabled();
-        var nextButton = Button.secondary(String.format("achievements all$%d", page+1), ReactionEmoji.unicode("➡"));
-        if (page == (allAchievements.length / PAGE_SIZE) - 1) nextButton = nextButton.disabled();
+        var nextButton = Button.secondary(String.format("%s$%d", getCommandNameFilter(), page+1), ReactionEmoji.unicode("➡"));
+        if (page == (allAchievements.length / pageSize) - 1) nextButton = nextButton.disabled();
 
         return InteractionReplyEditSpec.builder().addEmbed(embed).addComponent(ActionRow.of(previousButton, nextButton)).build();
     }

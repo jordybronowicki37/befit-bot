@@ -2,6 +2,7 @@ package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.data.models.ScheduledJob;
 import dev.jb.befit.backend.data.models.ScheduledJobType;
+import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.commands.exceptions.InvalidValueException;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
@@ -26,13 +27,12 @@ public class ManagementScheduledJobCreateCommandHandler extends DiscordChatInput
 
     @Override
     public String getCommandNameFilter() {
-        return "management jobs add";
+        return CommandConstants.CommandManagementJobsAdd;
     }
 
     @Override
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        var subCommandGroup = CommandHandlerHelper.getOption(event, "jobs");
-        var subCommand = CommandHandlerHelper.getOption(subCommandGroup, "add");
+        var subCommand = CommandHandlerHelper.getSubCommand(event, getCommandNameFilter());
         var channelId = CommandHandlerHelper.getOptionValue(subCommand, "channel-id");
         var jobType = ScheduledJobType.valueOf(CommandHandlerHelper.getOptionValue(subCommand, "job-type"));
         var cron = CommandHandlerHelper.getOptionValue(subCommand, "cron");

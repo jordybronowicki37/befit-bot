@@ -1,6 +1,7 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.data.models.ExerciseLog;
+import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ExerciseLogService;
@@ -31,15 +32,13 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class MyExercisesCommandHandler extends DiscordChatInputInteractionEventListener {
-    private static final int PAGE_SIZE = 5;
-
     private final ExerciseLogService exerciseLogService;
     private final UserService userService;
     private final GoalService goalService;
 
     @Override
     public String getCommandNameFilter() {
-        return "exercises view my";
+        return CommandConstants.CommandExercisesViewMy;
     }
 
     @Override
@@ -59,7 +58,8 @@ public class MyExercisesCommandHandler extends DiscordChatInputInteractionEventL
                 .entrySet().stream()
                 .sorted(Comparator.comparingLong(e -> e.getKey().getId())).toList();
 
-        var pageRequest = PageRequest.of(page, PAGE_SIZE);
+        // Create page
+        var pageRequest = PageRequest.of(page, CommandConstants.PageSize);
         var start = (int) pageRequest.getOffset();
         var end = Math.min((start + pageRequest.getPageSize()), groupedLogs.size());
         var pageContent = groupedLogs.subList(start, end);
@@ -90,9 +90,9 @@ public class MyExercisesCommandHandler extends DiscordChatInputInteractionEventL
                 .color(Color.GREEN)
                 .build();
 
-        var previousButton = Button.secondary(String.format("exercises view my$%d", page - 1), ReactionEmoji.unicode("⬅"));
+        var previousButton = Button.secondary(String.format("%s$%d", getCommandNameFilter(), page - 1), ReactionEmoji.unicode("⬅"));
         if (page <= 0) previousButton = previousButton.disabled();
-        var nextButton = Button.secondary(String.format("exercises view my$%d", page + 1), ReactionEmoji.unicode("➡"));
+        var nextButton = Button.secondary(String.format("%s$%d", getCommandNameFilter(), page + 1), ReactionEmoji.unicode("➡"));
         if (page == groupedLogsPage.getTotalPages() - 1 || groupedLogsPage.getTotalPages() == 0) nextButton = nextButton.disabled();
 
         var replyEditSpec = InteractionReplyEditSpec.builder().addEmbed(embed);

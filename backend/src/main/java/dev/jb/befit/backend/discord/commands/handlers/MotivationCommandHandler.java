@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.MotivationalService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -19,7 +20,7 @@ public class MotivationCommandHandler extends DiscordChatInputInteractionEventLi
 
     @Override
     public String getCommandNameFilter() {
-        return "motivation";
+        return CommandConstants.CommandMotivation;
     }
 
     @Override

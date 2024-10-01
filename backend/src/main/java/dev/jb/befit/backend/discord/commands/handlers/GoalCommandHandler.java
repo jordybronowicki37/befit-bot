@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.GoalService;
@@ -23,7 +24,7 @@ public class GoalCommandHandler extends DiscordChatInputInteractionEventListener
 
     @Override
     public String getCommandNameFilter() {
-        return "goals add";
+        return CommandConstants.CommandGoalsAdd;
     }
 
     @Override
@@ -31,8 +32,8 @@ public class GoalCommandHandler extends DiscordChatInputInteractionEventListener
     public Mono<Void> execute(ChatInputInteractionEvent event) {
         var userId = event.getInteraction().getUser().getId();
 
-        var subCommand = CommandHandlerHelper.getOption(event, "add");
-        var exerciseName = CommandHandlerHelper.getOptionValue(subCommand, "exercise-name");
+        var subCommand = CommandHandlerHelper.getSubCommand(event, getCommandNameFilter());
+        var exerciseName = CommandHandlerHelper.getOptionValue(subCommand, CommandConstants.AutoCompletePropExerciseName);
         var exerciseAmount = CommandHandlerHelper.getOptionValueAsDouble(subCommand, "amount");
 
         var user = userService.getOrCreateDiscordUser(userId);

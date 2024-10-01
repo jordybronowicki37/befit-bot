@@ -46,6 +46,16 @@ public class CommandHandlerHelper {
         return getCommandName(event).equals(commandName);
     }
 
+    public static ApplicationCommandInteractionOption getSubCommand(ChatInputInteractionEvent event, String commandName) {
+        var splitCommand = commandName.split(" ");
+
+        return switch (splitCommand.length) {
+            case 2 -> getOption(event, splitCommand[1]);
+            case 3 -> getOption(getOption(event, splitCommand[1]), splitCommand[2]);
+            default -> null;
+        };
+    }
+
     public static ApplicationCommandInteractionOption getOption(ApplicationCommandInteractionOption subCommand, String optionName) {
         return subCommand.getOption(optionName).orElseThrow(() -> new OptionNotFoundException(optionName));
     }
