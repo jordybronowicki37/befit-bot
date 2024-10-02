@@ -38,6 +38,15 @@ public class UserAchievementService {
         var foundAchievement = hasCompletedAchievement(user, achievement);
         if (foundAchievement.isPresent()) return foundAchievement.get();
 
+        var earnedXp = switch (achievement.getDifficulty()) {
+            case EASY -> 50;
+            case MEDIUM -> 100;
+            case HARD -> 150;
+            case IMPOSSIBLE -> 200;
+            default -> 0;
+        };
+        if (earnedXp != 0) userService.addExperience(user, earnedXp);
+
         var userAchievement = new UserAchievement(achievement, user);
         return achievementsRepository.save(userAchievement);
     }

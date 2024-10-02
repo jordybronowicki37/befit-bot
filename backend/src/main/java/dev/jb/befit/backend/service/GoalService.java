@@ -65,7 +65,7 @@ public class GoalService {
             goalRepository.save(lastGoal);
         });
 
-        userService.addExperience(user, 20L);
+        userService.addExperience(user, 10);
 
         var goal = new Goal(amount, exerciseType, user);
         goal.setStatus(GoalStatus.ACTIVE);

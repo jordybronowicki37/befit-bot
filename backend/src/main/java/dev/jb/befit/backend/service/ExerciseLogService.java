@@ -65,12 +65,12 @@ public class ExerciseLogService {
             var newRecord = new ExerciseRecord(user, exerciseType, amount);
             exerciseType.getExerciseRecords().add(newRecord);
             exerciseRecord = exerciseRecordRepository.save(newRecord);
-            earnedXp += 50;
+            earnedXp += 20;
         } else if (ServiceHelper.isRecordImproved(exerciseRecord, exerciseLog)) {
             exerciseRecord.setAmount(exerciseLog.getAmount());
             exerciseRecord = exerciseRecordRepository.save(exerciseRecord);
             newRecordReached = true;
-            earnedXp += 100;
+            earnedXp += 50;
         }
 
         var goalOpt = goalService.getActiveUserGoal(user, exerciseName);
