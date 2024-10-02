@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private static final double GROWTH_RATE = 1.2;
-    private static final long STARTING_LEVEL_LIMIT = 100L;
+    private static final double GROWTH_RATE = 1.3;
+    private static final long STARTING_LEVEL_LIMIT = 200L;
 
     private final DiscordUserRepository discordUserRepository;
     private final UserRepository userRepository;
