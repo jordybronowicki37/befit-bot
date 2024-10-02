@@ -23,7 +23,7 @@ import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_CO
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CommandHandlerHelper {
+public final class CommandHandlerHelper {
     public static String getCommandName(ChatInputInteractionEvent event) {
         var actualCommandNameBuilder = new StringBuilder();
         actualCommandNameBuilder.append(event.getCommandName());

@@ -1,8 +1,11 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.data.models.Achievement;
+import dev.jb.befit.backend.data.models.UserAchievement;
 import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
+import dev.jb.befit.backend.discord.registration.EmojiRegistrarService;
 import dev.jb.befit.backend.service.ExerciseLogService;
 import dev.jb.befit.backend.service.MotivationalService;
 import dev.jb.befit.backend.service.ServiceHelper;
@@ -18,11 +21,13 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class LogCommandHandler extends DiscordChatInputInteractionEventListener {
+    private final EmojiRegistrarService emojiRegistrarService;
     private final ExerciseLogService logService;
     private final UserService userService;
     private final MotivationalService motivationalService;
@@ -98,6 +103,20 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
                 anyIsApplied = true;
             }
             if (anyIsApplied) embed.addField("Congratulations", descriptionBuilder.toString(), false);
+        }
+
+        // Add user achievements
+        if (!logCreationStatus.completedAchievements().isEmpty()) {
+            var descriptionBuilder = new StringBuilder();
+
+            logCreationStatus.completedAchievements().stream()
+                    .map(UserAchievement::getAchievement)
+                    .sorted(Comparator.comparing(Achievement::getTitle))
+                    .forEach(a -> {
+                        var emoji = emojiRegistrarService.getEmojiId(a, false);
+                        descriptionBuilder.append(String.format("<:%s:%s> %s\n*%s*\n\n", a.getDisplayName(), emoji.asString(), a.getTitle(), a.getDescription()));
+                    });
+            embed.addField("Completed achievements", descriptionBuilder.toString(), false);
         }
 
         // Add user xp field

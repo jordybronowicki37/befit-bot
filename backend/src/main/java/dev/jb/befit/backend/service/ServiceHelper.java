@@ -10,7 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ServiceHelper {
+public final class ServiceHelper {
     public static List<ExerciseRecord> sortLeaderboard(List<ExerciseRecord> records) {
         if (records.size() < 2) return records;
         var exercise = records.get(0).getExerciseType();

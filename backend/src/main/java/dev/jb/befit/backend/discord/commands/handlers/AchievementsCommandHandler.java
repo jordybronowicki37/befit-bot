@@ -59,7 +59,7 @@ public class AchievementsCommandHandler extends DiscordChatInputInteractionEvent
                     var userAchievement = userAchievements.stream().filter(u -> u.getAchievement().equals(a)).findFirst();
                     var emoji = emojiRegistrarService.getEmojiId(a, userAchievement.isEmpty());
 
-                    description.append(String.format("# <:%s:%s> %s\n%s\n", a.getDisplayName(), emoji.asString(), a.getTitle(), a.getDescription()));
+                    description.append(String.format("# <:%s:%s> %s\n***%s***\n", a.getDisplayName(), emoji.asString(), a.getTitle(), a.getDescription()));
 
                     if (userAchievement.isPresent()) {
                         var date = userAchievement.get().getCreated().format(DateTimeFormatter.ISO_LOCAL_DATE);
@@ -67,7 +67,7 @@ public class AchievementsCommandHandler extends DiscordChatInputInteractionEvent
                     }
 
                     var completedPercentage = achievementService.getCompletionPercentage(a);
-                    if (completedPercentage != 0) description.append(String.format("Global completion: %.1f%%\n", completedPercentage));
+                    if (completedPercentage != 0) description.append(String.format("Community: %.1f%%\n", completedPercentage));
                 });
         var embed = EmbedCreateSpec.builder()
                 .title("All achievements")

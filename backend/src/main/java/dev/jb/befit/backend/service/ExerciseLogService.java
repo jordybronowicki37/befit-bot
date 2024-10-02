@@ -2,22 +2,22 @@ package dev.jb.befit.backend.service;
 
 import dev.jb.befit.backend.data.ExerciseLogRepository;
 import dev.jb.befit.backend.data.ExerciseRecordRepository;
-import dev.jb.befit.backend.data.models.ExerciseLog;
-import dev.jb.befit.backend.data.models.ExerciseRecord;
-import dev.jb.befit.backend.data.models.GoalStatus;
-import dev.jb.befit.backend.data.models.User;
+import dev.jb.befit.backend.data.models.*;
 import dev.jb.befit.backend.service.dto.LogCreationStatus;
 import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ExerciseLogService {
+    private final AchievementsRulesHandler achievementsRulesHandler;
     private final ExerciseLogRepository exerciseLogRepository;
     private final ExerciseTypeService exerciseTypeService;
     private final ExerciseRecordRepository exerciseRecordRepository;
@@ -25,6 +25,10 @@ public class ExerciseLogService {
     private final UserService userService;
 
     public List<ExerciseLog> getAllByUser(User user) {
+        return exerciseLogRepository.findAllByUser(user);
+    }
+
+    public List<ExerciseLog> getAllByUser(User user, LocalDateTime from) {
         return exerciseLogRepository.findAllByUser(user);
     }
 
@@ -47,6 +51,7 @@ public class ExerciseLogService {
     }
 
     public LogCreationStatus create(User user, String exerciseName, Double amount) {
+        var achievements = new LinkedList<UserAchievement>();
         var exerciseType = exerciseTypeService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
         var allExistingLogs = getAllByUserAndExerciseName(user, exerciseName);
         var exerciseLog = new ExerciseLog(amount, exerciseType, user);
@@ -73,11 +78,15 @@ public class ExerciseLogService {
             var goal = goalOpt.get();
             if (ServiceHelper.isGoalReached(goal, exerciseLog)) {
                 goal.setStatus(GoalStatus.COMPLETED);
+                goal.setCompletedAt(LocalDateTime.now());
                 exerciseLog.setReachedGoal(goal);
                 earnedXp += 50;
                 goalReached = true;
+                achievements.addAll(achievementsRulesHandler.checkGoalCompletedAchievements(user, goal));
             }
         }
+
+        achievements.addAll(achievementsRulesHandler.checkLogCreationAchievements(user, exerciseLog));
 
         userService.addExperience(user.getId(), earnedXp);
         var newExerciseLog = exerciseLogRepository.save(exerciseLog);
@@ -87,6 +96,7 @@ public class ExerciseLogService {
                 allExistingLogs.size() + 1,
                 exerciseRecord,
                 goalOpt.orElse(null),
+                achievements,
                 earnedXp,
                 allExistingLogs.isEmpty(),
                 newRecordReached,

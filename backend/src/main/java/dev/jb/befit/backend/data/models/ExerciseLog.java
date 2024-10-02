@@ -2,7 +2,6 @@ package dev.jb.befit.backend.data.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -19,9 +18,8 @@ public class ExerciseLog {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @CreationTimestamp
     @Setter
-    private LocalDateTime created;
+    private LocalDateTime created = LocalDateTime.now();
 
     @NonNull
     private Double amount;

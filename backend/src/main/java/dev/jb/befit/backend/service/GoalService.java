@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,8 +22,12 @@ public class GoalService {
     private final ExerciseTypeRepository exerciseTypeRepository;
     private final UserService userService;
 
-    public List<Goal> getAllByUser(User user) {
+    public List<Goal> getAllCompletedByUser(User user) {
         return goalRepository.findAllByUser(user);
+    }
+
+    public List<Goal> getAllCompletedByUser(User user, LocalDateTime from) {
+        return goalRepository.findAllByUserAndCompletedAtAfterAndCompletedAtNotNull(user, from);
     }
 
     public List<Goal> getAllByExerciseName(String exerciseName) {
@@ -39,7 +44,7 @@ public class GoalService {
     }
 
     public List<Goal> getAllActiveUserGoals(User user) {
-        return getAllByUser(user).stream().filter(g -> g.getStatus().equals(GoalStatus.ACTIVE)).toList();
+        return getAllCompletedByUser(user).stream().filter(g -> g.getStatus().equals(GoalStatus.ACTIVE)).toList();
     }
 
     public Optional<Goal> getActiveUserGoal(User user, String exerciseName) {
