@@ -10,9 +10,6 @@ import dev.jb.befit.backend.service.ServiceHelper;
 import dev.jb.befit.backend.service.UserService;
 import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import discord4j.core.object.component.ActionRow;
-import discord4j.core.object.component.Button;
-import discord4j.core.object.reaction.ReactionEmoji;
 import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionReplyEditSpec;
@@ -90,16 +87,7 @@ public class MyExercisesCommandHandler extends DiscordChatInputInteractionEventL
                 .color(Color.GREEN)
                 .build();
 
-        var previousButton = Button.secondary(String.format("%s$%d", getCommandNameFilter(), page - 1), ReactionEmoji.unicode("⬅"));
-        if (page <= 0) previousButton = previousButton.disabled();
-        var nextButton = Button.secondary(String.format("%s$%d", getCommandNameFilter(), page + 1), ReactionEmoji.unicode("➡"));
-        if (page == groupedLogsPage.getTotalPages() - 1 || groupedLogsPage.getTotalPages() == 0) nextButton = nextButton.disabled();
-
-        var replyEditSpec = InteractionReplyEditSpec.builder().addEmbed(embed);
-        if (!previousButton.isDisabled() || !nextButton.isDisabled()) {
-            replyEditSpec.addComponent(ActionRow.of(previousButton, nextButton));
-        }
-
-        return replyEditSpec.build();
+        var paginationControls = CommandHandlerHelper.getPaginationComponent(page, groupedLogsPage.getTotalPages(), getCommandNameFilter());
+        return InteractionReplyEditSpec.builder().addEmbed(embed).addComponent(paginationControls).build();
     }
 }

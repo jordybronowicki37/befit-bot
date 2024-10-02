@@ -9,6 +9,9 @@ import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
+import discord4j.core.object.component.ActionRow;
+import discord4j.core.object.component.Button;
+import discord4j.core.object.reaction.ReactionEmoji;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -136,5 +139,19 @@ public class CommandHandlerHelper {
         if (user instanceof DiscordUser discordUser) return String.format("<@%s>", discordUser.getDiscordId().asString());
         if (user instanceof WebUser webUser) return String.format("`%s`", webUser.getUsername());
         return "`unknown`";
+    }
+
+    public static int getAmountOfPages(int items, int pageSize) {
+        return (int) Math.ceil((double) items / pageSize);
+    }
+
+    public static ActionRow getPaginationComponent(int pageNumber, int amountOfPages, String commandName) {
+        var previousButton = Button.secondary(String.format("%s$%d", commandName, pageNumber-1), ReactionEmoji.unicode("⬅"));
+        if (pageNumber <= 0) previousButton = previousButton.disabled();
+        var reloadButton = Button.secondary(String.format("%s$%d", commandName, pageNumber), String.format("%d/%d", pageNumber+1, amountOfPages));
+        var nextButton = Button.secondary(String.format("%s$%d", commandName, pageNumber+1), ReactionEmoji.unicode("➡"));
+        if (pageNumber == amountOfPages - 1) nextButton = nextButton.disabled();
+
+        return ActionRow.of(previousButton, reloadButton, nextButton);
     }
 }

@@ -2,15 +2,13 @@ package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.data.models.Achievement;
 import dev.jb.befit.backend.discord.commands.CommandConstants;
+import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.discord.registration.EmojiRegistrarService;
 import dev.jb.befit.backend.service.UserAchievementService;
 import dev.jb.befit.backend.service.UserService;
 import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import discord4j.core.object.component.ActionRow;
-import discord4j.core.object.component.Button;
-import discord4j.core.object.reaction.ReactionEmoji;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionReplyEditSpec;
 import discord4j.rest.util.Color;
@@ -43,7 +41,7 @@ public class AchievementsCommandHandler extends DiscordChatInputInteractionEvent
         return event.editReply(getAchievementsEditSpec(userId, 0)).then();
     }
 
-    public InteractionReplyEditSpec getAchievementsEditSpec(Snowflake userId, long page) {
+    public InteractionReplyEditSpec getAchievementsEditSpec(Snowflake userId, int page) {
         var user = userService.getOrCreateDiscordUser(userId);
         var userAchievements = user.getAchievements();
         int pageSize = CommandConstants.PageSize;
@@ -55,7 +53,7 @@ public class AchievementsCommandHandler extends DiscordChatInputInteractionEvent
                     if (difficultyCompare != 0) return difficultyCompare;
                     return a.getTitle().compareToIgnoreCase(b.getTitle());
                 })
-                .skip(page * pageSize)
+                .skip((long) page * pageSize)
                 .limit(pageSize)
                 .forEach(a -> {
                     var userAchievement = userAchievements.stream().filter(u -> u.getAchievement().equals(a)).findFirst();
@@ -77,11 +75,8 @@ public class AchievementsCommandHandler extends DiscordChatInputInteractionEvent
                 .color(Color.CYAN)
                 .build();
 
-        var previousButton = Button.secondary(String.format("%s$%d", getCommandNameFilter(), page-1), ReactionEmoji.unicode("⬅"));
-        if (page <= 0) previousButton = previousButton.disabled();
-        var nextButton = Button.secondary(String.format("%s$%d", getCommandNameFilter(), page+1), ReactionEmoji.unicode("➡"));
-        if (page == (allAchievements.length / pageSize) - 1) nextButton = nextButton.disabled();
-
-        return InteractionReplyEditSpec.builder().addEmbed(embed).addComponent(ActionRow.of(previousButton, nextButton)).build();
+        var amountOfPages = CommandHandlerHelper.getAmountOfPages(allAchievements.length, pageSize);
+        var paginationControls = CommandHandlerHelper.getPaginationComponent(page, amountOfPages, getCommandNameFilter());
+        return InteractionReplyEditSpec.builder().addEmbed(embed).addComponent(paginationControls).build();
     }
 }

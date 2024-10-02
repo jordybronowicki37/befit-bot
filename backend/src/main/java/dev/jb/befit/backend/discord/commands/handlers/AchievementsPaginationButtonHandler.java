@@ -24,7 +24,7 @@ public class AchievementsPaginationButtonHandler extends DiscordButtonInteractio
     @Transactional
     public Mono<Void> execute(ButtonInteractionEvent event) {
         var userId = event.getMessage().get().getInteraction().get().getUser().getId();
-        var page = Long.parseLong(event.getCustomId().split("\\$")[1]);
+        var page = Integer.parseInt(event.getCustomId().split("\\$")[1]);
         return event.editReply(achievementsCommandHandler.getAchievementsEditSpec(userId, page)).then();
     }
 }
