@@ -5,8 +5,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CommandConstants {
-    public static final String CommandAchievementsAll = "achievements all";
-    public static final String CommandAchievementsMy = "achievements my";
+    public static final String CommandAchievements = "achievements";
     public static final String CommandExercisesViewAll = "exercises view all";
     public static final String CommandExercisesViewOne = "exercises view one";
     public static final String CommandExercisesViewMy = "exercises view my";

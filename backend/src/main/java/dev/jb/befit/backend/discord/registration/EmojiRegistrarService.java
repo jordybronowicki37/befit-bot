@@ -1,6 +1,6 @@
 package dev.jb.befit.backend.discord.registration;
 
-import dev.jb.befit.backend.data.models.AchievementIcon;
+import dev.jb.befit.backend.data.models.Achievement;
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.rest.util.Image;
@@ -36,8 +36,8 @@ public class EmojiRegistrarService {
     private final GatewayDiscordClient discordClient;
     private final ResourceLoader resourceLoader;
 
-    private final Map<AchievementIcon, Snowflake> achievementEmojiIds = new HashMap<>();
-    private final Map<AchievementIcon, Snowflake> lockedAchievementEmojiIds = new HashMap<>();
+    private final Map<Achievement, Snowflake> achievementEmojiIds = new HashMap<>();
+    private final Map<Achievement, Snowflake> lockedAchievementEmojiIds = new HashMap<>();
 
     public void registerEmojis() throws IOException {
         var managementGuild = discordClient.getGuildById(Snowflake.of(managementGuildId)).timeout(Duration.ofSeconds(5)).block();
@@ -51,7 +51,7 @@ public class EmojiRegistrarService {
 
         var emojiFiles = getAllEmojiFiles();
         for (var file : emojiFiles) {
-            var achievement = Arrays.stream(AchievementIcon.values()).filter(a -> a.getIconFileName().equals(file.getName())).findFirst();
+            var achievement = Arrays.stream(Achievement.values()).filter(a -> a.getIconFileName().equals(file.getName())).findFirst();
             if (achievement.isEmpty()) continue;
             var emojiName = achievement.get().getDisplayName();
             var lockedEmojiName = emojiName + "_locked";
@@ -108,9 +108,9 @@ public class EmojiRegistrarService {
         log.info("Removed all emojis from management guild");
     }
 
-    public Snowflake getEmojiId(AchievementIcon achievementIcon, boolean locked) {
-        if (locked) return lockedAchievementEmojiIds.get(achievementIcon);
-        return achievementEmojiIds.get(achievementIcon);
+    public Snowflake getEmojiId(Achievement achievement, boolean locked) {
+        if (locked) return lockedAchievementEmojiIds.get(achievement);
+        return achievementEmojiIds.get(achievement);
     }
 
     private File grayScaleImage(File file) throws IOException {

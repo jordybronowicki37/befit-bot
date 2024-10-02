@@ -19,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DummyDataInitializer implements CommandLineRunner {
     private final UserRepository userRepository;
+    private final UserAchievementsRepository userAchievementsRepository;
     private final ExerciseLogRepository exerciseLogRepository;
     private final ExerciseRecordRepository exerciseRecordRepository;
     private final ExerciseTypeRepository exerciseTypeRepository;
@@ -36,6 +37,8 @@ public class DummyDataInitializer implements CommandLineRunner {
         var webUser1 = new WebUser("test-user", "test@example.com", "12345678");
         var webUser2 = new WebUser("other-test-user", "other-test@example.com", "12345678");
         userRepository.saveAll(List.of(discordUser, webUser1, webUser2));
+        userAchievementsRepository.save(new UserAchievement(Achievement.DONE_FOR_TODAY, discordUser));
+        userAchievementsRepository.save(new UserAchievement(Achievement.CARDIO_ENTHUSIAST, webUser1));
 
 //        var exercises = IntStream.range(1, 20).mapToObj(i -> new ExerciseType("exercise-"+i, MeasurementTypes.KG, GoalDirection.INCREASING)).toList();
 //        exerciseTypeRepository.saveAll(exercises);

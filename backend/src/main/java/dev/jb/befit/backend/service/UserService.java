@@ -28,6 +28,10 @@ public class UserService {
         return discordUser.get();
     }
 
+    public long getAmountOfUsers() {
+        return userRepository.count();
+    }
+
     public void addExperience(long userId, long experience) {
         if (experience < 0) throw new IllegalArgumentException("Experience cannot be negative");
         var user = userRepository.findById(userId);

@@ -7,6 +7,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Entity
@@ -34,4 +35,7 @@ public abstract class User {
     @Setter
     @ColumnDefault("0")
     private Long xp;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserAchievement> achievements;
 }
