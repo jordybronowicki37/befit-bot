@@ -39,13 +39,7 @@ public class UserAchievementService {
         var foundAchievement = hasCompletedAchievement(user, achievement);
         if (foundAchievement.isPresent()) return foundAchievement.get();
 
-        var earnedXp = switch (achievement.getDifficulty()) {
-            case EASY -> 50;
-            case MEDIUM -> 100;
-            case HARD -> 150;
-            case IMPOSSIBLE -> 200;
-            default -> 0;
-        };
+        var earnedXp = getEarnedAchievementXp(achievement);
         if (earnedXp != 0) userExperienceService.addExperience(user, earnedXp);
 
         var userAchievement = new UserAchievement(achievement, user);
@@ -57,5 +51,15 @@ public class UserAchievementService {
         var amountOfCompletedAchievements = achievementsRepository.countDistinctByAchievement(achievement);
         if (amountOfCompletedAchievements == 0 | amountOfUsers == 0) return 0;
         return (double) amountOfCompletedAchievements / amountOfUsers * 100;
+    }
+
+    public static long getEarnedAchievementXp(Achievement achievement) {
+        return switch (achievement.getDifficulty()) {
+            case EASY -> 50;
+            case MEDIUM -> 100;
+            case HARD -> 150;
+            case IMPOSSIBLE -> 200;
+            default -> 0;
+        };
     }
 }

@@ -50,6 +50,8 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
         var exerciseType = exerciseLog.getExerciseType();
         var goal = logCreationStatus.goal();
         var measurementName = exerciseType.getMeasurementType().getShortName();
+        var userXp = user.getXp();
+        var xpLevelData = UserExperienceService.getLevelData(userXp);
 
         // Construct embed
         var embed = EmbedCreateSpec.builder()
@@ -101,6 +103,11 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
                 descriptionBuilder.append(":chart_with_upwards_trend: Goal completed!\n");
                 anyIsApplied = true;
             }
+            // Add new level reached congratulations
+            if (xpLevelData.xpCompletedInLevel() < logCreationStatus.earnedXp()) {
+                descriptionBuilder.append(":sparkles: Level completed!\n");
+                anyIsApplied = true;
+            }
             if (anyIsApplied) embed.addField("Congratulations", descriptionBuilder.toString(), false);
         }
 
@@ -121,9 +128,7 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
         // Add user xp field
         FileInputStream inputStream;
         {
-            var userXp = user.getXp();
-            var xpLevelData = UserExperienceService.getLevelData(userXp);
-            var levelDescription = String.format(":dizzy: Level: %d - %dxp - %dxp required for next level", xpLevelData.level(), userXp, xpLevelData.xpRemainingInLevel());
+            var levelDescription = String.format(":dizzy: Earned: %dxp - %dxp required for next level", logCreationStatus.earnedXp(), xpLevelData.xpTopLevel());
             embed.addField("Experience", levelDescription, false);
             var userLevelXpBar = UserExperienceService.getXpLevelPicture(userXp);
             try {

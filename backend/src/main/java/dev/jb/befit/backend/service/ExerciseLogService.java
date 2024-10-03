@@ -90,6 +90,9 @@ public class ExerciseLogService {
         achievements.addAll(achievementsRulesHandler.checkLogCreationAchievements(user, exerciseLog));
 
         userExperienceService.addExperience(user.getId(), earnedXp);
+
+        earnedXp += achievements.stream().mapToLong(a -> UserAchievementService.getEarnedAchievementXp(a.getAchievement())).sum();
+
         var newExerciseLog = exerciseLogRepository.save(exerciseLog);
         return new LogCreationStatus(
                 newExerciseLog,

@@ -44,7 +44,7 @@ public class UserExperienceService {
         while (xp >= topLevelXp) {
             level++;
             bottomLevelXp = topLevelXp;
-            topLevelXp += (long) (Math.ceil(topLevelXp * GROWTH_RATE / 10) * 10);
+            topLevelXp = (long) (Math.ceil(topLevelXp * GROWTH_RATE / 10) * 10);
         }
 
         var remainingLevelXp = topLevelXp - xp;
@@ -56,52 +56,66 @@ public class UserExperienceService {
     public static File getXpLevelPicture(long xp) {
         var levelData = getLevelData(xp);
 
-        int progress = (int) ((float) levelData.xpCompletedInLevel() / (levelData.xpBottomLevel() + levelData.xpTopLevel()) * 100);
+        int progress = (int) ((float) levelData.xpCompletedInLevel() / (levelData.xpTopLevel() - levelData.xpBottomLevel()) * 100);
         if (progress < 0) progress = 0;
         if (progress > 99) progress = 99;
 
-        int progressBarWidth = 300;
+        int barWidth = 300;
         int progressBarHeight = 20;
-        int progressBarX = 2;
-        int progressBarY = 2;
-        int width = progressBarWidth + 2 * progressBarX;
-        int height = progressBarHeight + 2 * progressBarY;
+        int cornerArc = progressBarHeight;
+        int imageMargin = 2;
+        int width = barWidth + 2*imageMargin;
+        int height = progressBarHeight + 2*imageMargin;
         int textSize = 15;
         int textY = 18;
-        int progressBarLength = (progressBarWidth * progress) / 100;
-        if (progressBarLength < progressBarHeight) progressBarLength = progressBarHeight;
+        var progressText = xp + "XP";
+        var levelText = "LVL " + levelData.level();
 
         var bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         var graphics = bufferedImage.createGraphics();
-        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+        Stroke thickBorder = new BasicStroke(2);
+        graphics.setStroke(thickBorder);
+        graphics.setFont(new Font("Arial", Font.BOLD, textSize));
+        int levelTextWidth = graphics.getFontMetrics().stringWidth(levelText);
+        int levelBarWidth = levelTextWidth+6+progressBarHeight/2;
+        int progressBarX = levelTextWidth+imageMargin;
+        int progressBarLength = (barWidth - levelBarWidth + cornerArc/2 + imageMargin + 1) * progress / 100;
+        if (progressBarLength < progressBarHeight) progressBarLength = progressBarHeight;
 
         // Set the background to transparent by clearing the image and switch back to normal drawing mode
         graphics.setComposite(AlphaComposite.Clear);
         graphics.fillRect(0, 0, width, height);
         graphics.setComposite(AlphaComposite.SrcOver);
 
-        // Draw the background
+        // Draw the progress bar
         graphics.setColor(Color.WHITE);
-        graphics.fillRoundRect(progressBarX, progressBarY, progressBarWidth, progressBarHeight, progressBarHeight, progressBarHeight);
-
-        // Draw the filled part of the progress bar
+        graphics.fillRoundRect(imageMargin, imageMargin, barWidth-1, progressBarHeight, cornerArc, cornerArc);
         graphics.setColor(Color.GREEN);
-        graphics.fillRoundRect(progressBarX, progressBarY, progressBarLength, progressBarHeight, progressBarHeight, progressBarHeight);
+        graphics.fillRoundRect(progressBarX, imageMargin, progressBarLength, progressBarHeight, cornerArc, cornerArc);
 
         // Draw the border of the progress bar
-        var thickBorder = new BasicStroke(2);
-        graphics.setStroke(thickBorder);
         graphics.setColor(Color.BLACK);
-        graphics.drawRoundRect(progressBarX, progressBarY, progressBarWidth, progressBarHeight, progressBarHeight, progressBarHeight);
+        graphics.drawRoundRect(imageMargin, imageMargin, barWidth-imageMargin, progressBarHeight, cornerArc, cornerArc);
 
         // Add progress text
-        var text = levelData.xpRemainingInLevel() + "xp";
-        graphics.setFont(new Font("Arial", Font.BOLD, textSize));
+        int progressTextWidth = graphics.getFontMetrics().stringWidth(progressText);
+        int progressTextX = levelTextWidth + progressBarLength - progressTextWidth;
+        if (progressTextX < progressBarX + cornerArc) progressTextX = progressBarX + cornerArc;
         graphics.setColor(Color.BLACK);
-        int textWidth = graphics.getFontMetrics().stringWidth(text);
-        int textX = progressBarLength - textWidth;
-        if (textX < progressBarX + 5) textX = progressBarX + 5;
-        graphics.drawString(text, textX, textY);
+        graphics.drawString(progressText, progressTextX, textY);
+
+        // Draw the level background
+        graphics.setColor(Color.CYAN);
+        graphics.fillRoundRect(imageMargin, imageMargin, levelBarWidth, progressBarHeight, cornerArc, cornerArc);
+
+        // Draw the level border
+        graphics.setColor(Color.BLACK);
+        graphics.drawRoundRect(imageMargin, imageMargin, levelBarWidth, progressBarHeight, cornerArc, cornerArc);
+
+        // Add level text
+        graphics.setColor(Color.BLACK);
+        graphics.drawString(levelText, 10, textY);
 
         graphics.dispose();
 
