@@ -16,6 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserAchievementService {
     private final UserService userService;
+    private final UserExperienceService userExperienceService;
     private final UserAchievementsRepository achievementsRepository;
 
     public List<UserAchievement> getAllOfAchievement(Achievement achievement) {
@@ -45,7 +46,7 @@ public class UserAchievementService {
             case IMPOSSIBLE -> 200;
             default -> 0;
         };
-        if (earnedXp != 0) userService.addExperience(user, earnedXp);
+        if (earnedXp != 0) userExperienceService.addExperience(user, earnedXp);
 
         var userAchievement = new UserAchievement(achievement, user);
         return achievementsRepository.save(userAchievement);

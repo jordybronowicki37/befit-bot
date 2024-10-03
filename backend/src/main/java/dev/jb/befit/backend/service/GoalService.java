@@ -21,6 +21,7 @@ public class GoalService {
     private final GoalRepository goalRepository;
     private final ExerciseTypeRepository exerciseTypeRepository;
     private final UserService userService;
+    private final UserExperienceService userExperienceService;
 
     public List<Goal> getAllCompletedByUser(User user) {
         return goalRepository.findAllByUser(user);
@@ -65,7 +66,7 @@ public class GoalService {
             goalRepository.save(lastGoal);
         });
 
-        userService.addExperience(user, 10);
+        userExperienceService.addExperience(user, 10);
 
         var goal = new Goal(amount, exerciseType, user);
         goal.setStatus(GoalStatus.ACTIVE);

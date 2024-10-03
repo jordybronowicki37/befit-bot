@@ -126,6 +126,7 @@ public class ProgressImageService {
         // Create an image from the chart
         var image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         var graphics = image.createGraphics();
+        graphics.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
         var chartArea = new Rectangle2D.Double(0, 0, WIDTH, HEIGHT);
         var chartRenderingInfo = new ChartRenderingInfo(new StandardEntityCollection());
         chart.draw(graphics, chartArea, chartRenderingInfo);

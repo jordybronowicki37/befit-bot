@@ -23,6 +23,7 @@ public class ExerciseLogService {
     private final ExerciseRecordRepository exerciseRecordRepository;
     private final GoalService goalService;
     private final UserService userService;
+    private final UserExperienceService userExperienceService;
 
     public List<ExerciseLog> getAllByUser(User user) {
         return exerciseLogRepository.findAllByUser(user);
@@ -88,7 +89,7 @@ public class ExerciseLogService {
 
         achievements.addAll(achievementsRulesHandler.checkLogCreationAchievements(user, exerciseLog));
 
-        userService.addExperience(user.getId(), earnedXp);
+        userExperienceService.addExperience(user.getId(), earnedXp);
         var newExerciseLog = exerciseLogRepository.save(exerciseLog);
         return new LogCreationStatus(
                 newExerciseLog,

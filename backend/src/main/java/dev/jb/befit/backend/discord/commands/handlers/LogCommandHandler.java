@@ -6,10 +6,7 @@ import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.discord.registration.EmojiRegistrarService;
-import dev.jb.befit.backend.service.ExerciseLogService;
-import dev.jb.befit.backend.service.MotivationalService;
-import dev.jb.befit.backend.service.ServiceHelper;
-import dev.jb.befit.backend.service.UserService;
+import dev.jb.befit.backend.service.*;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionReplyEditSpec;
@@ -20,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 
@@ -120,13 +119,21 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
         }
 
         // Add user xp field
+        FileInputStream inputStream;
         {
             var userXp = user.getXp();
-            var xpLevelData = UserService.getLevelData(userXp);
+            var xpLevelData = UserExperienceService.getLevelData(userXp);
             var levelDescription = String.format(":dizzy: Level: %d - %dxp - %dxp required for next level", xpLevelData.level(), userXp, xpLevelData.xpRemainingInLevel());
             embed.addField("Experience", levelDescription, false);
+            var userLevelXpBar = UserExperienceService.getXpLevelPicture(userXp);
+            try {
+                inputStream = new FileInputStream(userLevelXpBar);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            embed.image("attachment://level-xp-bar.png");
         }
 
-        return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed.build()).build()).then();
+        return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed.build()).addFile("level-xp-bar.png", inputStream).build()).then();
     }
 }
