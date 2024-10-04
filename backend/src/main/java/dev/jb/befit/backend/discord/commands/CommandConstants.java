@@ -11,6 +11,7 @@ public final class CommandConstants {
     public static final String CommandExercisesViewMy = "exercises view my";
     public static final String CommandExercisesCreate = "exercises create";
     public static final String CommandGoalsAdd = "goals add";
+    public static final String CommandHelp = "help";
     public static final String CommandLog = "log";
     public static final String CommandManagementRestart = "management restart";
     public static final String CommandManagementRefreshCommands = "management refresh-commands";
