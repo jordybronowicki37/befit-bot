@@ -28,10 +28,10 @@ public class HelpCommandHandler extends DiscordChatInputInteractionEventListener
         var embed = EmbedCreateSpec.builder()
                 .author("Befit bot", "https://github.com/jordybronowicki37/befit-bot", avatarUrl)
                 .title("About this bot")
-                .description("This bot helps you track your gym progress and motivates you into a better lifestyle.")
+                .description("This bot helps you track your gym progress and motivates you into a better lifestyle.\n## Commands:")
                 .addFields(
                         Field.of("/log", "Create a new log for an exercise. The more logs you create the better the bot can help you improve.", false),
-                        Field.of("/exercises create", "Create a new log for an exercise. The more logs you create the better the bot can help you improve.", false),
+                        Field.of("/exercises create", "Don't see your favourite exercise inside of our catalogue? Just add it and track your progress for it!", false),
                         Field.of("/exercises view ...", "View all the exercises, your own exercises or detailed information about a single exercise.", false),
                         Field.of("/achievements", "See which achievements you have completed and which are still locked.", false),
                         Field.of("/progress", "Get a progress chart on a single exercise.", false),
