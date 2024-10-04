@@ -49,6 +49,33 @@ This cool bot can help you with improving your fitness. It can track your progre
 </details>
 
 <details>
+  <summary>Remove an existing goal</summary>
+  
+  >Format: `/goals remove {goal}` \
+  >Example: \
+  >![Remove goal command response example](docs/examples/removeGoalCommandExample.png)
+
+</details>
+
+<details>
+  <summary>View your goals</summary>
+  
+  >Format: `/goals view` \
+  >Example: \
+  >![View goals command response example](docs/examples/viewGoalsCommandExample.png)
+
+</details>
+
+<details>
+  <summary>Help</summary>
+  
+  >Format: `/help` \
+  >Example: \
+  >![Help command response example](docs/examples/helpCommandExample.png)
+
+</details>
+
+<details>
   <summary>Log an exercise</summary>
   
   >Format: `/log {exercise-name} {amount}` \
@@ -103,6 +130,10 @@ This cool bot can help you with improving your fitness. It can track your progre
   >Format: `/management jobs remove {scheduled-job}`
 
 </details>
+
+## Achievements
+There are 20 achievements for you to complete.
+![Achievements](docs/achievements.png)
 
 ## Deployment
 ### Docker
