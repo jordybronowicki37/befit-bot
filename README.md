@@ -4,6 +4,15 @@ This cool bot can help you with improving your fitness. It can track your progre
 ## Discord
 ### Global Commands
 <details>
+  <summary>Achievements</summary>
+  
+  >Format: `/achievements` \
+  >Example: \
+  >![All exercises command response example](docs/examples/achievementsCommandExample.png)
+  
+</details>
+
+<details>
   <summary>View all exercises</summary>
   
   >Format: `/exercises view all` \
@@ -51,9 +60,7 @@ This cool bot can help you with improving your fitness. It can track your progre
 <details>
   <summary>Remove an existing goal</summary>
   
-  >Format: `/goals remove {goal}` \
-  >Example: \
-  >![Remove goal command response example](docs/examples/removeGoalCommandExample.png)
+  >Format: `/goals remove {goal}`
 
 </details>
 
