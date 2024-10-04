@@ -12,18 +12,19 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class GetExercisesPaginationButtonHandler extends DiscordButtonInteractionEventListener {
-    private final GetExercisesCommandHandler getExercisesCommandHandler;
+public class ExercisesMyPaginationButtonHandler extends DiscordButtonInteractionEventListener {
+    private final ExercisesMyCommandHandler exercisesMyCommandHandler;
 
     @Override
     public String getCommandNameFilter() {
-        return CommandConstants.CommandExercisesViewAll;
+        return CommandConstants.CommandExercisesViewMy;
     }
 
     @Override
     @Transactional
     public Mono<Void> execute(ButtonInteractionEvent event) {
+        var userId = event.getMessage().get().getInteraction().get().getUser().getId();
         var page = Integer.parseInt(event.getCustomId().split("\\$")[1]);
-        return event.editReply(getExercisesCommandHandler.getReplyEditSpec(page)).then();
+        return event.editReply(exercisesMyCommandHandler.getReplyEditSpec(userId, page)).then();
     }
 }

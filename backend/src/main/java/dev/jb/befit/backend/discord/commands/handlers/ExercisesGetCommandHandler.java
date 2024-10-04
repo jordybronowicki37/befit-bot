@@ -20,7 +20,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class GetExercisesCommandHandler extends DiscordChatInputInteractionEventListener {
+public class ExercisesGetCommandHandler extends DiscordChatInputInteractionEventListener {
     private final ExerciseTypeService exerciseService;
 
     @Override

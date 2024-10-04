@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class GetExerciseCommandHandler extends DiscordChatInputInteractionEventListener {
+public class ExerciseGetCommandHandler extends DiscordChatInputInteractionEventListener {
     private final ExerciseTypeService exerciseService;
     private final ExerciseLogService exerciseLogService;
     private final GoalService goalService;
