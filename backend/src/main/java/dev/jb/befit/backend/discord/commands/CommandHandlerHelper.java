@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 
 import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_COMMAND;
 import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_COMMAND_GROUP;
@@ -147,11 +148,27 @@ public final class CommandHandlerHelper {
 
     public static ActionRow getPaginationComponent(int pageNumber, int amountOfPages, String commandName) {
         var previousButton = Button.secondary(String.format("%s$%d", commandName, pageNumber-1), ReactionEmoji.unicode("⬅"));
-        if (pageNumber <= 0) previousButton = previousButton.disabled();
-        var reloadButton = Button.secondary(String.format("%s$%d", commandName, pageNumber), String.format("%d/%d", pageNumber+1, amountOfPages));
+        if (pageNumber <= 0 || amountOfPages == 0) previousButton = previousButton.disabled();
+        var reloadButton = Button.secondary(String.format("%s$%d", commandName, pageNumber), String.format("%d/%d", amountOfPages == 0 ? 0 : pageNumber+1, amountOfPages));
         var nextButton = Button.secondary(String.format("%s$%d", commandName, pageNumber+1), ReactionEmoji.unicode("➡"));
-        if (pageNumber == amountOfPages - 1) nextButton = nextButton.disabled();
+        if (pageNumber == amountOfPages - 1 || amountOfPages == 0) nextButton = nextButton.disabled();
 
         return ActionRow.of(previousButton, reloadButton, nextButton);
+    }
+
+    public static String timeAgoText(LocalDate date) {
+        var current = LocalDate.now();
+        var difference = date.until(current);
+        var daysDifference = difference.getDays();
+
+        if (daysDifference == 0) return "Today";
+        if (daysDifference == 1) return "Yesterday";
+        if (daysDifference > 30) return String.format("%d days ago", daysDifference);
+        var monthsDifference = difference.getMonths();
+        if (monthsDifference == 12) return "1 month ago";
+        if (monthsDifference > 12) return String.format("%d months ago", monthsDifference);
+        var yearsDifference = difference.getYears();
+        if (yearsDifference == 1) return "1 year ago";
+        return String.format("%d years ago", yearsDifference);
     }
 }

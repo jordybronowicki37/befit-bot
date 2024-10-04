@@ -11,6 +11,8 @@ public final class CommandConstants {
     public static final String CommandExercisesViewMy = "exercises view my";
     public static final String CommandExercisesCreate = "exercises create";
     public static final String CommandGoalsAdd = "goals add";
+    public static final String CommandGoalsView = "goals view";
+    public static final String CommandGoalsRemove = "goals remove";
     public static final String CommandHelp = "help";
     public static final String CommandLog = "log";
     public static final String CommandManagementRestart = "management restart";
@@ -21,6 +23,7 @@ public final class CommandConstants {
     public static final String CommandProgress = "progress";
 
     public static final String AutoCompletePropExerciseName = "exercise-name";
+    public static final String AutoCompletePropGoal = "goal";
     public static final String AutoCompletePropScheduledJob = "scheduled-job";
 
     public static final Integer PageSize = 5;

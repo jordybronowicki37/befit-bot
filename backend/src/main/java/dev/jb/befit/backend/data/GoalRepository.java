@@ -7,9 +7,11 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface GoalRepository extends JpaRepository<Goal, Long> {
+    Optional<Goal> findByUserAndId(User user, Long id);
     List<Goal> findAllByUser(User user);
     List<Goal> findAllByUserAndCompletedAtAfterAndCompletedAtNotNull(User user, LocalDateTime from);
     List<Goal> findAllByExerciseTypeName(String name);

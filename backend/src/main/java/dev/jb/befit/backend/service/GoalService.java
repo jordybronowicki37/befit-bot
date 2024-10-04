@@ -6,6 +6,7 @@ import dev.jb.befit.backend.data.models.Goal;
 import dev.jb.befit.backend.data.models.GoalStatus;
 import dev.jb.befit.backend.data.models.User;
 import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
+import dev.jb.befit.backend.service.exceptions.GoalNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,11 @@ import java.util.Optional;
 public class GoalService {
     private final GoalRepository goalRepository;
     private final ExerciseTypeRepository exerciseTypeRepository;
-    private final UserService userService;
     private final UserExperienceService userExperienceService;
+
+    public Optional<Goal> getByUserAndId(User user, Long id) {
+        return goalRepository.findByUserAndId(user, id);
+    }
 
     public List<Goal> getAllCompletedByUser(User user) {
         return goalRepository.findAllByUser(user);
@@ -71,5 +75,14 @@ public class GoalService {
         var goal = new Goal(amount, exerciseType, user);
         goal.setStatus(GoalStatus.ACTIVE);
         return goalRepository.save(goal);
+    }
+
+    public Goal cancel(User user, Long goalId) {
+        var goalOpt = getByUserAndId(user, goalId);
+        if (goalOpt.isEmpty()) throw new GoalNotFoundException(goalId);
+        var goal = goalOpt.get();
+        goal.setStatus(GoalStatus.CANCELLED);
+        goalRepository.save(goal);
+        return goal;
     }
 }

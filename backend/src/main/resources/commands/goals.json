@@ -22,6 +22,25 @@
           "min_value": 0
         }
       ]
+    },
+    {
+      "name": "remove",
+      "description": "Removes a goal",
+      "type": 1,
+      "options": [
+        {
+          "name": "goal",
+          "description": "The goal that is to be removed",
+          "type": 4,
+          "required": true,
+          "autocomplete": true
+        }
+      ]
+    },
+    {
+      "name": "view",
+      "description": "View your goals",
+      "type": 1
     }
   ]
 }
