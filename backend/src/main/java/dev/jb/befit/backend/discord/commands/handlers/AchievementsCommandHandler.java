@@ -38,10 +38,10 @@ public class AchievementsCommandHandler extends DiscordChatInputInteractionEvent
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
         var userId = event.getInteraction().getUser().getId();
-        return event.editReply(getAchievementsEditSpec(userId, 0)).then();
+        return event.editReply(getReplyEditSpec(userId, 0)).then();
     }
 
-    public InteractionReplyEditSpec getAchievementsEditSpec(Snowflake userId, int page) {
+    public InteractionReplyEditSpec getReplyEditSpec(Snowflake userId, int page) {
         var user = userService.getOrCreateDiscordUser(userId);
         var userAchievements = user.getAchievements();
         int pageSize = CommandConstants.PageSize;

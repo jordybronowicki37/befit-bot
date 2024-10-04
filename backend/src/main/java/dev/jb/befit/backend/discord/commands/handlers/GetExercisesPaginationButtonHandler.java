@@ -24,6 +24,6 @@ public class GetExercisesPaginationButtonHandler extends DiscordButtonInteractio
     @Transactional
     public Mono<Void> execute(ButtonInteractionEvent event) {
         var page = Integer.parseInt(event.getCustomId().split("\\$")[1]);
-        return event.editReply(getExercisesCommandHandler.getExercisesEditSpec(page)).then();
+        return event.editReply(getExercisesCommandHandler.getReplyEditSpec(page)).then();
     }
 }

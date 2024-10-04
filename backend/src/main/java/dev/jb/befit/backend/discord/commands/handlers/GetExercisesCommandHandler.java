@@ -31,10 +31,10 @@ public class GetExercisesCommandHandler extends DiscordChatInputInteractionEvent
     @Override
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        return event.editReply(getExercisesEditSpec(0)).then();
+        return event.editReply(getReplyEditSpec(0)).then();
     }
 
-    public InteractionReplyEditSpec getExercisesEditSpec(int page) {
+    public InteractionReplyEditSpec getReplyEditSpec(int page) {
         var exercises = exerciseService.getPage(Pageable.ofSize(CommandConstants.PageSize).withPage(page));
 
         var embed = EmbedCreateSpec.builder()
