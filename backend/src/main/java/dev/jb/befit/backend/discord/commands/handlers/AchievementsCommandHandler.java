@@ -64,6 +64,8 @@ public class AchievementsCommandHandler extends DiscordChatInputInteractionEvent
                     if (userAchievement.isPresent()) {
                         var date = userAchievement.get().getCreated().format(DateTimeFormatter.ISO_LOCAL_DATE);
                         description.append(String.format("Completed at: %s\n", date));
+                    } else {
+                        description.append("Locked.\n");
                     }
 
                     var completedPercentage = achievementService.getCompletionPercentage(a);
