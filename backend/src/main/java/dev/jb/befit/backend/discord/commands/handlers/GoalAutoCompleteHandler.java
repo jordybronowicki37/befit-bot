@@ -39,7 +39,7 @@ public class GoalAutoCompleteHandler extends DiscordChatInputAutoCompleteEventLi
                 .limit(CommandConstants.SearchResultsSize)
                 .forEach(g -> suggestions.add(
                         ApplicationCommandOptionChoiceData.builder()
-                                .name(String.format("%s - %s", g.getExerciseType().getName(), CommandHandlerHelper.formatDouble(g.getAmount())))
+                                .name(String.format("%s - %s %s", g.getExerciseType().getName(), CommandHandlerHelper.formatDouble(g.getAmount()), g.getExerciseType().getMeasurementType().getShortName()))
                                 .value(g.getId())
                                 .build()
                 ));

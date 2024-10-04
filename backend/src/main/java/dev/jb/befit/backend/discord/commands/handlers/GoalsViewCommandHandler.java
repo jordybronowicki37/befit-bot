@@ -51,7 +51,7 @@ public class GoalsViewCommandHandler extends DiscordChatInputInteractionEventLis
         goals.stream().skip((long) pageSize * page).limit(pageSize)
                 .sorted(Comparator.comparing(g -> g.getExerciseType().getName()))
                 .forEach(g -> {
-                    var description = String.format("Created: %s\nAmount: %s", CommandHandlerHelper.timeAgoText(g.getCreated().toLocalDate()), CommandHandlerHelper.formatDouble(g.getAmount()));
+                    var description = String.format("Created: %s\nAmount: %s %s", CommandHandlerHelper.timeAgoText(g.getCreated().toLocalDate()), CommandHandlerHelper.formatDouble(g.getAmount()), g.getExerciseType().getMeasurementType().getShortName());
                     embed.addField(g.getExerciseType().getName(), description, false);
                 });
 
