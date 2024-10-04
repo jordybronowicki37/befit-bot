@@ -13,10 +13,10 @@ class UserExperienceServiceTest {
     static Stream<Arguments> levelTestData() {
         return Stream.of(
                 Arguments.of(90, 1, 10, 90, 0, 100),
-                Arguments.of(130, 2, 90, 30, 100, 220),
-                Arguments.of(240, 3, 250, 20, 220, 490),
-                Arguments.of(600, 4, 480, 110, 490, 1080),
-                Arguments.of(2000, 5, 380, 920, 1080, 2380)
+                Arguments.of(130, 2, 100, 30, 100, 230),
+                Arguments.of(240, 3, 290, 10, 230, 530),
+                Arguments.of(600, 4, 620, 70, 530, 1220),
+                Arguments.of(2000, 5, 810, 780, 1220, 2810)
         );
     }
 
@@ -29,7 +29,7 @@ class UserExperienceServiceTest {
                       long expectedBottomLevelXp,
                       long expectedTopLevelXp
     ) {
-        var experienceLevelDetails = UserService.getLevelData(xp);
+        var experienceLevelDetails = UserExperienceService.getLevelData(xp);
 
         System.out.println(experienceLevelDetails);
 
