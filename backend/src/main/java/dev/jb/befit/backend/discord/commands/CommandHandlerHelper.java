@@ -15,6 +15,8 @@ import discord4j.core.object.reaction.ReactionEmoji;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -26,8 +28,22 @@ import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_CO
 import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_COMMAND_GROUP;
 
 @Slf4j
+@Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CommandHandlerHelper {
+    private static String timeFormat;
+    private static String dateFormat;
+
+    @Value("${befit.timeFormat}")
+    private void setTimeFormat(String timeFormat) {
+        CommandHandlerHelper.timeFormat = timeFormat;
+    }
+
+    @Value("${befit.dateFormat}")
+    private void setDateFormat(String dateFormat) {
+        CommandHandlerHelper.dateFormat = dateFormat;
+    }
+
     public static String getCommandName(ChatInputInteractionEvent event) {
         var actualCommandNameBuilder = new StringBuilder();
         actualCommandNameBuilder.append(event.getCommandName());
@@ -176,11 +192,11 @@ public final class CommandHandlerHelper {
     }
 
     public static String formatDate(LocalDate date) {
-        return date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+        return date.format(DateTimeFormatter.ofPattern(dateFormat));
     }
 
     public static String formatTime(LocalTime time) {
-        return time.format(DateTimeFormatter.ISO_LOCAL_TIME);
+        return time.format(DateTimeFormatter.ofPattern(timeFormat));
     }
 
     public static String formatDateTime(LocalDateTime date) {
