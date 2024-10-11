@@ -7,6 +7,8 @@ import dev.jb.befit.backend.service.dto.LogCreationStatus;
 import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,15 +24,14 @@ public class ExerciseLogService {
     private final ExerciseTypeService exerciseTypeService;
     private final ExerciseRecordRepository exerciseRecordRepository;
     private final GoalService goalService;
-    private final UserService userService;
     private final UserExperienceService userExperienceService;
 
     public List<ExerciseLog> getAllByUser(User user) {
         return exerciseLogRepository.findAllByUser(user);
     }
 
-    public List<ExerciseLog> getAllByUser(User user, LocalDateTime from) {
-        return exerciseLogRepository.findAllByUser(user);
+    public Page<ExerciseLog> getAllRecentByUser(User user, Pageable pageable) {
+        return exerciseLogRepository.findAllByUserOrderByCreatedDesc(user, pageable);
     }
 
     public List<ExerciseLog> getAllByExerciseName(String exerciseName) {

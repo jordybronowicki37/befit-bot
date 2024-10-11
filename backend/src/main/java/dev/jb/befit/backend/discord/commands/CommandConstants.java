@@ -14,6 +14,7 @@ public final class CommandConstants {
     public static final String CommandGoalsView = "goals view";
     public static final String CommandGoalsRemove = "goals remove";
     public static final String CommandHelp = "help";
+    public static final String CommandHistory = "history";
     public static final String CommandLog = "log";
     public static final String CommandManagementRestart = "management restart";
     public static final String CommandManagementRefreshCommands = "management refresh-commands";
@@ -27,5 +28,6 @@ public final class CommandConstants {
     public static final String AutoCompletePropScheduledJob = "scheduled-job";
 
     public static final Integer PageSize = 5;
+    public static final Integer PageSizeSmallItems = 10;
     public static final Integer SearchResultsSize = 25;
 }
