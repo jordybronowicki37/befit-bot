@@ -15,8 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.time.format.DateTimeFormatter;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -60,7 +58,7 @@ public class ExerciseGetCommandHandler extends DiscordChatInputInteractionEventL
             progressDescriptionBuilder.append(String.format("Logs: %d", logs.size()));
 
             var lastLog = logs.get(logs.size() - 1);
-            progressDescriptionBuilder.append(String.format("\nLast: %s %s - %s", CommandHandlerHelper.formatDouble(lastLog.getAmount()), measurement.getShortName(), lastLog.getCreated().format(DateTimeFormatter.ISO_LOCAL_DATE)));
+            progressDescriptionBuilder.append(String.format("\nLast: %s %s - %s", CommandHandlerHelper.formatDouble(lastLog.getAmount()), measurement.getShortName(), CommandHandlerHelper.formatDate(lastLog.getCreated().toLocalDate())));
 
             var goal = goalService.getActiveUserGoal(user, exerciseName);
             goal.ifPresent(value -> progressDescriptionBuilder.append(String.format("\nGoal: %s", CommandHandlerHelper.formatDouble(value.getAmount()))));

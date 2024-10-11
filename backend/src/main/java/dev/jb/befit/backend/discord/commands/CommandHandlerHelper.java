@@ -18,6 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_COMMAND;
 import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_COMMAND_GROUP;
@@ -163,12 +166,24 @@ public final class CommandHandlerHelper {
 
         if (daysDifference == 0) return "Today";
         if (daysDifference == 1) return "Yesterday";
-        if (daysDifference > 30) return String.format("%d days ago", daysDifference);
+        if (daysDifference < 30) return String.format("%d days ago", daysDifference);
         var monthsDifference = difference.getMonths();
-        if (monthsDifference == 12) return "1 month ago";
-        if (monthsDifference > 12) return String.format("%d months ago", monthsDifference);
+        if (monthsDifference == 1) return "1 month ago";
+        if (monthsDifference < 12) return String.format("%d months ago", monthsDifference);
         var yearsDifference = difference.getYears();
         if (yearsDifference == 1) return "1 year ago";
         return String.format("%d years ago", yearsDifference);
+    }
+
+    public static String formatDate(LocalDate date) {
+        return date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+    }
+
+    public static String formatTime(LocalTime time) {
+        return time.format(DateTimeFormatter.ISO_LOCAL_TIME);
+    }
+
+    public static String formatDateTime(LocalDateTime date) {
+        return formatDate(date.toLocalDate()) + " " + formatTime(date.toLocalTime());
     }
 }

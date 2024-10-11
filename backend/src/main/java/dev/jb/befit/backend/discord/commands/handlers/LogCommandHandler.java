@@ -19,7 +19,6 @@ import reactor.core.publisher.Mono;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 
 @Slf4j
@@ -67,7 +66,7 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
             // Add last log value
             if (logCreationStatus.lastLog() != null) {
                 var previousLog = logCreationStatus.lastLog();
-                descriptionBuilder.append(String.format("Last: %s %s - %s\n", CommandHandlerHelper.formatDouble(previousLog.getAmount()), measurementName, previousLog.getCreated().format(DateTimeFormatter.ISO_LOCAL_DATE)));
+                descriptionBuilder.append(String.format("Last: %s %s - %s\n", CommandHandlerHelper.formatDouble(previousLog.getAmount()), measurementName, CommandHandlerHelper.timeAgoText(previousLog.getCreated().toLocalDate())));
             }
             // Add goal if it is present and not yet reached
             if (goal != null && !logCreationStatus.goalReached()) {
