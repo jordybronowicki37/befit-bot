@@ -30,6 +30,14 @@ public class ExerciseLogService {
         return exerciseLogRepository.findAllByUser(user);
     }
 
+    public long countAllByUser(User user) {
+        return exerciseLogRepository.countAllByUser(user);
+    }
+
+    public long countAmountOfExercisesByUser(User user) {
+        return exerciseLogRepository.countDistinctExerciseTypeByUser(user);
+    }
+
     public Page<ExerciseLog> getAllRecentByUser(User user, Pageable pageable) {
         return exerciseLogRepository.findAllByUserOrderByCreatedDesc(user, pageable);
     }

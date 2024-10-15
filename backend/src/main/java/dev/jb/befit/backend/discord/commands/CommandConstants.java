@@ -22,6 +22,7 @@ public final class CommandConstants {
     public static final String CommandManagementJobsRemove = "management jobs remove";
     public static final String CommandMotivation = "motivation";
     public static final String CommandProgress = "progress";
+    public static final String CommandStats = "stats";
 
     public static final String AutoCompletePropExerciseName = "exercise-name";
     public static final String AutoCompletePropGoal = "goal";
