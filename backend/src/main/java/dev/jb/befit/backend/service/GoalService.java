@@ -65,7 +65,7 @@ public class GoalService {
             goalRepository.save(lastGoal);
         });
 
-        userExperienceService.addExperience(user, 10);
+        userExperienceService.addExperience(user, ServiceConstants.EarnedXpGoalCreated);
 
         var goal = new Goal(amount, exerciseType, user);
         goal.setStatus(GoalStatus.ACTIVE);

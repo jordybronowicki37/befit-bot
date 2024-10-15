@@ -18,9 +18,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Slf4j
 public class UserExperienceService {
-    private static final double GROWTH_RATE = 1.3;
-    private static final long STARTING_LEVEL_LIMIT = 100L;
-
     private final UserRepository userRepository;
 
     public void addExperience(long userId, long experience) {
@@ -38,13 +35,13 @@ public class UserExperienceService {
 
     public static ExperienceLevelDetails getLevelData(long xp) {
         var bottomLevelXp = 0L;
-        var topLevelXp = STARTING_LEVEL_LIMIT;
+        var topLevelXp = ServiceConstants.XpStartingLimit;
         var level = 1L;
 
         while (xp >= topLevelXp) {
             level++;
             bottomLevelXp = topLevelXp;
-            topLevelXp += (long) (Math.ceil(topLevelXp * GROWTH_RATE / 10) * 10);
+            topLevelXp += (long) (Math.ceil(topLevelXp * ServiceConstants.XpGrowthRate / 10) * 10);
         }
 
         var remainingLevelXp = topLevelXp - xp;

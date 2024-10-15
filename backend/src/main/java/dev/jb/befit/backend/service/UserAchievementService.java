@@ -55,10 +55,10 @@ public class UserAchievementService {
 
     public static long getEarnedAchievementXp(Achievement achievement) {
         return switch (achievement.getDifficulty()) {
-            case EASY -> 50;
-            case MEDIUM -> 100;
-            case HARD -> 150;
-            case IMPOSSIBLE -> 200;
+            case EASY -> ServiceConstants.EarnedXpAchievementCompletedEasy;
+            case MEDIUM -> ServiceConstants.EarnedXpAchievementCompletedMedium;
+            case HARD -> ServiceConstants.EarnedXpAchievementCompletedHard;
+            case IMPOSSIBLE -> ServiceConstants.EarnedXpAchievementCompletedImpossible;
             default -> 0;
         };
     }

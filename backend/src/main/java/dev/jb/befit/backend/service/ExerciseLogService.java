@@ -67,7 +67,7 @@ public class ExerciseLogService {
         var exerciseLog = new ExerciseLog(amount, exerciseType, user);
         var exerciseRecord = exerciseType.getExerciseRecords().stream().filter(r -> r.getUser().equals(user)).findFirst().orElse(null);
 
-        long earnedXp = 10;
+        long earnedXp = ServiceConstants.EarnedXpLogCreated;
         var newRecordReached = false;
         var goalReached = false;
 
@@ -75,12 +75,12 @@ public class ExerciseLogService {
             var newRecord = new ExerciseRecord(user, exerciseType, amount);
             exerciseType.getExerciseRecords().add(newRecord);
             exerciseRecord = exerciseRecordRepository.save(newRecord);
-            earnedXp += 20;
+            earnedXp += ServiceConstants.EarnedXpNewExerciseStarted;
         } else if (ServiceHelper.isRecordImproved(exerciseRecord, exerciseLog)) {
             exerciseRecord.setAmount(exerciseLog.getAmount());
             exerciseRecord = exerciseRecordRepository.save(exerciseRecord);
             newRecordReached = true;
-            earnedXp += 50;
+            earnedXp += ServiceConstants.EarnedXpRecordImproved;
         }
 
         var goalOpt = goalService.getActiveUserGoal(user, exerciseName);
@@ -90,7 +90,7 @@ public class ExerciseLogService {
                 goal.setStatus(GoalStatus.COMPLETED);
                 goal.setCompletedAt(LocalDateTime.now());
                 exerciseLog.setReachedGoal(goal);
-                earnedXp += 50;
+                earnedXp += ServiceConstants.EarnedXpGoalCompleted;
                 goalReached = true;
                 achievements.addAll(achievementsRulesHandler.checkGoalCompletedAchievements(user, goal));
             }
