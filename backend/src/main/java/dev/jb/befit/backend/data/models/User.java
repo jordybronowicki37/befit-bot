@@ -35,7 +35,7 @@ public abstract class User {
     @Min(0)
     @Setter
     @ColumnDefault("0")
-    private Long xp;
+    private Long xp = 0L;
 
     @OneToMany(mappedBy = "user")
     private List<UserAchievement> achievements = new ArrayList<>();
