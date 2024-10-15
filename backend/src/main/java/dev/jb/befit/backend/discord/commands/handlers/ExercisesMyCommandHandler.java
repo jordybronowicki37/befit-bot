@@ -1,6 +1,7 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.data.models.ExerciseLog;
+import dev.jb.befit.backend.data.models.GoalStatus;
 import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
@@ -47,7 +48,7 @@ public class ExercisesMyCommandHandler extends DiscordChatInputInteractionEventL
 
     public InteractionReplyEditSpec getReplyEditSpec(Snowflake userId, int page) {
         var user = userService.getOrCreateDiscordUser(userId);
-        var goals = goalService.getAllActiveUserGoals(user);
+        var goals = goalService.getAllUserGoals(user, GoalStatus.ACTIVE);
         var allLogs = exerciseLogService.getAllByUser(user);
 
         var groupedLogs = allLogs.stream()

@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.data.models.GoalStatus;
 import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputAutoCompleteEventListener;
@@ -31,7 +32,7 @@ public class GoalAutoCompleteHandler extends DiscordChatInputAutoCompleteEventLi
         var filter = CommandHandlerHelper.getAutocompleteOptionFilter(event).toLowerCase();
         var userId = event.getInteraction().getUser().getId();
         var user = userService.getOrCreateDiscordUser(userId);
-        var goals = goalService.getAllActiveUserGoals(user);
+        var goals = goalService.getAllUserGoals(user, GoalStatus.ACTIVE);
 
         var suggestions = new ArrayList<ApplicationCommandOptionChoiceData>();
         goals.stream()

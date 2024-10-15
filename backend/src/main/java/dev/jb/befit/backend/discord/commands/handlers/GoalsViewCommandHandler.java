@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.data.models.GoalStatus;
 import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
@@ -40,7 +41,7 @@ public class GoalsViewCommandHandler extends DiscordChatInputInteractionEventLis
     public InteractionReplyEditSpec getReplyEditSpec(Snowflake userId, int page) {
         var pageSize = CommandConstants.PageSize;
         var user = userService.getOrCreateDiscordUser(userId);
-        var goals = goalService.getAllActiveUserGoals(user);
+        var goals = goalService.getAllUserGoals(user, GoalStatus.ACTIVE);
 
         var embed = EmbedCreateSpec.builder()
                 .title(":chart_with_upwards_trend: Your goals")
