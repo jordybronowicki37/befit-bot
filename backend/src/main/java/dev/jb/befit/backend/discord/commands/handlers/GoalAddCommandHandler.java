@@ -4,6 +4,8 @@ import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.GoalService;
+import dev.jb.befit.backend.service.ServiceConstants;
+import dev.jb.befit.backend.service.UserExperienceService;
 import dev.jb.befit.backend.service.UserService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
@@ -14,6 +16,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 @Slf4j
 @Service
@@ -46,9 +51,24 @@ public class GoalAddCommandHandler extends DiscordChatInputInteractionEventListe
         var embed = EmbedCreateSpec.builder()
                 .title(":chart_with_upwards_trend: New goal set")
                 .addField(title, description, false)
-                .color(Color.GREEN)
-                .build();
+                .color(Color.GREEN);
 
-        return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();
+        // Add user xp field
+        FileInputStream inputStream;
+        {
+            var userXp = user.getXp();
+            var xpLevelData = UserExperienceService.getLevelData(userXp);
+            var levelDescription = String.format(":dizzy: Earned: %dxp - %dxp required for next level", ServiceConstants.EarnedXpGoalCreated, xpLevelData.xpTopLevel());
+            embed.addField("Experience", levelDescription, false);
+            var userLevelXpBar = UserExperienceService.getXpLevelPicture(userXp);
+            try {
+                inputStream = new FileInputStream(userLevelXpBar);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            embed.image("attachment://level-xp-bar.png");
+        }
+
+        return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed.build()).addFile("level-xp-bar.png", inputStream).build()).then();
     }
 }
