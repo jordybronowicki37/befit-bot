@@ -41,7 +41,7 @@ public class LeaderboardCommandHandler extends DiscordChatInputInteractionEventL
         var userRank = userService.getUserLeaderboardRank(userService.getOrCreateDiscordUser(userId).getId());
         var users = usersPage.getContent();
         var description = new StringBuilder();
-        description.append(String.format("Your rank: %d\n", userRank));
+        description.append(String.format("Your rank: #%d\n", userRank));
 
         for (int i = 0; i < users.size(); i++) {
             var index = (page * pageSize) + i + 1;
