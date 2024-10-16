@@ -83,6 +83,24 @@ This cool bot can help you with improving your fitness. It can track your progre
 </details>
 
 <details>
+  <summary>Leaderboard</summary>
+  
+  >Format: `/leaderboard` \
+  >Example: \
+  >![Leaderboard command response example](docs/examples/leaderboardCommandExample.png)
+
+</details>
+
+<details>
+  <summary>Log history</summary>
+  
+  >Format: `/history` \
+  >Example: \
+  >![History command response example](docs/examples/historyCommandExample.png)
+
+</details>
+
+<details>
   <summary>Log an exercise</summary>
   
   >Format: `/log {exercise-name} {amount}` \
@@ -106,6 +124,15 @@ This cool bot can help you with improving your fitness. It can track your progre
   >Format: `/progress {exercise-name} ?{view-mode}` \
   >Example: \
   >![Progress command response example](docs/examples/progressCommandExample.png)
+
+</details>
+
+<details>
+  <summary>User stats</summary>
+
+>Format: `/stats` \
+>Example: \
+>![Stats command response example](docs/examples/statsCommandExample.png)
 
 </details>
 
@@ -140,7 +167,13 @@ This cool bot can help you with improving your fitness. It can track your progre
 
 ## Achievements
 There are 20 achievements for you to complete.
-![Achievements](docs/achievements.png)
+
+<details>
+  <summary>Achievements</summary>
+
+  >![Achievements](docs/achievements.png)
+
+</details>
 
 ## Deployment
 ### Docker
