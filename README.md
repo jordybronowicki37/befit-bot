@@ -1,4 +1,16 @@
-# BeFit
+[![Newest Release](https://img.shields.io/github/v/release/jordybronowicki37/befit-bot?style=for-the-badge&logo=github&logoColor=fff&labelColor=555&color=94398d)](https://github.com/jordybronowicki37/befit/releases)
+[![GitHub Profile](https://img.shields.io/static/v1.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=jordybronowicki37&message=GitHub&logo=github)](https://github.com/jordybronowicki37)
+
+```
+██████╗ ███████╗███████╗██╗████████╗
+██╔══██╗██╔════╝██╔════╝██║╚══██╔══╝
+██████╔╝█████╗  █████╗  ██║   ██║   
+██╔══██╗██╔══╝  ██╔══╝  ██║   ██║   
+██████╔╝███████╗██║     ██║   ██║   
+╚═════╝ ╚══════╝╚═╝     ╚═╝   ╚═╝   
+```
+
+# BeFit gains tracker
 This cool bot can help you with improving your fitness. It can track your progress, motivate you, manage your goals and compare your progress to others.
 
 ## Discord
