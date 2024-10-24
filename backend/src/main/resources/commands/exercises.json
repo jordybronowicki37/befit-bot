@@ -1,6 +1,6 @@
 {
   "name": "exercises",
-  "description": "Get, edit or add exercises",
+  "description": "Get, edit or create exercises",
   "options": [
     {
       "name": "view",
