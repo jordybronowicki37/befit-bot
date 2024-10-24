@@ -39,4 +39,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
           DEFAULT_BUMP: ${{ inputs.default_bump }}
-      - run: echo ${{ steps.tag.outputs }}
+      - run: echo "${{ toJson(steps.tag.outputs) }}"
