@@ -38,6 +38,14 @@ jobs:
         uses: docker/setup-buildx-action@v3
       - name: Login to Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-      - name: Build and push the Docker image
-        run: docker buildx build --push --platform linux/arm64/v8,linux/amd64 --file Dockerfile --tag ghcr.io/${{ github.actor }}/${{ inputs.image_name }}:${{ inputs.version }} .
+      - name: Build the Docker image
+        run: |
+          docker buildx build . --platform linux/arm64/v8,linux/amd64 \
+          --file Dockerfile \
+          --tag ghcr.io/${{ github.actor }}/${{ inputs.image_name }}:${{ inputs.version }} \
+          --tag ghcr.io/${{ github.actor }}/${{ inputs.image_name }}:latest \
         working-directory: backend
+      - name: Push Docker images
+        run: |
+          docker push ghcr.io/${{ github.actor }}/${{ inputs.image_name }}:${{ inputs.version }}
+          docker push ghcr.io/${{ github.actor }}/${{ inputs.image_name }}:latest
