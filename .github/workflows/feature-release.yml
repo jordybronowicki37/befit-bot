@@ -1,0 +1,19 @@
+name: Feature release
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  bump-tag-version:
+    permissions:
+      contents: write
+    uses: ./.github/workflows/bump-tag.yml
+  build-and-publish:
+    needs: bump-tag-version
+    permissions:
+      packages: write
+      contents: read
+    uses: ./.github/workflows/create-docker-image.yml
+    with:
+      version: ${{ needs.bump-tag-version.outputs.version }}

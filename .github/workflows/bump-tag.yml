@@ -1,22 +1,41 @@
 name: Bump tag version
 on:
-  push:
-    branches:
-      - main
+  workflow_call:
+    inputs:
+      default_bump:
+        description: The default version bump
+        required: false
+        type: string
+        default: minor
+  workflow_dispatch:
+    inputs:
+      default_bump:
+        description: The default version bump
+        required: false
+        type: string
+        default: minor
+        options:
+          - none
+          - patch
+          - minor
+          - major
 
 jobs:
-  build:
+  bump-tag:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    outputs:
+      version: ${{ steps.tag.outputs.new_tag }}
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: '0'
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'
 
-    - name: Bump version and push tag
-      uses: anothrNick/github-tag-action@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        WITH_V: true
-        DEFAULT_BUMP: minor
+      - name: Bump version and push tag
+        id: tag
+        uses: anothrNick/github-tag-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          DEFAULT_BUMP: ${{ inputs.default_bump }}
