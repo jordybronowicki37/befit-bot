@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UserAchievement {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "exercise_log_seq")
-    @SequenceGenerator(name = "exercise_log_seq" ,sequenceName = "exercise_log_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_achievement_seq")
+    @SequenceGenerator(name = "user_achievement_seq" ,sequenceName = "user_achievement_seq", allocationSize = 1)
     @Setter(AccessLevel.PROTECTED)
     @EqualsAndHashCode.Include
     private Long id;
