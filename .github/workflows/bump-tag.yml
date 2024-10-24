@@ -7,6 +7,8 @@ on:
         required: false
         type: string
         default: minor
+    outputs:
+      tag: ${{ jobs.bump-tag.outputs.tag }}
   workflow_dispatch:
     inputs:
       default_bump:
@@ -26,19 +28,16 @@ jobs:
     permissions:
       contents: write
     outputs:
-      new_tag: ${{ steps.tag.outputs.new_tag }}
+      tag: ${{ steps.tag.outputs.new_tag }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
 
       - name: Bump version and push tag
-        id: new_tag
+        id: tag
         uses: anothrNick/github-tag-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: true
           DEFAULT_BUMP: ${{ inputs.default_bump }}
-      - name: Add the new tag to the outputs
-        id: tag_outputs
-        run: echo "version=${{ steps.new_tag.outputs.new_tag }}" >> "$GITHUB_OUTPUT"
+          WITH_V: true
