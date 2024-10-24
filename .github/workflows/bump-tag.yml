@@ -33,9 +33,12 @@ jobs:
           fetch-depth: '0'
 
       - name: Bump version and push tag
-        id: tag
+        id: new_tag
         uses: anothrNick/github-tag-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
           DEFAULT_BUMP: ${{ inputs.default_bump }}
+      - name: Add the new tag to the outputs
+        id: tag_outputs
+        run: echo "version=${{ steps.new_tag.outputs.new_tag }}" >> "$GITHUB_OUTPUT"

@@ -10,6 +10,12 @@ jobs:
       contents: write
     uses: ./.github/workflows/bump-tag.yml
 
+  log:
+    needs: bump-tag-version
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ${{ toJson(needs.bump-tag-version.outputs) }}
+
   build-and-publish:
     needs: bump-tag-version
     permissions:
@@ -17,4 +23,4 @@ jobs:
       contents: read
     uses: ./.github/workflows/create-docker-image.yml
     with:
-      version: ${{ needs.bump-tag-version.outputs.new_tag }}
+      version: ${{ needs.bump-tag-version.outputs.version }}
