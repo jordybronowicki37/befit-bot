@@ -16,7 +16,7 @@ public interface GoalRepository extends JpaRepository<Goal, Long> {
     List<Goal> findAllByUser(User user);
     List<Goal> findAllByUserAndStatus(User user, GoalStatus status);
     List<Goal> findAllByUserAndCompletedAtAfterAndCompletedAtNotNull(User user, LocalDateTime from);
-    List<Goal> findAllByExerciseTypeName(String name);
-    List<Goal> findAllByUserAndExerciseTypeId(User user, Long id);
-    List<Goal> findAllByUserAndExerciseTypeName(User user, String name);
+    List<Goal> findAllByExerciseTypeName(String exerciseTypeName);
+    List<Goal> findAllByUserAndExerciseTypeId(User user, Long exerciseTypeId);
+    List<Goal> findAllByUserAndExerciseTypeName(User user, String exerciseTypeName);
 }
