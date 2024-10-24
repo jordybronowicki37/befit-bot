@@ -1,4 +1,5 @@
-[![Newest Release](https://img.shields.io/github/v/release/jordybronowicki37/befit-bot?style=for-the-badge&logo=github&logoColor=fff&labelColor=555&color=94398d)](https://github.com/jordybronowicki37/befit/releases)
+[![Newest Release](https://img.shields.io/github/v/release/jordybronowicki37/befit-bot?style=for-the-badge&logo=github&logoColor=fff&labelColor=555&color=94398d)](https://github.com/jordybronowicki37/befit-bot/releases)
+[![Newest Version](https://img.shields.io/github/v/tag/jordybronowicki37/befit-bot?style=for-the-badge&logo=github&logoColor=fff&labelColor=555&color=94398d)](https://github.com/jordybronowicki37/befit-bot/tags)
 [![GitHub Profile](https://img.shields.io/static/v1.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=jordybronowicki37&message=GitHub&logo=github)](https://github.com/jordybronowicki37)
 
 ```
