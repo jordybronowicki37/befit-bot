@@ -1,10 +1,13 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.data.models.ExerciseLog;
 import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ExerciseLogService;
+import dev.jb.befit.backend.service.ExerciseTypeService;
 import dev.jb.befit.backend.service.UserService;
+import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateFields;
@@ -14,6 +17,7 @@ import discord4j.rest.util.Color;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -23,6 +27,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class HistoryCommandHandler extends DiscordChatInputInteractionEventListener {
     private final ExerciseLogService exerciseLogService;
+    private final ExerciseTypeService exerciseTypeService;
     private final UserService userService;
 
     @Override
@@ -33,13 +38,20 @@ public class HistoryCommandHandler extends DiscordChatInputInteractionEventListe
     @Override
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
+        var exerciseName = CommandHandlerHelper.getOptionalOptionValue(event, CommandConstants.AutoCompletePropExerciseName, null);
         var userId = event.getInteraction().getUser().getId();
-        return event.editReply(getReplyEditSpec(userId, 0)).then();
+        return event.editReply(getReplyEditSpec(userId, 0, exerciseName)).then();
     }
 
-    public InteractionReplyEditSpec getReplyEditSpec(Snowflake userId, int page) {
+    public InteractionReplyEditSpec getReplyEditSpec(Snowflake userId, int page, String exerciseNameFilter) {
         var user = userService.getOrCreateDiscordUser(userId);
-        var allLogs = exerciseLogService.getAllRecentByUser(user, Pageable.ofSize(CommandConstants.PageSizeSmallItems).withPage(page));
+        Page<ExerciseLog> allLogs;
+        if (exerciseNameFilter == null) {
+            allLogs = exerciseLogService.getAllRecentByUser(user, Pageable.ofSize(CommandConstants.PageSizeSmallItems).withPage(page));
+        } else {
+            var exercise = exerciseTypeService.getByName(exerciseNameFilter).orElseThrow(() -> new ExerciseNotFoundException(exerciseNameFilter));
+            allLogs = exerciseLogService.getAllRecentByUser(user, exercise.getId(), Pageable.ofSize(CommandConstants.PageSizeSmallItems).withPage(page));
+        }
 
         var embed = EmbedCreateSpec.builder()
                 .title("Log history")
@@ -59,7 +71,7 @@ public class HistoryCommandHandler extends DiscordChatInputInteractionEventListe
                 .color(Color.CYAN)
                 .build();
 
-        var paginationControls = CommandHandlerHelper.getPaginationComponent(page, allLogs.getTotalPages(), getCommandNameFilter());
+        var paginationControls = CommandHandlerHelper.getPaginationComponent(page, allLogs.getTotalPages(), String.format("%s$%s", getCommandNameFilter(), exerciseNameFilter));
         return InteractionReplyEditSpec.builder().addEmbed(embed).addComponent(paginationControls).build();
     }
 }

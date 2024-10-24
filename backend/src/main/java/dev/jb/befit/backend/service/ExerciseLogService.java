@@ -42,6 +42,10 @@ public class ExerciseLogService {
         return exerciseLogRepository.findAllByUserOrderByCreatedDesc(user, pageable);
     }
 
+    public Page<ExerciseLog> getAllRecentByUser(User user, Long exerciseTypeId, Pageable pageable) {
+        return exerciseLogRepository.findAllByUserAndExerciseTypeIdOrderByCreatedDesc(user, exerciseTypeId, pageable);
+    }
+
     public List<ExerciseLog> getAllByExerciseName(String exerciseName) {
         if (exerciseName.startsWith("#")) {
             var idString = exerciseName.substring(1);

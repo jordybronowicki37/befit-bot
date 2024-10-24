@@ -1,4 +1,13 @@
 {
   "name": "history",
-  "description": "See your most recent logs"
+  "description": "See your most recent logs",
+  "options": [
+    {
+      "name": "exercise-name",
+      "description": "Filter on an exercise type",
+      "type": 3,
+      "required": false,
+      "autocomplete": true
+    }
+  ]
 }
