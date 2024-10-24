@@ -38,7 +38,15 @@ public class StatsCommandHandler extends DiscordChatInputInteractionEventListene
     @Override
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
+        var userOption = event.getOption("user");
         var discordUser = event.getInteraction().getUser();
+        if (userOption.isPresent()) {
+            var userOptionValue = userOption.get().getValue();
+            if (userOptionValue.isPresent()) {
+                discordUser = userOptionValue.get().asUser().block();
+            }
+        }
+
         var user = userService.getOrCreateDiscordUser(discordUser.getId());
 
         var description = new StringBuilder();

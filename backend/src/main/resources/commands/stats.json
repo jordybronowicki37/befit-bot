@@ -1,4 +1,12 @@
 {
   "name": "stats",
-  "description": "See your personal stats"
+  "description": "See your personal stats",
+  "options": [
+    {
+      "name": "user",
+      "description": "The user you want to see the stats for",
+      "type": 6,
+      "required": false
+    }
+  ]
 }
