@@ -9,6 +9,7 @@ jobs:
     permissions:
       contents: write
     uses: ./.github/workflows/bump-tag.yml
+
   build-and-publish:
     needs: bump-tag-version
     permissions:
@@ -16,4 +17,4 @@ jobs:
       contents: read
     uses: ./.github/workflows/create-docker-image.yml
     with:
-      version: ${{ needs.bump-tag-version.outputs.version }}
+      version: ${{ needs.bump-tag-version.outputs.new_tag }}
