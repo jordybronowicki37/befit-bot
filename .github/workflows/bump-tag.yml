@@ -8,7 +8,9 @@ on:
         type: string
         default: minor
     outputs:
-      tag: ${{ jobs.bump-tag.outputs.tag }}
+      tag:
+        description: The new tag version
+        value: ${{ jobs.bump-tag.outputs.tag }}
   workflow_dispatch:
     inputs:
       default_bump:
