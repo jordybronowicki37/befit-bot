@@ -4,16 +4,18 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class ExerciseLog {
+public class ExerciseSession {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "exercise_log_seq")
-    @SequenceGenerator(name = "exercise_log_seq" ,sequenceName = "exercise_log_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "session_seq")
+    @SequenceGenerator(name = "session_seq" ,sequenceName = "session_seq", allocationSize = 1)
     @Setter(AccessLevel.PROTECTED)
     @EqualsAndHashCode.Include
     private Long id;
@@ -22,19 +24,11 @@ public class ExerciseLog {
     private LocalDateTime created = LocalDateTime.now();
 
     @NonNull
-    private Double amount;
-
-    @NonNull
-    @ManyToOne
-    private ExerciseType exerciseType;
-
     @Setter
-    @OneToOne
-    private Goal reachedGoal;
+    private String name;
 
-    @NonNull
-    @ManyToOne
-    private ExerciseSession session;
+    @OneToMany
+    private List<ExerciseLog> exerciseLogs = new ArrayList<>();
 
     @NonNull
     @ManyToOne
