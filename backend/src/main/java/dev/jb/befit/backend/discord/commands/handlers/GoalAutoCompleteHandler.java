@@ -34,16 +34,15 @@ public class GoalAutoCompleteHandler extends DiscordChatInputAutoCompleteEventLi
         var user = userService.getOrCreateDiscordUser(userId);
         var goals = goalService.getAllUserGoals(user, GoalStatus.ACTIVE);
 
-        var suggestions = new ArrayList<ApplicationCommandOptionChoiceData>();
-        goals.stream()
+        var suggestions = goals.stream()
                 .filter(g -> g.getExerciseType().getName().toLowerCase().contains(filter))
                 .limit(CommandConstants.SearchResultsSize)
-                .forEach(g -> suggestions.add(
+                .map(g ->
                         ApplicationCommandOptionChoiceData.builder()
                                 .name(String.format("%s - %s %s", g.getExerciseType().getName(), CommandHandlerHelper.formatDouble(g.getAmount()), g.getExerciseType().getMeasurementType().getShortName()))
                                 .value(g.getId())
                                 .build()
-                ));
-        return event.respondWithSuggestions(suggestions);
+                ).toList();
+        return event.respondWithSuggestions(new ArrayList<>(suggestions));
     }
 }

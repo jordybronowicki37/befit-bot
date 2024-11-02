@@ -31,7 +31,7 @@ public class ScheduledJobAutoCompleteHandler extends DiscordChatInputAutoComplet
         var filter = CommandHandlerHelper.getAutocompleteOptionFilter(event);
 
         var jobs = jobScheduler.getScheduledTasks();
-        var sug = jobs.keySet().stream()
+        var suggestions = jobs.keySet().stream()
                 .map(scheduledJob -> {
                     var jobId = scheduledJob.getId();
                     var channel = discordClient.getChannelById(scheduledJob.getChannelId()).block();
@@ -44,7 +44,6 @@ public class ScheduledJobAutoCompleteHandler extends DiscordChatInputAutoComplet
                 .filter(v -> v.name().contains(filter))
                 .limit(CommandConstants.SearchResultsSize)
                 .toList();
-        var suggestions = new ArrayList<ApplicationCommandOptionChoiceData>(sug);
-        return event.respondWithSuggestions(suggestions);
+        return event.respondWithSuggestions(new ArrayList<>(suggestions));
     }
 }

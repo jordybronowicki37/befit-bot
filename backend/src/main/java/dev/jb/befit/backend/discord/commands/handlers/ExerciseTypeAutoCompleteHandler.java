@@ -28,8 +28,15 @@ public class ExerciseTypeAutoCompleteHandler extends DiscordChatInputAutoComplet
     public Mono<Void> execute(ChatInputAutoCompleteEvent event) {
         var filter = CommandHandlerHelper.getAutocompleteOptionFilter(event);
         var exercises = exerciseTypeService.getFiltered(filter);
-        var suggestions = new ArrayList<ApplicationCommandOptionChoiceData>();
-        exercises.stream().limit(CommandConstants.SearchResultsSize).forEach(e -> suggestions.add(ApplicationCommandOptionChoiceData.builder().name(e.getName()).value(e.getName()).build()));
-        return event.respondWithSuggestions(suggestions);
+        var suggestions = exercises.stream()
+                .limit(CommandConstants.SearchResultsSize)
+                .map(e ->
+                        ApplicationCommandOptionChoiceData.builder()
+                                .name(e.getName())
+                                .value(e.getName())
+                                .build()
+                )
+                .toList();
+        return event.respondWithSuggestions(new ArrayList<>(suggestions));
     }
 }
