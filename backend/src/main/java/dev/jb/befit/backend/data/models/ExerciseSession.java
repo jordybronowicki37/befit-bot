@@ -27,6 +27,10 @@ public class ExerciseSession {
     @Setter
     private String name;
 
+    @Setter
+    @Enumerated
+    private ExerciseSessionStatus status = ExerciseSessionStatus.ACTIVE;
+
     @OneToMany(mappedBy = "session")
     private List<ExerciseLog> exerciseLogs = new ArrayList<>();
 

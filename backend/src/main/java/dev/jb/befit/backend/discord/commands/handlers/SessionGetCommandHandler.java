@@ -44,23 +44,28 @@ public class SessionGetCommandHandler extends DiscordChatInputInteractionEventLi
 
     public static EmbedCreateSpec.Builder getEmbed(ExerciseSession session) {
         var logs = session.getExerciseLogs();
-        var logsDescription = new StringBuilder();
+        var logsDescriptionBuilder = new StringBuilder();
 
-        if (logs.isEmpty()) logsDescription.append("You have not added any logs yet.");
+        if (logs.isEmpty()) logsDescriptionBuilder.append("You have not added any logs yet.");
         else {
             logs.forEach(log -> {
                 var exercise = log.getExerciseType();
                 var measurement = exercise.getMeasurementType();
                 var amount = CommandHandlerHelper.formatDouble(log.getAmount());
-                var time = CommandHandlerHelper.formatTime(log.getCreated().toLocalTime());
-                logsDescription.append(String.format("### #%d %s\nAmount: %s %s\nCreated: %s", exercise.getId(), exercise.getName(), amount, measurement.getShortName(), time));
+                var time = CommandHandlerHelper.formatTime(log.getCreated());
+                logsDescriptionBuilder.append(String.format("**#%d %s**\nAmount: %s %s\nCreated: %s\n\n", exercise.getId(), exercise.getName(), amount, measurement.getShortName(), time));
             });
         }
 
+        var descriptionBuilder = new StringBuilder();
+        descriptionBuilder.append(String.format("Session name: %s\n", session.getName()));
+        descriptionBuilder.append(String.format("Started: %s\n", CommandHandlerHelper.formatDateTime(session.getCreated())));
+        descriptionBuilder.append(String.format("Status: %s\n\n", session.getStatus().name().toLowerCase()));
+        descriptionBuilder.append(String.format("### Logs\n%s", logsDescriptionBuilder));
+
         return EmbedCreateSpec.builder()
                 .title("Session")
-                .description(String.format("Session name: %s\nStarted: %s\n", session.getName(), CommandHandlerHelper.formatDateTime(session.getCreated())))
-                .addField("Logs", logsDescription.toString(), false)
+                .description(descriptionBuilder.toString())
                 .color(Color.GREEN);
     }
 }
