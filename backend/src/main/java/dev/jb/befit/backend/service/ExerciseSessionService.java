@@ -15,6 +15,10 @@ import java.util.Optional;
 public class ExerciseSessionService {
     private final ExerciseSessionRepository exerciseSessionRepository;
 
+    public Long amountByUser(User user) {
+        return exerciseSessionRepository.countAllByUser(user);
+    }
+
     public Page<ExerciseSession> getAllByUser(User user, Pageable pageable) {
         return exerciseSessionRepository.findAllByUserOrderByCreatedDesc(user, pageable);
     }

@@ -5,10 +5,7 @@ import dev.jb.befit.backend.data.models.GoalStatus;
 import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
-import dev.jb.befit.backend.service.ExerciseLogService;
-import dev.jb.befit.backend.service.GoalService;
-import dev.jb.befit.backend.service.UserExperienceService;
-import dev.jb.befit.backend.service.UserService;
+import dev.jb.befit.backend.service.*;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionReplyEditSpec;
@@ -28,6 +25,7 @@ import java.io.FileNotFoundException;
 public class StatsCommandHandler extends DiscordChatInputInteractionEventListener {
     private final UserService userService;
     private final ExerciseLogService exerciseLogService;
+    private final ExerciseSessionService exerciseSessionService;
     private final GoalService goalService;
 
     @Override
@@ -54,8 +52,11 @@ public class StatsCommandHandler extends DiscordChatInputInteractionEventListene
         description.append(String.format("Achievements completed: %d/%d\n", user.getAchievements().size(), Achievement.values().length));
         description.append(String.format("Goals active: %d\n", goalService.getAllUserGoals(user, GoalStatus.ACTIVE).size()));
         description.append(String.format("Goals completed: %d\n", goalService.getAllUserGoals(user, GoalStatus.COMPLETED).size()));
+        description.append(String.format("Last log: %s\n", exerciseLogService.getLastByUser(user).map(l -> CommandHandlerHelper.formatDateTime(l.getCreated())).orElse("`Not available`")));
+        description.append(String.format("Last session: %s\n", exerciseSessionService.getLastByUser(user).map(s -> CommandHandlerHelper.formatDateTime(s.getCreated())).orElse("`Not available`")));
         description.append(String.format("Participated exercises: %d\n", exerciseLogService.countAmountOfExercisesByUser(user)));
         description.append(String.format("Total logs: %d\n", exerciseLogService.countAllByUser(user)));
+        description.append(String.format("Total sessions: %d\n", exerciseSessionService.amountByUser(user)));
 
         var embed = EmbedCreateSpec.builder()
                 .author(discordUser.getUsername(), null, discordUser.getAvatarUrl())

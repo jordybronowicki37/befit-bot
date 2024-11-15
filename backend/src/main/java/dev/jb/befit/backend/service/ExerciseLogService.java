@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -36,6 +37,10 @@ public class ExerciseLogService {
 
     public long countAmountOfExercisesByUser(User user) {
         return exerciseLogRepository.countDistinctExerciseTypeByUser(user);
+    }
+
+    public Optional<ExerciseLog> getLastByUser(User user) {
+        return exerciseLogRepository.findTopByUserOrderByIdDesc(user);
     }
 
     public Page<ExerciseLog> getAllRecentByUser(User user, Pageable pageable) {

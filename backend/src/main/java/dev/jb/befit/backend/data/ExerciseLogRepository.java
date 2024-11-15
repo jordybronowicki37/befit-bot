@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ExerciseLogRepository extends JpaRepository<ExerciseLog, Long> {
@@ -24,4 +25,5 @@ public interface ExerciseLogRepository extends JpaRepository<ExerciseLog, Long> 
     List<ExerciseLog> findAllByExerciseTypeName(String exerciseTypeName);
     List<ExerciseLog> findAllByUserAndExerciseTypeId(User user, Long exerciseTypeId);
     List<ExerciseLog> findAllByUserAndExerciseTypeName(User user, String exerciseTypeName);
+    Optional<ExerciseLog> findTopByUserOrderByIdDesc(User user);
 }
