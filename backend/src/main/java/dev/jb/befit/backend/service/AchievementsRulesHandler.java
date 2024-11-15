@@ -122,6 +122,15 @@ public class AchievementsRulesHandler {
             }
         }
 
+        if (checkUserAchievementLocked(user, Achievement.ON_THE_BENCH)) {
+            var session = exerciseLog.getSession();
+            if (session != null) {
+                if (session.getExerciseLogs().size() >= 5) {
+                    achievements.add(userAchievementService.completeAchievement(user, Achievement.ON_THE_BENCH));
+                }
+            }
+        }
+
         if (checkUserAchievementLocked(user, Achievement.THINK_OF_HEALTH)) {
             if (exerciseIsOfType(exerciseType, MeasurementType.CALORIES) && exerciseIsIncreasing && exerciseLog.getAmount() >= 200) {
                 achievements.add(userAchievementService.completeAchievement(user, Achievement.THINK_OF_HEALTH));
@@ -168,6 +177,15 @@ public class AchievementsRulesHandler {
         if (checkUserAchievementLocked(user, Achievement.THE_HULK)) {
             if (exerciseIsOfType(exerciseType, MeasurementType.KG) && exerciseIsIncreasing && exerciseLog.getAmount() >= 100) {
                 achievements.add(userAchievementService.completeAchievement(user, Achievement.THE_HULK));
+            }
+        }
+
+        if (checkUserAchievementLocked(user, Achievement.BODYBUILDER)) {
+            var session = exerciseLog.getSession();
+            if (session != null) {
+                if (session.getExerciseLogs().size() >= 10) {
+                    achievements.add(userAchievementService.completeAchievement(user, Achievement.BODYBUILDER));
+                }
             }
         }
 

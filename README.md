@@ -198,6 +198,7 @@ There are 20 achievements for you to complete.
   > | ![Achievement icon](backend/src/main/resources/achievement-icons/icon-09.png) | Keep on stacking        | Have 5 concurrent logs of a single exercise that keep increasing.                         | MEDIUM     |
   > | ![Achievement icon](backend/src/main/resources/achievement-icons/icon-20.png) | Love to lift            | Lift something weighing more than 50kg for 3 days in a row.                               | MEDIUM     |
   > | ![Achievement icon](backend/src/main/resources/achievement-icons/icon-04.png) | On a roll               | Log an exercise 4 days in a row.                                                          | MEDIUM     |
+  > | ![Achievement icon](backend/src/main/resources/achievement-icons/icon-11.png) | On the bench            | Add 5 logs to a single session.                                                           | MEDIUM     |
   > | ![Achievement icon](backend/src/main/resources/achievement-icons/icon-16.png) | The right mindset       | Set 5 goals and complete these within a month.                                            | MEDIUM     |
   > | ![Achievement icon](backend/src/main/resources/achievement-icons/icon-05.png) | Think about your health | Log an exercise that burns 200 calories.                                                  | MEDIUM     |
   > | ![Achievement icon](backend/src/main/resources/achievement-icons/icon-18.png) | Feels like home         | Log an exercise 10 days in a row.                                                         | HARD       |
@@ -205,10 +206,9 @@ There are 20 achievements for you to complete.
   > | ![Achievement icon](backend/src/main/resources/achievement-icons/icon-14.png) | Show off                | Reach the first place on an exercise leaderboard that has at least 6 participants.        | HARD       |
   > | ![Achievement icon](backend/src/main/resources/achievement-icons/icon-15.png) | The goat                | Create a total of 100 logs.                                                               | HARD       |
   > | ![Achievement icon](backend/src/main/resources/achievement-icons/icon-06.png) | The hulk                | Lift something weighing more than 100kg.                                                  | HARD       |
+  > | ![Achievement icon](backend/src/main/resources/achievement-icons/icon-01.png) | Bodybuilder             | Add 10 logs to a single session.                                                          | IMPOSSIBLE |
   > | ![Achievement icon](backend/src/main/resources/achievement-icons/icon-02.png) | Like a marathon         | Reach a distance on any exercise of 42km.                                                 | IMPOSSIBLE |
   > | ![Achievement icon](backend/src/main/resources/achievement-icons/icon-10.png) | Serious dedication      | Create logs each day for an entire month.                                                 | IMPOSSIBLE |
-  > | ![Achievement icon](backend/src/main/resources/achievement-icons/icon-01.png) | Bodybuilder             | WIP                                                                                       | UNKNOWN    |
-  > | ![Achievement icon](backend/src/main/resources/achievement-icons/icon-11.png) | On the bench            | WIP                                                                                       | UNKNOWN    |
 
 </details>
 

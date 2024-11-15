@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Achievement {
-    BODYBUILDER(AchievementDifficulty.UNKNOWN, "icon-01.png", "ach_bodybuilder", "Bodybuilder", "WIP"),
+    BODYBUILDER(AchievementDifficulty.IMPOSSIBLE, "icon-01.png", "ach_bodybuilder", "Bodybuilder", "Add 10 logs to a single session."),
     LIKE_A_MARATHON(AchievementDifficulty.IMPOSSIBLE, "icon-02.png", "ach_like_a_marathon", "Like a marathon", "Reach a distance on any exercise of 42km."),
     HEART_MONITOR(AchievementDifficulty.EASY, "icon-03.png", "ach_heart_monitor", "Heart monitor", "Log an exercise which uses bpm as a measurement."),
     ON_A_ROLL(AchievementDifficulty.MEDIUM, "icon-04.png", "ach_on_a_roll", "On a roll", "Log an exercise 4 days in a row."),
@@ -16,7 +16,7 @@ public enum Achievement {
     DONE_FOR_TODAY(AchievementDifficulty.MEDIUM, "icon-08.png", "ach_done_for_today", "Done for today", "Create 10 logs on a single day."),
     KEEP_ON_STACKING(AchievementDifficulty.MEDIUM, "icon-09.png", "ach_keep_on_stacking", "Keep on stacking", "Have 5 concurrent logs of a single exercise that keep increasing."),
     SERIOUS_DEDICATION(AchievementDifficulty.IMPOSSIBLE, "icon-10.png", "ach_serious_dedication", "Serious dedication", "Create logs each day for an entire month."),
-    ON_THE_BENCH(AchievementDifficulty.UNKNOWN, "icon-11.png", "ach_on_the_bench", "On the bench", "WIP"),
+    ON_THE_BENCH(AchievementDifficulty.MEDIUM, "icon-11.png", "ach_on_the_bench", "On the bench", "Add 5 logs to a single session."),
     GOAL_REACHED(AchievementDifficulty.EASY, "icon-12.png", "ach_goal_reached", "Reach your potential", "Complete a goal."),
     LETS_GO_PLACES(AchievementDifficulty.HARD, "icon-13.png", "ach_lets_go_places", "Lets go places", "Reach a distance on any exercise of 20km."),
     SHOW_OFF(AchievementDifficulty.HARD, "icon-14.png", "ach_show_off", "Show off", "Reach the first place on an exercise leaderboard that has at least 6 participants."),
