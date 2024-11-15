@@ -22,6 +22,7 @@ public class DummyDataInitializer implements CommandLineRunner {
     private final UserAchievementsRepository userAchievementsRepository;
     private final ExerciseLogRepository exerciseLogRepository;
     private final ExerciseRecordRepository exerciseRecordRepository;
+    private final ExerciseSessionRepository exerciseSessionRepository;
     private final ExerciseTypeRepository exerciseTypeRepository;
     private final GoalRepository goalRepository;
 
@@ -54,6 +55,8 @@ public class DummyDataInitializer implements CommandLineRunner {
         var shoulderPress = new ExerciseType("Shoulder press", MeasurementType.MINUTES, GoalDirection.INCREASING);
         var cycling = new ExerciseType("Cycling", MeasurementType.KM, GoalDirection.INCREASING);
         exerciseTypeRepository.saveAll(List.of(benchpress, pullUp, running, pecFly, shoulderPress, cycling));
+        var session = new ExerciseSession("My first session", discordUser);
+        exerciseSessionRepository.save(session);
 
         var benchLog1 = new ExerciseLog(30d, benchpress, discordUser);
         benchLog1.setCreated(LocalDateTime.now().minusDays(30));
@@ -66,6 +69,7 @@ public class DummyDataInitializer implements CommandLineRunner {
         var benchLog5 = new ExerciseLog(50d, benchpress, discordUser);
         benchLog5.setCreated(LocalDateTime.now().minusDays(8));
         var benchLog6 = new ExerciseLog(55d, benchpress, discordUser);
+        benchLog6.setSession(session);
         var benchLog7 = new ExerciseLog(35d, benchpress, webUser1);
         benchLog7.setCreated(LocalDateTime.now().minusDays(18));
         var benchLog8 = new ExerciseLog(40d, benchpress, webUser1);
@@ -85,9 +89,11 @@ public class DummyDataInitializer implements CommandLineRunner {
 
         var pullLog1 = new ExerciseLog(5d, pullUp, discordUser);
         pullLog1.setCreated(LocalDateTime.now().minusDays(3));
+        pullLog1.setSession(session);
         var pullLog2 = new ExerciseLog(9d, pullUp, webUser1);
         pullLog2.setCreated(LocalDateTime.now().minusDays(3));
         var cyclingLog1 = new ExerciseLog(10d, cycling, discordUser);
+        cyclingLog1.setSession(session);
         exerciseLogRepository.saveAll(List.of(pullLog1, pullLog2, cyclingLog1));
 
         exerciseRecordRepository.save(new ExerciseRecord(discordUser, pullUp, 5d));

@@ -32,7 +32,7 @@ public class ExerciseLog {
     @OneToOne
     private Goal reachedGoal;
 
-    @NonNull
+    @Setter
     @ManyToOne
     private ExerciseSession session;
 

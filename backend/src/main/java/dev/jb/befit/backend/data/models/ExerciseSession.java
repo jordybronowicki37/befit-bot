@@ -27,7 +27,7 @@ public class ExerciseSession {
     @Setter
     private String name;
 
-    @OneToMany
+    @OneToMany(mappedBy = "session")
     private List<ExerciseLog> exerciseLogs = new ArrayList<>();
 
     @NonNull
