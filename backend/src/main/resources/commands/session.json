@@ -1,0 +1,63 @@
+{
+  "name": "sessions",
+  "description": "Get, edit or create sessions",
+  "options": [
+    {
+      "name": "view",
+      "description": "View your sessions",
+      "type": 2,
+      "options": [
+        {
+          "name": "all",
+          "description": "View all sessions",
+          "type": 1
+        },
+        {
+          "name": "last",
+          "description": "View your last session",
+          "type": 1
+        },
+        {
+          "name": "one",
+          "description": "View a single session with more detailed information",
+          "type": 1,
+          "options": [
+            {
+              "name": "session",
+              "description": "The session",
+              "type": 4,
+              "required": true,
+              "autocomplete": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "create",
+      "description": "Create a new session",
+      "type": 1,
+      "options": [
+        {
+          "name": "name",
+          "description": "The name of the session",
+          "type": 3,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "stop",
+      "description": "Stop your latest session",
+      "type": 1,
+      "options": [
+        {
+          "name": "session",
+          "description": "The session",
+          "type": 3,
+          "required": true
+        }
+      ]
+    }
+  ]
+}

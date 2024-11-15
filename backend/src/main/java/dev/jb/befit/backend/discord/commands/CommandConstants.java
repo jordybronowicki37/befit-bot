@@ -23,10 +23,16 @@ public final class CommandConstants {
     public static final String CommandManagementJobsRemove = "management jobs remove";
     public static final String CommandMotivation = "motivation";
     public static final String CommandProgress = "progress";
+    public static final String CommandSessionsCreate = "sessions create";
+    public static final String CommandSessionsViewAll = "sessions view all";
+    public static final String CommandSessionsViewOne = "sessions view one";
+    public static final String CommandSessionsViewLast = "sessions view last";
+    public static final String CommandSessionsStop = "sessions stop";
     public static final String CommandStats = "stats";
 
     public static final String AutoCompletePropExerciseName = "exercise-name";
     public static final String AutoCompletePropGoal = "goal";
+    public static final String AutoCompletePropSession = "session";
     public static final String AutoCompletePropScheduledJob = "scheduled-job";
 
     public static final Integer PageSize = 5;

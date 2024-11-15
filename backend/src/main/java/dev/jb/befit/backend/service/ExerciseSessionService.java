@@ -27,6 +27,10 @@ public class ExerciseSessionService {
         return exerciseSessionRepository.findByUserAndId(user, id);
     }
 
+    public Page<ExerciseSession> searchByNameAndUser(User user, String name, Pageable pageable) {
+        return exerciseSessionRepository.findAllByUserAndNameIgnoreCaseContainingOrderByCreatedDesc(user, name, pageable);
+    }
+
     public ExerciseSession create(User user, String name) {
         var session = new ExerciseSession(name, user);
         return exerciseSessionRepository.save(session);

@@ -12,6 +12,7 @@ import java.util.Optional;
 @Repository
 public interface ExerciseSessionRepository extends JpaRepository<ExerciseSession, Long> {
     Page<ExerciseSession> findAllByUserOrderByCreatedDesc(User user, Pageable pageable);
+    Page<ExerciseSession> findAllByUserAndNameIgnoreCaseContainingOrderByCreatedDesc(User user, String name, Pageable pageable);
     Optional<ExerciseSession> findByUserAndId(User user, Long id);
     Optional<ExerciseSession> findTopByUserOrderByIdDesc(User user);
 }
