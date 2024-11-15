@@ -66,7 +66,7 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
             // Add last log value
             if (logCreationStatus.lastLog() != null) {
                 var previousLog = logCreationStatus.lastLog();
-                descriptionBuilder.append(String.format("Last: %s %s - %s\n", CommandHandlerHelper.formatDouble(previousLog.getAmount()), measurementName, CommandHandlerHelper.timeAgoText(previousLog.getCreated().toLocalDate())));
+                descriptionBuilder.append(String.format("Last: %s %s - %s\n", CommandHandlerHelper.formatDouble(previousLog.getAmount()), measurementName, CommandHandlerHelper.timeAgoText(previousLog.getCreated())));
             }
             // Add goal if it is present and not yet reached
             if (goal != null && !logCreationStatus.goalReached()) {

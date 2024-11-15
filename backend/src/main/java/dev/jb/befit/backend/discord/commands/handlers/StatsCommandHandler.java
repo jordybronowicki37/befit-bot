@@ -50,7 +50,7 @@ public class StatsCommandHandler extends DiscordChatInputInteractionEventListene
         var user = userService.getOrCreateDiscordUser(discordUser.getId());
 
         var description = new StringBuilder();
-        description.append(String.format("Account created: %s\n", CommandHandlerHelper.formatDate(user.getCreated().toLocalDate())));
+        description.append(String.format("Account created: %s\n", CommandHandlerHelper.formatDate(user.getCreated())));
         description.append(String.format("Achievements completed: %d/%d\n", user.getAchievements().size(), Achievement.values().length));
         description.append(String.format("Goals active: %d\n", goalService.getAllUserGoals(user, GoalStatus.ACTIVE).size()));
         description.append(String.format("Goals completed: %d\n", goalService.getAllUserGoals(user, GoalStatus.COMPLETED).size()));

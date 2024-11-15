@@ -15,14 +15,11 @@ import discord4j.core.object.reaction.ReactionEmoji;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.text.DecimalFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import java.time.ZoneOffset;
 
 import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_COMMAND;
 import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_COMMAND_GROUP;
@@ -31,19 +28,6 @@ import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_CO
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CommandHandlerHelper {
-    private static String timeFormat;
-    private static String dateFormat;
-
-    @Value("${befit.timeFormat}")
-    private void setTimeFormat(String timeFormat) {
-        CommandHandlerHelper.timeFormat = timeFormat;
-    }
-
-    @Value("${befit.dateFormat}")
-    private void setDateFormat(String dateFormat) {
-        CommandHandlerHelper.dateFormat = dateFormat;
-    }
-
     public static String getCommandName(ChatInputInteractionEvent event) {
         var actualCommandNameBuilder = new StringBuilder();
         actualCommandNameBuilder.append(event.getCommandName());
@@ -175,31 +159,23 @@ public final class CommandHandlerHelper {
         return ActionRow.of(previousButton, reloadButton, nextButton);
     }
 
-    public static String timeAgoText(LocalDate date) {
-        var current = LocalDate.now();
-        var difference = date.until(current);
-        var daysDifference = difference.getDays();
-
-        if (daysDifference == 0) return "Today";
-        if (daysDifference == 1) return "Yesterday";
-        if (daysDifference < 30) return String.format("%d days ago", daysDifference);
-        var monthsDifference = difference.getMonths();
-        if (monthsDifference == 1) return "1 month ago";
-        if (monthsDifference < 12) return String.format("%d months ago", monthsDifference);
-        var yearsDifference = difference.getYears();
-        if (yearsDifference == 1) return "1 year ago";
-        return String.format("%d years ago", yearsDifference);
+    public static String timeAgoText(LocalDateTime date) {
+        var epochSeconds = date.toEpochSecond(ZoneOffset.UTC);
+        return String.format("<t:%d:R>", epochSeconds);
     }
 
-    public static String formatDate(LocalDate date) {
-        return date.format(DateTimeFormatter.ofPattern(dateFormat));
+    public static String formatDate(LocalDateTime date) {
+        var epochSeconds = date.toEpochSecond(ZoneOffset.UTC);
+        return String.format("<t:%d:d>", epochSeconds);
     }
 
-    public static String formatTime(LocalTime time) {
-        return time.format(DateTimeFormatter.ofPattern(timeFormat));
+    public static String formatTime(LocalDateTime time) {
+        var epochSeconds = time.toEpochSecond(ZoneOffset.UTC);
+        return String.format("<t:%d:t>", epochSeconds);
     }
 
     public static String formatDateTime(LocalDateTime date) {
-        return formatDate(date.toLocalDate()) + " " + formatTime(date.toLocalTime());
+        var epochSeconds = date.toEpochSecond(ZoneOffset.UTC);
+        return String.format("<t:%d:f>", epochSeconds);
     }
 }
