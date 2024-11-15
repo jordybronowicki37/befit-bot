@@ -27,6 +27,11 @@ public class ExerciseSessionService {
         return exerciseSessionRepository.findTopByUserOrderByIdDesc(user);
     }
 
+    public Optional<ExerciseSession> getLastActiveByUser(User user) {
+        // TODO see if the session is actually still active and update if not
+        return exerciseSessionRepository.findTopByUserOrderByIdDesc(user);
+    }
+
     public Optional<ExerciseSession> getByUserAndId(User user, Long id) {
         return exerciseSessionRepository.findByUserAndId(user, id);
     }

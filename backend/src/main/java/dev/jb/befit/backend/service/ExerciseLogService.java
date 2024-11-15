@@ -22,6 +22,7 @@ import java.util.Optional;
 public class ExerciseLogService {
     private final AchievementsRulesHandler achievementsRulesHandler;
     private final ExerciseLogRepository exerciseLogRepository;
+    private final ExerciseSessionService exerciseSessionService;
     private final ExerciseTypeService exerciseTypeService;
     private final ExerciseRecordRepository exerciseRecordRepository;
     private final GoalService goalService;
@@ -80,6 +81,12 @@ public class ExerciseLogService {
         var newRecordReached = false;
         var goalReached = false;
 
+        var session = exerciseSessionService.getLastActiveByUser(user);
+        if (session.isPresent()) {
+            exerciseLog.setSession(session.get());
+            earnedXp += ServiceConstants.EarnedXpLogAddedToSession;
+        }
+
         if (exerciseRecord == null) {
             var newRecord = new ExerciseRecord(user, exerciseType, amount);
             exerciseType.getExerciseRecords().add(newRecord);
@@ -116,6 +123,7 @@ public class ExerciseLogService {
                 newExerciseLog,
                 allExistingLogs.stream().skip(allExistingLogs.isEmpty() ? 0 : allExistingLogs.size()-1).findFirst().orElse(null),
                 allExistingLogs.size() + 1,
+                session,
                 exerciseRecord,
                 goalOpt.orElse(null),
                 achievements,

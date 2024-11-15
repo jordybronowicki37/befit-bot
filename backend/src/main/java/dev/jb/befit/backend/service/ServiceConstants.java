@@ -9,6 +9,7 @@ public final class ServiceConstants {
     public static final long XpStartingLimit = 100;
 
     public static final long EarnedXpLogCreated = 10;
+    public static final long EarnedXpLogAddedToSession = 5;
     public static final long EarnedXpNewExerciseStarted = 20;
     public static final long EarnedXpRecordImproved = 50;
     public static final long EarnedXpGoalCreated = 10;
