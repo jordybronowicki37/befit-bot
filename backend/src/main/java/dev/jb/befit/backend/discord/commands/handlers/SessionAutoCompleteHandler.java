@@ -37,7 +37,7 @@ public class SessionAutoCompleteHandler extends DiscordChatInputAutoCompleteEven
         var suggestions = sessions.stream()
                 .limit(CommandConstants.SearchResultsSize)
                 .map(session -> {
-                    var name = String.format("%s - %s", session.getName(), CommandHandlerHelper.formatDate(session.getCreated()));
+                    var name = String.format("%s - %s", session.getName(), CommandHandlerHelper.formatDate(session.getCreated().toLocalDate()));
                     return ApplicationCommandOptionChoiceData.builder().name(name).value(session.getId()).build();
                 })
                 .toList();

@@ -55,14 +55,14 @@ public class SessionGetCommandHandler extends DiscordChatInputInteractionEventLi
                 var exercise = log.getExerciseType();
                 var measurement = exercise.getMeasurementType();
                 var amount = CommandHandlerHelper.formatDouble(log.getAmount());
-                var time = CommandHandlerHelper.formatTime(log.getCreated());
+                var time = CommandHandlerHelper.discordFormatTime(log.getCreated());
                 logsDescriptionBuilder.append(String.format("**#%d %s**\nAmount: %s %s\nCreated: %s\n\n", exercise.getId(), exercise.getName(), amount, measurement.getShortName(), time));
             });
         }
 
         var descriptionBuilder = new StringBuilder();
         descriptionBuilder.append(String.format("Name: %s\n", session.getName()));
-        descriptionBuilder.append(String.format("Started: %s\n", CommandHandlerHelper.formatDateTime(session.getCreated())));
+        descriptionBuilder.append(String.format("Started: %s\n", CommandHandlerHelper.discordFormatDateTime(session.getCreated())));
         descriptionBuilder.append(String.format("Status: %s\n", session.getStatus().name().toLowerCase()));
         descriptionBuilder.append(String.format("Total logs: %d\n", logs.size()));
         descriptionBuilder.append(String.format("### Logs\n%s", logsDescriptionBuilder));

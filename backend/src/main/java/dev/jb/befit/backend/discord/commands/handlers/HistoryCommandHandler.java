@@ -62,7 +62,7 @@ public class HistoryCommandHandler extends DiscordChatInputInteractionEventListe
                             return EmbedCreateFields.Field.of(
                                     String.format("#%d %s", exercise.getId(), exercise.getName()),
                                     String.format("Created: %s\nValue: %s %s",
-                                            CommandHandlerHelper.formatDateTime(log.getCreated()),
+                                            CommandHandlerHelper.discordFormatDateTime(log.getCreated()),
                                             CommandHandlerHelper.formatDouble(log.getAmount()),
                                             exercise.getMeasurementType().getShortName()),
                                     false);

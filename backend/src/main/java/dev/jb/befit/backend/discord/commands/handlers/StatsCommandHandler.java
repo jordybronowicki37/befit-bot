@@ -48,12 +48,12 @@ public class StatsCommandHandler extends DiscordChatInputInteractionEventListene
         var user = userService.getOrCreateDiscordUser(discordUser.getId());
 
         var description = new StringBuilder();
-        description.append(String.format("Account created: %s\n", CommandHandlerHelper.formatDate(user.getCreated())));
+        description.append(String.format("Account created: %s\n", CommandHandlerHelper.discordFormatDate(user.getCreated())));
         description.append(String.format("Achievements completed: %d/%d\n", user.getAchievements().size(), Achievement.values().length));
         description.append(String.format("Goals active: %d\n", goalService.getAllUserGoals(user, GoalStatus.ACTIVE).size()));
         description.append(String.format("Goals completed: %d\n", goalService.getAllUserGoals(user, GoalStatus.COMPLETED).size()));
-        description.append(String.format("Last log: %s\n", exerciseLogService.getLastByUser(user).map(l -> CommandHandlerHelper.formatDateTime(l.getCreated())).orElse("`Not available`")));
-        description.append(String.format("Last session: %s\n", exerciseSessionService.getLastByUser(user).map(s -> CommandHandlerHelper.formatDateTime(s.getCreated())).orElse("`Not available`")));
+        description.append(String.format("Last log: %s\n", exerciseLogService.getLastByUser(user).map(l -> CommandHandlerHelper.discordFormatDateTime(l.getCreated())).orElse("`Not available`")));
+        description.append(String.format("Last session: %s\n", exerciseSessionService.getLastByUser(user).map(s -> CommandHandlerHelper.discordFormatDateTime(s.getCreated())).orElse("`Not available`")));
         description.append(String.format("Participated exercises: %d\n", exerciseLogService.countAmountOfExercisesByUser(user)));
         description.append(String.format("Total logs: %d\n", exerciseLogService.countAllByUser(user)));
         description.append(String.format("Total sessions: %d\n", exerciseSessionService.amountByUser(user)));

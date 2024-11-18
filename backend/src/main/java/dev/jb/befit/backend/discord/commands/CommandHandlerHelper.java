@@ -15,11 +15,15 @@ import discord4j.core.object.reaction.ReactionEmoji;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 
 import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_COMMAND;
 import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_COMMAND_GROUP;
@@ -28,6 +32,19 @@ import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_CO
 @Component
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CommandHandlerHelper {
+    private static String timeFormat;
+    private static String dateFormat;
+
+    @Value("${befit.timeFormat}")
+    private void setTimeFormat(String timeFormat) {
+        CommandHandlerHelper.timeFormat = timeFormat;
+    }
+
+    @Value("${befit.dateFormat}")
+    private void setDateFormat(String dateFormat) {
+        CommandHandlerHelper.dateFormat = dateFormat;
+    }
+
     public static String getCommandName(ChatInputInteractionEvent event) {
         var actualCommandNameBuilder = new StringBuilder();
         actualCommandNameBuilder.append(event.getCommandName());
@@ -159,23 +176,35 @@ public final class CommandHandlerHelper {
         return ActionRow.of(previousButton, reloadButton, nextButton);
     }
 
-    public static String timeAgoText(LocalDateTime date) {
-        var epochSeconds = date.toEpochSecond(ZoneOffset.UTC);
-        return String.format("<t:%d:R>", epochSeconds);
+    private static long getEpochSeconds(LocalDateTime date) {
+        return date.toEpochSecond(ZoneOffset.systemDefault().getRules().getOffset(date));
     }
 
-    public static String formatDate(LocalDateTime date) {
-        var epochSeconds = date.toEpochSecond(ZoneOffset.UTC);
-        return String.format("<t:%d:d>", epochSeconds);
+    public static String discordTimeAgoText(LocalDateTime date) {
+        return String.format("<t:%d:R>", getEpochSeconds(date));
     }
 
-    public static String formatTime(LocalDateTime time) {
-        var epochSeconds = time.toEpochSecond(ZoneOffset.UTC);
-        return String.format("<t:%d:t>", epochSeconds);
+    public static String discordFormatDate(LocalDateTime date) {
+        return String.format("<t:%d:d>", getEpochSeconds(date));
+    }
+
+    public static String discordFormatTime(LocalDateTime date) {
+        return String.format("<t:%d:t>", getEpochSeconds(date));
+    }
+
+    public static String discordFormatDateTime(LocalDateTime date) {
+        return String.format("<t:%d:f>", getEpochSeconds(date));
+    }
+
+    public static String formatDate(LocalDate date) {
+        return date.format(DateTimeFormatter.ofPattern(dateFormat));
+    }
+
+    public static String formatTime(LocalTime time) {
+        return time.format(DateTimeFormatter.ofPattern(timeFormat));
     }
 
     public static String formatDateTime(LocalDateTime date) {
-        var epochSeconds = date.toEpochSecond(ZoneOffset.UTC);
-        return String.format("<t:%d:f>", epochSeconds);
+        return formatDate(date.toLocalDate()) + " " + formatTime(date.toLocalTime());
     }
 }
