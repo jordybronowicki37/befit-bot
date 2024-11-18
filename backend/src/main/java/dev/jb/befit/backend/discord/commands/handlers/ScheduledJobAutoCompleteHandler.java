@@ -2,7 +2,7 @@ package dev.jb.befit.backend.discord.commands.handlers;
 
 import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
-import dev.jb.befit.backend.discord.jobs.JobScheduler;
+import dev.jb.befit.backend.discord.jobs.MessageSchedulerJobController;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputAutoCompleteEventListener;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 @Service
 @RequiredArgsConstructor
 public class ScheduledJobAutoCompleteHandler extends DiscordChatInputAutoCompleteEventListener {
-    private final JobScheduler jobScheduler;
+    private final MessageSchedulerJobController messageSchedulerJobController;
     private final GatewayDiscordClient discordClient;
 
     @Override
@@ -30,7 +30,7 @@ public class ScheduledJobAutoCompleteHandler extends DiscordChatInputAutoComplet
     public Mono<Void> execute(ChatInputAutoCompleteEvent event) {
         var filter = CommandHandlerHelper.getAutocompleteOptionFilter(event);
 
-        var jobs = jobScheduler.getScheduledTasks();
+        var jobs = messageSchedulerJobController.getScheduledTasks();
         var suggestions = jobs.keySet().stream()
                 .map(scheduledJob -> {
                     var jobId = scheduledJob.getId();

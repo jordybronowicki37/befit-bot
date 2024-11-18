@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class JobsInitializer implements CommandLineRunner {
-    private final JobScheduler jobScheduler;
+public class MessageSchedulerJobInitializer implements CommandLineRunner {
+    private final MessageSchedulerJobController messageSchedulerJobController;
     private final ScheduledJobService scheduledJobService;
 
     @Override
     public void run(String... args) {
         var jobs = scheduledJobService.getAll();
-        jobs.forEach(jobScheduler::scheduleJob);
+        jobs.forEach(messageSchedulerJobController::scheduleJob);
     }
 }

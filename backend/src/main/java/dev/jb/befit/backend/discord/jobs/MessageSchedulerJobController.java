@@ -13,7 +13,7 @@ import java.util.concurrent.ScheduledFuture;
 
 @Service
 @RequiredArgsConstructor
-public class JobScheduler {
+public class MessageSchedulerJobController {
     private final TaskScheduler taskScheduler;
     private final ScheduledJobGymReminderService scheduledJobGymReminderService;
     private final ScheduledJobMotivationalQuoteService scheduledJobMotivationalQuoteService;
