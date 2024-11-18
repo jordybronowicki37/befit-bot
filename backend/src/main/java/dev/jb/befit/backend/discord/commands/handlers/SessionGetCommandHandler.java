@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.data.models.ExerciseLog;
 import dev.jb.befit.backend.data.models.ExerciseSession;
 import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
@@ -16,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+
+import java.util.Comparator;
 
 @Slf4j
 @Service
@@ -46,9 +49,9 @@ public class SessionGetCommandHandler extends DiscordChatInputInteractionEventLi
         var logs = session.getExerciseLogs();
         var logsDescriptionBuilder = new StringBuilder();
 
-        if (logs.isEmpty()) logsDescriptionBuilder.append("You have not added any logs yet.");
+        if (logs.isEmpty()) logsDescriptionBuilder.append("_You have not added any logs yet._");
         else {
-            logs.forEach(log -> {
+            logs.stream().sorted(Comparator.comparing(ExerciseLog::getCreated)).forEach(log -> {
                 var exercise = log.getExerciseType();
                 var measurement = exercise.getMeasurementType();
                 var amount = CommandHandlerHelper.formatDouble(log.getAmount());
@@ -58,9 +61,10 @@ public class SessionGetCommandHandler extends DiscordChatInputInteractionEventLi
         }
 
         var descriptionBuilder = new StringBuilder();
-        descriptionBuilder.append(String.format("Session name: %s\n", session.getName()));
+        descriptionBuilder.append(String.format("Name: %s\n", session.getName()));
         descriptionBuilder.append(String.format("Started: %s\n", CommandHandlerHelper.formatDateTime(session.getCreated())));
-        descriptionBuilder.append(String.format("Status: %s\n\n", session.getStatus().name().toLowerCase()));
+        descriptionBuilder.append(String.format("Status: %s\n", session.getStatus().name().toLowerCase()));
+        descriptionBuilder.append(String.format("Total logs: %d\n", logs.size()));
         descriptionBuilder.append(String.format("### Logs\n%s", logsDescriptionBuilder));
 
         return EmbedCreateSpec.builder()
