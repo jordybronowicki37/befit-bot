@@ -47,8 +47,8 @@ public class SessionsGetCommandHandler extends DiscordChatInputInteractionEventL
                         .stream()
                         .map(session -> {
                             var descriptionBuilder = new StringBuilder();
-                            descriptionBuilder.append(String.format("Created: %s\n", CommandHandlerHelper.discordTimeAgoText(session.getCreated())));
-                            descriptionBuilder.append(String.format("Status: %s\n", session.getStatus().name().toLowerCase()));
+                            descriptionBuilder.append(String.format("Started: %s\n", CommandHandlerHelper.discordTimeAgoText(session.getCreated())));
+                            descriptionBuilder.append(String.format("Status: %s\n", session.getStatus().getDisplayName()));
                             descriptionBuilder.append(String.format("Logs: %s\n", session.getExerciseLogs().size()));
                             return EmbedCreateFields.Field.of(
                                     session.getName(),

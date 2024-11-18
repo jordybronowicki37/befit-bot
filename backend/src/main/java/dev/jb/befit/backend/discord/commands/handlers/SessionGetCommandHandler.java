@@ -63,7 +63,7 @@ public class SessionGetCommandHandler extends DiscordChatInputInteractionEventLi
         var descriptionBuilder = new StringBuilder();
         descriptionBuilder.append(String.format("Name: %s\n", session.getName()));
         descriptionBuilder.append(String.format("Started: %s\n", CommandHandlerHelper.discordFormatDateTime(session.getCreated())));
-        descriptionBuilder.append(String.format("Status: %s\n", session.getStatus().name().toLowerCase()));
+        descriptionBuilder.append(String.format("Status: %s\n", session.getStatus().getDisplayName()));
         descriptionBuilder.append(String.format("Total logs: %d\n", logs.size()));
         descriptionBuilder.append(String.format("### Logs\n%s", logsDescriptionBuilder));
 
