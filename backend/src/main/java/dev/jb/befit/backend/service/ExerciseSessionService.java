@@ -2,7 +2,9 @@ package dev.jb.befit.backend.service;
 
 import dev.jb.befit.backend.data.ExerciseSessionRepository;
 import dev.jb.befit.backend.data.models.ExerciseSession;
+import dev.jb.befit.backend.data.models.ExerciseSessionStatus;
 import dev.jb.befit.backend.data.models.User;
+import dev.jb.befit.backend.service.exceptions.SessionNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +23,10 @@ public class ExerciseSessionService {
 
     public Page<ExerciseSession> getAllByUser(User user, Pageable pageable) {
         return exerciseSessionRepository.findAllByUserOrderByCreatedDesc(user, pageable);
+    }
+
+    public Page<ExerciseSession> getAllActiveByUser(User user, Pageable pageable) {
+        return exerciseSessionRepository.findAllByUserAndStatusOrderByCreatedDesc(user, ExerciseSessionStatus.ACTIVE, pageable);
     }
 
     public Optional<ExerciseSession> getLastByUser(User user) {
@@ -42,6 +48,12 @@ public class ExerciseSessionService {
 
     public ExerciseSession create(User user, String name) {
         var session = new ExerciseSession(name, user);
+        return exerciseSessionRepository.save(session);
+    }
+
+    public ExerciseSession stop(User user, Long id) {
+        var session = getByUserAndId(user, id).orElseThrow(() -> new SessionNotFoundException(id));
+        session.setStatus(ExerciseSessionStatus.STOPPED);
         return exerciseSessionRepository.save(session);
     }
 }

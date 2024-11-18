@@ -52,10 +52,11 @@
       "type": 1,
       "options": [
         {
-          "name": "session",
-          "description": "The session",
-          "type": 3,
-          "required": true
+          "name": "active-session",
+          "description": "The active session",
+          "type": 4,
+          "required": true,
+          "autocomplete": true
         }
       ]
     }

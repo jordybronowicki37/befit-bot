@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum ExerciseSessionStatus {
     ACTIVE("active"),
     STOPPED("manually stopped"),
+    OVERWRITTEN("overwritten by new session"),
     FINISHED("finished");
 
     private final String displayName;
