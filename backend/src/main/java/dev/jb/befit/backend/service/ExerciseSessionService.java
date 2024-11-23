@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,6 +27,10 @@ public class ExerciseSessionService {
         return exerciseSessionRepository.findAllByUserOrderByCreatedDesc(user, pageable);
     }
 
+    public List<ExerciseSession> getAllActiveAndOutdated() {
+        return exerciseSessionRepository.findAllByStatusAndEndedBeforeOrderByCreatedAsc(ExerciseSessionStatus.ACTIVE, LocalDateTime.now());
+    }
+
     public Page<ExerciseSession> getAllActiveByUser(User user, Pageable pageable) {
         return exerciseSessionRepository.findAllByUserAndStatusOrderByCreatedDesc(user, ExerciseSessionStatus.ACTIVE, pageable);
     }
@@ -34,8 +40,7 @@ public class ExerciseSessionService {
     }
 
     public Optional<ExerciseSession> getLastActiveByUser(User user) {
-        // TODO see if the session is actually still active and update if not
-        return exerciseSessionRepository.findTopByUserOrderByIdDesc(user);
+        return exerciseSessionRepository.findTopByUserAndStatusOrderByIdDesc(user, ExerciseSessionStatus.ACTIVE);
     }
 
     public Optional<ExerciseSession> getByUserAndId(User user, Long id) {
@@ -47,13 +52,29 @@ public class ExerciseSessionService {
     }
 
     public ExerciseSession create(User user, String name) {
+        var lastSession = getLastActiveByUser(user);
+        lastSession.ifPresent(s -> {
+            s.setStatus(ExerciseSessionStatus.OVERWRITTEN);
+            exerciseSessionRepository.save(s);
+        });
+
         var session = new ExerciseSession(name, user);
         return exerciseSessionRepository.save(session);
     }
 
-    public ExerciseSession stop(User user, Long id) {
+    public ExerciseSession extendAutomaticFinalization(User user, Long id) {
         var session = getByUserAndId(user, id).orElseThrow(() -> new SessionNotFoundException(id));
-        session.setStatus(ExerciseSessionStatus.STOPPED);
+        if (!session.getStatus().equals(ExerciseSessionStatus.ACTIVE)) return session;
+
+        session.setEnded(LocalDateTime.now().plusSeconds(ServiceConstants.SessionTimeout.getEpochSecond()));
+
+        return exerciseSessionRepository.save(session);
+    }
+
+    public ExerciseSession updateStatus(User user, Long id, ExerciseSessionStatus status) {
+        var session = getByUserAndId(user, id).orElseThrow(() -> new SessionNotFoundException(id));
+        session.setStatus(status);
+        if (!status.equals(ExerciseSessionStatus.ACTIVE)) session.setEnded(LocalDateTime.now());
         return exerciseSessionRepository.save(session);
     }
 }

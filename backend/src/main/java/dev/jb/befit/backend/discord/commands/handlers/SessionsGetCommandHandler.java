@@ -39,7 +39,7 @@ public class SessionsGetCommandHandler extends DiscordChatInputInteractionEventL
 
     public InteractionReplyEditSpec getReplyEditSpec(Snowflake userId, int page) {
         var user = userService.getOrCreateDiscordUser(userId);
-        var sessions = exerciseSessionService.getAllByUser(user, Pageable.ofSize(CommandConstants.PageSizeSmallItems).withPage(page));
+        var sessions = exerciseSessionService.getAllByUser(user, Pageable.ofSize(CommandConstants.PageSize).withPage(page));
 
         var embed = EmbedCreateSpec.builder()
                 .title("Your sessions")

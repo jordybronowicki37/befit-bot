@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.data.models.ExerciseSessionStatus;
 import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
@@ -33,7 +34,7 @@ public class SessionStopCommandHandler extends DiscordChatInputInteractionEventL
         var sessionId = CommandHandlerHelper.getOptionValueAsLong(subCommand, CommandConstants.AutoCompletePropSessionActive);
 
         var user = userService.getOrCreateDiscordUser(userId);
-        var session = exerciseSessionService.stop(user, sessionId);
+        var session = exerciseSessionService.updateStatus(user, sessionId, ExerciseSessionStatus.STOPPED);
 
         var embed = SessionGetCommandHandler.getEmbed(session).title("Session is stopped").build();
         return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();

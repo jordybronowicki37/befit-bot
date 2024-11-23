@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.data.models;
 
+import dev.jb.befit.backend.service.ServiceConstants;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,6 +23,9 @@ public class ExerciseSession {
 
     @Setter
     private LocalDateTime created = LocalDateTime.now();
+
+    @Setter
+    private LocalDateTime ended = LocalDateTime.now().plusSeconds(ServiceConstants.SessionTimeout.getEpochSecond());
 
     @NonNull
     @Setter

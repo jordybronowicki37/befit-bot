@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -16,6 +18,8 @@ public interface ExerciseSessionRepository extends JpaRepository<ExerciseSession
     Page<ExerciseSession> findAllByUserOrderByCreatedDesc(User user, Pageable pageable);
     Page<ExerciseSession> findAllByUserAndStatusOrderByCreatedDesc(User user, ExerciseSessionStatus status, Pageable pageable);
     Page<ExerciseSession> findAllByUserAndNameIgnoreCaseContainingOrderByCreatedDesc(User user, String name, Pageable pageable);
+    List<ExerciseSession> findAllByStatusAndEndedBeforeOrderByCreatedAsc(ExerciseSessionStatus status, LocalDateTime date);
     Optional<ExerciseSession> findByUserAndId(User user, Long id);
     Optional<ExerciseSession> findTopByUserOrderByIdDesc(User user);
+    Optional<ExerciseSession> findTopByUserAndStatusOrderByIdDesc(User user, ExerciseSessionStatus status);
 }

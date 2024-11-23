@@ -85,6 +85,7 @@ public class ExerciseLogService {
         if (session.isPresent()) {
             exerciseLog.setSession(session.get());
             earnedXp += ServiceConstants.EarnedXpLogAddedToSession;
+            exerciseSessionService.extendAutomaticFinalization(user, session.get().getId());
         }
 
         if (exerciseRecord == null) {

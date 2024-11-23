@@ -3,6 +3,8 @@ package dev.jb.befit.backend.service;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ServiceConstants {
     public static final double XpGrowthRate = 1.3;
@@ -18,4 +20,6 @@ public final class ServiceConstants {
     public static final long EarnedXpAchievementCompletedMedium = 150;
     public static final long EarnedXpAchievementCompletedHard = 450;
     public static final long EarnedXpAchievementCompletedImpossible = 1350;
+
+    public static final Instant SessionTimeout = Instant.ofEpochSecond(60 * 60); // 1 hour
 }
