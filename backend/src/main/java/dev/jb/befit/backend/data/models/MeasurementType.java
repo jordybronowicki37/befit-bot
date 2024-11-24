@@ -18,6 +18,7 @@ public enum MeasurementType {
     HOURS("hrs", "hours", TIME),
     MINUTES("min", "minutes", TIME),
     SECONDS("sec", "seconds", TIME),
+    PERCENTAGE("%", "percentage", MeasurementCategory.AMOUNT),
     CALORIES("cal", "calories", MeasurementCategory.AMOUNT),
     BPM("bpm", "beats per minute", MeasurementCategory.AMOUNT);
 
