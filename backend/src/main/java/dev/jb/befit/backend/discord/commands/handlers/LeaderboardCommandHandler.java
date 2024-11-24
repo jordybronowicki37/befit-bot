@@ -48,7 +48,7 @@ public class LeaderboardCommandHandler extends DiscordChatInputInteractionEventL
             var user = users.get(i);
             var userName = CommandHandlerHelper.getUserStringValue(user);
             var levelData = UserExperienceService.getLevelData(user.getXp());
-            description.append(String.format("\n**#%d %s**\n", index, userName));
+            description.append(String.format("\n**%s %s**\n", CommandHandlerHelper.getLeaderboardValue(index), userName));
             description.append(String.format("Level %d\n", levelData.level()));
         }
 
