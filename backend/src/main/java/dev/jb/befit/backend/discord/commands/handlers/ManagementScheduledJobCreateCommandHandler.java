@@ -36,7 +36,7 @@ public class ManagementScheduledJobCreateCommandHandler extends DiscordChatInput
         var channelId = CommandHandlerHelper.getOptionValue(subCommand, "channel-id");
         var jobType = ScheduledJobType.valueOf(CommandHandlerHelper.getOptionValue(subCommand, "job-type"));
         var cron = CommandHandlerHelper.getOptionValue(subCommand, "cron");
-        var timezone = CommandHandlerHelper.getOptionalOptionValue(subCommand, "timezone-id", "Europe/Amsterdam");
+        var timezone = CommandHandlerHelper.getOptionalOptionValue(subCommand, "timezone-id", "UTC");
 
         ZoneId timezoneId;
         try {
