@@ -24,13 +24,13 @@
       ]
     },
     {
-      "name": "remove",
-      "description": "Removes a goal",
+      "name": "cancel",
+      "description": "Cancels a goal",
       "type": 1,
       "options": [
         {
           "name": "goal",
-          "description": "The goal that is to be removed",
+          "description": "The goal that is to be cancelled",
           "type": 4,
           "required": true,
           "autocomplete": true

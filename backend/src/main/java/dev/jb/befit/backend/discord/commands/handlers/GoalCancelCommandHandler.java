@@ -18,13 +18,13 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class GoalRemoveCommandHandler extends DiscordChatInputInteractionEventListener {
+public class GoalCancelCommandHandler extends DiscordChatInputInteractionEventListener {
     private final UserService userService;
     private final GoalService goalService;
 
     @Override
     public String getCommandNameFilter() {
-        return CommandConstants.CommandGoalsRemove;
+        return CommandConstants.CommandGoalsCancel;
     }
 
     @Override
@@ -39,8 +39,8 @@ public class GoalRemoveCommandHandler extends DiscordChatInputInteractionEventLi
         goalService.cancel(user, goalId);
 
         var embed = EmbedCreateSpec.builder()
-                .title("Goal removed")
-                .description("Goal successfully removed")
+                .title("Goal cancelled")
+                .description("Goal successfully cancelled")
                 .color(Color.GREEN)
                 .build();
 
