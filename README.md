@@ -20,167 +20,318 @@ This cool bot can help you with improving your fitness. It can track your progre
 <details>
   <summary>Achievements</summary>
   
-  >Format: `/achievements` \
-  >Example: \
-  >![All exercises command response example](docs/examples/achievementsCommandExample.png)
+  > With this command you can view all of your earned and locked achievements. It can also display the completion percentage of the entire community.
+  >
+  > Format: `/achievements` \
+  > Example: \
+  > ![All exercises command response example](docs/examples/achievementsCommandExample.png)
   
 </details>
 
 <details>
   <summary>View all exercises</summary>
   
-  >Format: `/exercises view all` \
-  >Example: \
-  >![All exercises command response example](docs/examples/allExercisesCommandExample.png)
+  > With this command you van view all available exercises. The extended data will also show how many people are 
+  > participating and who is in first place.
+  >
+  > Format: `/exercises view all` \
+  > Example: \
+  > ![All exercises command response example](docs/examples/allExercisesCommandExample.png)
   
 </details>
 
 <details>
   <summary>View the exercises you are participating in</summary>
   
-  >Format: `/exercises view my` \
-  >Example: \
-  >![My exercises command response example](docs/examples/myExercisesCommandExample.png)
+  > With this command you can view all the exercises you are participating in. The extended data will show the amount 
+  > of logs you've made, the goal if you have added any, your personal record and your place in the leaderboard.
+  >
+  > Format: `/exercises view my` \
+  > Example: \
+  > ![My exercises command response example](docs/examples/myExercisesCommandExample.png)
   
 </details>
 
 <details>
   <summary>View extended data of a single exercise</summary>
   
-  >Format: `/exercises view one {exercise-name}` \
-  >Example: \
-  >![One exercise command response example](docs/examples/oneExercisesCommandExample.png)
+  > With this command you can view extended data on a single exercise. It can show global information and statistics,
+  > your personal statistics and also a larger leaderboard.
+  >
+  > Format: `/exercises view one {exercise-name}` \
+  > Example: \
+  > ![One exercise command response example](docs/examples/oneExercisesCommandExample.png)
 
 </details>
 
 <details>
   <summary>Create a new exercise type</summary>
   
-  >Format: `/exercises create {name} {measurement-type} {goal-direction}` \
-  >Example: \
-  >![Create exercise command response example](docs/examples/createExerciseCommandExample.png)
+  > With this command you can create new exercises so that you can track your progress on all of your favorite exercises.
+  > Go to [measurement-types](#measurement-types) and [goal-direction](#goal-directions) to see the available options.
+  >
+  > Format: `/exercises create {name} {measurement-type} {goal-direction}` \
+  > Example: \
+  > ![Create exercise command response example](docs/examples/createExerciseCommandExample.png)
 
 </details>
 
 <details>
   <summary>Create a new goal for yourself</summary>
   
-  >Format: `/goals add {exercise-name} {amount}` \
-  >Example: \
-  >![Create goal command response example](docs/examples/addGoalCommandExample.png)
+  > With this command you can set a goal for a specific exercise to work towards. 
+  > See [goal-status](#goal-status) for all possible statuses.
+  >
+  > Format: `/goals add {exercise-name} {amount}` \
+  > Example: \
+  > ![Create goal command response example](docs/examples/addGoalCommandExample.png)
 
 </details>
 
 <details>
-  <summary>Remove an existing goal</summary>
+  <summary>Cancel an existing goal</summary>
   
-  >Format: `/goals remove {goal}`
+  > With this command you can cancel a goal. This will update the goal's status to `CANCELLED`.
+  > See [goal-status](#goal-status) for all possible statuses.
+  >
+  > Format: `/goals cancel {goal}`
 
 </details>
 
 <details>
   <summary>View your goals</summary>
   
-  >Format: `/goals view` \
-  >Example: \
-  >![View goals command response example](docs/examples/viewGoalsCommandExample.png)
+  > With this command you can view all of your active goals.
+  > See [goal-status](#goal-status) for all possible statuses.
+  >
+  > Format: `/goals view` \
+  > Example: \
+  > ![View goals command response example](docs/examples/viewGoalsCommandExample.png)
 
 </details>
 
 <details>
   <summary>Help</summary>
   
-  >Format: `/help` \
-  >Example: \
-  >![Help command response example](docs/examples/helpCommandExample.png)
+  > Use this command to get an overview of the most common and useful commands. You also get some information of the bot.
+  >
+  > Format: `/help` \
+  > Example: \
+  > ![Help command response example](docs/examples/helpCommandExample.png)
 
 </details>
 
 <details>
   <summary>Leaderboard</summary>
   
-  >Format: `/leaderboard` \
-  >Example: \
-  >![Leaderboard command response example](docs/examples/leaderboardCommandExample.png)
+  > With this command you can view the global leaderboard. This leaderboard is based on the users total xp.
+  >
+  > Format: `/leaderboard` \
+  > Example: \
+  > ![Leaderboard command response example](docs/examples/leaderboardCommandExample.png)
 
 </details>
 
 <details>
   <summary>Log history</summary>
   
-  >Format: `/history` \
-  >Example: \
-  >![History command response example](docs/examples/historyCommandExample.png)
+  > With this command you can see your entire log history or filter it by an exercise.
+  >
+  > Format: `/history {exercise-name}` \
+  > Example: \
+  > ![History command response example](docs/examples/historyCommandExample.png)
 
 </details>
 
 <details>
   <summary>Log an exercise</summary>
   
-  >Format: `/log {exercise-name} {amount}` \
-  >Example: \
-  >![Log command response example](docs/examples/logCommandExample.png)
+  > With this command you can create a log of an exercise. In the response you can see multiple personal statistics 
+  > of the exercise, get congratulations on your reached result, see your reached achievements, view the received 
+  > amount of experience and finally get some motivation.
+  > This is perhaps the most important, used and complex command of the bot.
+  >
+  > Format: `/log {exercise-name} {amount}` \
+  > Example: \
+  > ![Log command response example](docs/examples/logCommandExample.png)
 
 </details>
 
 <details>
   <summary>Retrieve a random motivational quote</summary>
   
-  >Format: `/motivation` \
-  >Example: \
-  >![Motivation command response example](docs/examples/motivationCommandExample.png)
+  > With this command you can receive a random motivational quote.
+  >
+  > Format: `/motivation` \
+  > Example: \
+  > ![Motivation command response example](docs/examples/motivationCommandExample.png)
 
 </details>
 
 <details>
   <summary>View your progress on an exercise</summary>
   
-  >Format: `/progress {exercise-name} ?{view-mode}` \
-  >Example: \
-  >![Progress command response example](docs/examples/progressCommandExample.png)
+  > With this command you can get a progress chart of a single exercise. By using the view mode you can specify if you 
+  > only want to view your own data or of all participants. To view the progress of an exercise you must have made at 
+  > least two logs for that specific exercise.
+  >
+  > Format: `/progress {exercise-name} ?{view-mode}` \
+  > Example: \
+  > ![Progress command response example](docs/examples/progressCommandExample.png)
+
+</details>
+
+<details>
+  <summary>Create session</summary>
+
+  > With this command you can create a session. With a session you can group subsequent logs and get an overview of your
+  > entire workout. A session will get automatically finished when there is no log created for at least an hour.
+  > See [session-status](#session-status) for the possible states that a session can be in.
+  >
+  > Format: `/sessions create {name}` \
+  > Example: \
+  > ![Session create command response example](docs/examples/sessionCreateCommandExample.png)
+
+</details>
+
+<details>
+  <summary>View sessions</summary>
+
+  > With this command you can see all of your created sessions.
+  > See [session-status](#session-status) for the possible states that a session can be in.
+  >
+  > Format: `/sessions view all` \
+  > Example: \
+  > ![Session view all command response example](docs/examples/sessionsViewAllCommandExample.png)
+
+</details>
+
+<details>
+  <summary>View last session</summary>
+
+  > With this command you can view more expanded data on your last session.
+  > See [session-status](#session-status) for the possible states that a session can be in.
+  >
+  > Format: `/sessions view last` \
+  > Example: \
+  > ![Session view last command response example](docs/examples/sessionViewOneCommandExample.png)
+
+</details>
+
+<details>
+  <summary>View one session</summary>
+
+  > With this command you can view more expanded data on a specific session.
+  > See [session-status](#session-status) for the possible states that a session can be in.
+  >
+  > Format: `/sessions view one {session}` \
+  > Example: \
+  > ![Session view one command response example](docs/examples/sessionViewOneCommandExample.png)
+
+</details>
+
+<details>
+  <summary>Stop session</summary>
+
+  > With this command you can manually stop a session. This will update the session's status to `STOPPED`.
+  > See [session-status](#session-status) for the possible states that a session can be in.
+  > 
+  > Format: `/sessions stop {session}` \
+  > Example: \
+  > ![Session stop command response example](docs/examples/sessionStopCommandExample.png)
 
 </details>
 
 <details>
   <summary>User stats</summary>
 
-  >Format: `/stats` \
-  >Example: \
-  >![Stats command response example](docs/examples/statsCommandExample.png)
+  > With this command you can see your own stats or optionally see the stats of one of your friends.
+  >
+  > Format: `/stats ?{user-id}` \
+  > Example: \
+  > ![Stats command response example](docs/examples/statsCommandExample.png)
 
 </details>
 
 ### Management Commands
+These commands are only available from the configured management server. It is advisable to create a separate server
+as a management server so that these management commands will only be visible to the maintainer. Besides this the bot 
+needs some free space for the custom emoji's that are used for the achievement icons, and to not fill your personal
+server with these visuals, it is advisable to create this separate server.
+
 <details>
   <summary>Restart server</summary>
 
-  >Format: `/management restart`
+  > With this command you can as a maintainer restart the server on demand.
+  > 
+  > Format: `/management restart`
 
 </details>
 
 <details>
   <summary>Refresh guild commands</summary>
 
-  >Format: `/management refresh`
+  > With this command you can as a maintainer register the discord commands. This is useful if some commands are not
+  > working properly or are missing on a server.
+  > 
+  > Format: `/management refresh`
 
 </details>
 
 <details>
   <summary>Add scheduled job</summary>
 
-  >Format: `/management jobs add {channel-id} {job-type} {cron-expression} ?{timezone-id}`
+  > With this command you can as a maintainer add a scheduled job. These jobs are scheduled on a cron-expression basis.
+  > Optionally you can give a `timezone-id`, defaults to UTC.
+  > See [job-types](#job-types) to view all the available types of jobs.
+  > 
+  > Format: `/management jobs add {channel-id} {job-type} {cron-expression} ?{timezone-id}`
 
 </details>
 
 <details>
   <summary>Remove scheduled job</summary>
 
-  >Format: `/management jobs remove {scheduled-job}`
+  > With this command you can as a maintainer remove a scheduled job.
+  > 
+  > Format: `/management jobs remove {scheduled-job}`
 
 </details>
 
+## Options and statuses
+### Goal directions
+- Increasing
+- Decreasing
+### Goal status
+- Active
+- Cancelled (manually)
+- Overwritten (when a goal with the same exercise is created)
+- Completed
+### Job types
+- Gym reminder (sends a reminder to go to the gym)
+- Motivational message (sends a motivational message)
+### Measurement types
+- Kilograms
+- Grams
+- Kilometers
+- Meters
+- Centimeters
+- Kilometers per hour
+- Times
+- Hours
+- Minutes
+- Seconds
+- Calories
+- Beats per minute
+- Percentage
+### Session status
+- Active
+- Overwritten (when a new session is started if one is still active)
+- Stopped (manually)
+- Finished (automatically)
+
 ## Achievements
-There are 20 achievements for you to complete.
+There are 20 achievements for you to complete. Each increasing in difficulty. Are you the one to complete them all?
 
 <details>
   <summary>Achievements</summary>
