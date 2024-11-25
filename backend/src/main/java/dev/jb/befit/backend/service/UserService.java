@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -25,6 +27,10 @@ public class UserService {
             return discordUserRepository.save(newDiscordUser);
         }
         return discordUser.get();
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
     public long getAmountOfUsers() {
