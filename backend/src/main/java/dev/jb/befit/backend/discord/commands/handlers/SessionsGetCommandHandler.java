@@ -42,7 +42,7 @@ public class SessionsGetCommandHandler extends DiscordChatInputInteractionEventL
         var sessions = exerciseSessionService.getAllByUser(user, Pageable.ofSize(CommandConstants.PageSize).withPage(page));
 
         var embed = EmbedCreateSpec.builder()
-                .title("Your sessions")
+                .title(":notepad_spiral: Your sessions")
                 .fields(sessions
                         .stream()
                         .map(session -> {

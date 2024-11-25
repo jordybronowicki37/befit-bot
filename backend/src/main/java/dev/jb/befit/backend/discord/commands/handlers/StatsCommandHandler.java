@@ -53,10 +53,10 @@ public class StatsCommandHandler extends DiscordChatInputInteractionEventListene
         description.append(String.format("Goals active: %d\n", goalService.getAllUserGoals(user, GoalStatus.ACTIVE).size()));
         description.append(String.format("Goals completed: %d\n", goalService.getAllUserGoals(user, GoalStatus.COMPLETED).size()));
         description.append(String.format("Last log: %s\n", exerciseLogService.getLastByUser(user).map(l -> CommandHandlerHelper.discordFormatDateTime(l.getCreated())).orElse("`Not available`")));
+        description.append(String.format("Logs total: %d\n", exerciseLogService.countAllByUser(user)));
         description.append(String.format("Last session: %s\n", exerciseSessionService.getLastByUser(user).map(s -> CommandHandlerHelper.discordFormatDateTime(s.getCreated())).orElse("`Not available`")));
+        description.append(String.format("Sessions total: %d\n", exerciseSessionService.amountByUser(user)));
         description.append(String.format("Participated exercises: %d\n", exerciseLogService.countAmountOfExercisesByUser(user)));
-        description.append(String.format("Total logs: %d\n", exerciseLogService.countAllByUser(user)));
-        description.append(String.format("Total sessions: %d\n", exerciseSessionService.amountByUser(user)));
 
         var embed = EmbedCreateSpec.builder()
                 .author(discordUser.getUsername(), null, discordUser.getAvatarUrl())
@@ -68,7 +68,7 @@ public class StatsCommandHandler extends DiscordChatInputInteractionEventListene
         FileInputStream inputStream;
         {
             var xpLevelData = UserExperienceService.getLevelData(user.getXp());
-            var levelDescription = String.format(":dizzy: %dxp required for next level", xpLevelData.xpTopLevel());
+            var levelDescription = String.format("\n:dizzy: %dxp required for next level", xpLevelData.xpTopLevel());
             embed.addField("Experience", levelDescription, false);
             var userLevelXpBar = UserExperienceService.getXpLevelPicture(user.getXp());
             try {

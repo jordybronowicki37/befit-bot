@@ -108,7 +108,7 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
             }
             // Add new level reached congratulations
             if (xpLevelData.xpCompletedInLevel() < logCreationStatus.earnedXp()) {
-                descriptionBuilder.append(":sparkles: Level completed!\n");
+                descriptionBuilder.append(":star2: Level completed!\n");
                 anyIsApplied = true;
             }
             if (anyIsApplied) embed.addField("Congratulations", descriptionBuilder.toString(), false);

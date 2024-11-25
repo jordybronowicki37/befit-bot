@@ -43,14 +43,10 @@ public class GoalAddCommandHandler extends DiscordChatInputInteractionEventListe
 
         var user = userService.getOrCreateDiscordUser(userId);
         var goal = goalService.create(user, exerciseName, exerciseAmount);
-        var exerciseType = goal.getExerciseType();
-
-        var title = String.format("Exercise #%d %s", exerciseType.getId(), exerciseType.getName());
-        var description = String.format("Amount: %s %s\nStatus: %s", CommandHandlerHelper.formatDouble(exerciseAmount), exerciseType.getMeasurementType().getShortName(), goal.getStatus().name().toLowerCase());
 
         var embed = EmbedCreateSpec.builder()
-                .title(":chart_with_upwards_trend: New goal set")
-                .addField(title, description, false)
+                .title(":dart: New goal set")
+                .addField(GoalsViewCommandHandler.getGoalField(goal))
                 .color(Color.GREEN);
 
         // Add user xp field

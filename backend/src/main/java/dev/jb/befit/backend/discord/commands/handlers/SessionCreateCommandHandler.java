@@ -34,7 +34,7 @@ public class SessionCreateCommandHandler extends DiscordChatInputInteractionEven
 
         var user = userService.getOrCreateDiscordUser(userId);
         var session = exerciseSessionService.create(user, sessionName);
-        var embed = SessionGetCommandHandler.getEmbed(session).title("New session created").build();
+        var embed = SessionGetCommandHandler.getEmbed(session).title(":notepad_spiral: New session created").build();
         return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();
     }
 }

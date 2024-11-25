@@ -36,11 +36,11 @@ public class GoalCancelCommandHandler extends DiscordChatInputInteractionEventLi
         var goalId = CommandHandlerHelper.getOptionValueAsLong(subCommand, CommandConstants.AutoCompletePropGoal);
 
         var user = userService.getOrCreateDiscordUser(userId);
-        goalService.cancel(user, goalId);
+        var goal = goalService.cancel(user, goalId);
 
         var embed = EmbedCreateSpec.builder()
-                .title("Goal cancelled")
-                .description("Goal successfully cancelled")
+                .title(":no_entry_sign: Goal cancelled")
+                .addField(GoalsViewCommandHandler.getGoalField(goal))
                 .color(Color.GREEN)
                 .build();
 

@@ -68,7 +68,7 @@ public class SessionGetCommandHandler extends DiscordChatInputInteractionEventLi
         descriptionBuilder.append(String.format("### Logs\n%s", logsDescriptionBuilder));
 
         return EmbedCreateSpec.builder()
-                .title("Session")
+                .title(":notepad_spiral: Session")
                 .description(descriptionBuilder.toString())
                 .color(Color.GREEN);
     }
