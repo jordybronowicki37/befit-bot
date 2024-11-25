@@ -84,7 +84,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   >
   > Format: `/goals add {exercise-name} {amount}` \
   > Example: \
-  > ![Create goal command response example](docs/examples/addGoalCommandExample.png)
+  > ![Create goal command response example](docs/examples/goalAddCommandExample.png)
 
 </details>
 
@@ -95,6 +95,8 @@ This cool bot can help you with improving your fitness. It can track your progre
   > See [goal-status](#goal-status) for all possible statuses.
   >
   > Format: `/goals cancel {goal}`
+  > Example: \
+  > ![Goal cancel command response example](docs/examples/goalCancelCommandExample.png)
 
 </details>
 
@@ -106,7 +108,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   >
   > Format: `/goals view` \
   > Example: \
-  > ![View goals command response example](docs/examples/viewGoalsCommandExample.png)
+  > ![View goals command response example](docs/examples/goalsViewCommandExample.png)
 
 </details>
 
