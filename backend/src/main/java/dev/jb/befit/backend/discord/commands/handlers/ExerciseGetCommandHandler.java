@@ -74,7 +74,7 @@ public class ExerciseGetCommandHandler extends DiscordChatInputInteractionEventL
         if (!records.isEmpty()) {
             var recordsDescriptionBuilder = new StringBuilder();
             for (int i = 0; i < records.size(); i++) {
-                if (i == CommandConstants.PageSize) break;
+                if (i == CommandConstants.PageSizeSmallItems) break;
                 var record = records.get(i);
                 recordsDescriptionBuilder.append(String.format("%s %s %s - %s\n",
                         CommandHandlerHelper.getLeaderboardValue(i+1),
