@@ -42,13 +42,13 @@ public class CommandRegistrarService {
     public void registerAllCommands() throws IOException {
         final var guilds = getAllGuilds();
         final var managementGuilds = guilds.filter(g -> g.id().asLong() == managementGuildId);
-        final var normalGuilds = guilds.filter(g -> g.id().asLong() != managementGuildId);
 
         var allCommands = getAllCommandConfigFiles();
         var globalCommands = allCommands.stream().filter(c -> !"management".equals(c.name())).toList();
+        var managementCommands = allCommands.stream().filter(c -> "management".equals(c.name())).toList();
 
-        bulkUpdateCommands(globalCommands, normalGuilds);
-        bulkUpdateCommands(allCommands, managementGuilds);
+        bulkUpdateGlobalCommands(globalCommands);
+        bulkUpdateGuildCommands(managementCommands, managementGuilds);
     }
 
     private Flux<UserGuildData> getAllGuilds() {
@@ -56,7 +56,7 @@ public class CommandRegistrarService {
         return restClient.getGuilds();
     }
 
-    private void bulkUpdateCommands(List<ApplicationCommandRequest> commands, Flux<UserGuildData> guilds) {
+    private void bulkUpdateGuildCommands(List<ApplicationCommandRequest> commands, Flux<UserGuildData> guilds) {
         final var restClient = discordClient.getRestClient();
         final var applicationService = restClient.getApplicationService();
         final var applicationId = restClient.getApplicationId().block();
@@ -69,6 +69,18 @@ public class CommandRegistrarService {
                                 .doOnNext(cmd -> log.debug("Successfully updated guild command: {}", cmd.name()))
                                 .doOnError(e -> log.error("Failed to update guild command: ", e))
                 ).subscribe();
+    }
+
+    private void bulkUpdateGlobalCommands(List<ApplicationCommandRequest> commands) {
+        final var restClient = discordClient.getRestClient();
+        final var applicationService = restClient.getApplicationService();
+        final var applicationId = restClient.getApplicationId().block();
+        assert applicationId != null;
+
+        applicationService.bulkOverwriteGlobalApplicationCommand(applicationId, commands)
+                .doOnNext(cmd -> log.debug("Successfully updated guild command: {}", cmd.name()))
+                .doOnError(e -> log.error("Failed to update guild command: ", e))
+                .subscribe();
     }
 
     public ApplicationCommandRequest getCommandConfigFile(String fileName) throws IOException {
