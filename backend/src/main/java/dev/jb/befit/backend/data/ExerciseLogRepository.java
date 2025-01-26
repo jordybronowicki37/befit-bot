@@ -2,10 +2,12 @@ package dev.jb.befit.backend.data;
 
 import dev.jb.befit.backend.data.models.ExerciseLog;
 import dev.jb.befit.backend.data.models.User;
+import lombok.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -14,16 +16,16 @@ import java.util.Optional;
 
 @Repository
 public interface ExerciseLogRepository extends JpaRepository<ExerciseLog, Long> {
-    long countAllByUser(User user);
+    long countAllByUser(@NonNull User user);
     @Query("select count(distinct e.exerciseType) from ExerciseLog e where e.user = :user")
-    long countDistinctExerciseTypeByUser(User user);
-    List<ExerciseLog> findAllByUser(User user);
-    Page<ExerciseLog> findAllByUserOrderByCreatedDesc(User user, Pageable pageable);
-    Page<ExerciseLog> findAllByUserAndExerciseTypeIdOrderByCreatedDesc(User user, Long exerciseTypeId, Pageable pageable);
-    List<ExerciseLog> findAllByUserAndCreatedAfter(User user, LocalDateTime from);
-    List<ExerciseLog> findAllByExerciseTypeId(Long exerciseTypeId);
-    List<ExerciseLog> findAllByExerciseTypeName(String exerciseTypeName);
-    List<ExerciseLog> findAllByUserAndExerciseTypeId(User user, Long exerciseTypeId);
-    List<ExerciseLog> findAllByUserAndExerciseTypeName(User user, String exerciseTypeName);
-    Optional<ExerciseLog> findTopByUserOrderByIdDesc(User user);
+    long countDistinctExerciseTypeByUser(@NonNull @Param("user") User user);
+    List<ExerciseLog> findAllByUser(@NonNull User user);
+    Page<ExerciseLog> findAllByUserOrderByCreatedDesc(@NonNull User user, @NonNull Pageable pageable);
+    Page<ExerciseLog> findAllByUserAndExerciseTypeIdOrderByCreatedDesc(@NonNull User user, @NonNull Long exerciseTypeId, @NonNull Pageable pageable);
+    List<ExerciseLog> findAllByUserAndCreatedAfter(@NonNull User user, @NonNull LocalDateTime from);
+    List<ExerciseLog> findAllByExerciseTypeId(@NonNull Long exerciseTypeId);
+    List<ExerciseLog> findAllByExerciseTypeName(@NonNull String exerciseTypeName);
+    List<ExerciseLog> findAllByUserAndExerciseTypeId(@NonNull User user, @NonNull Long exerciseTypeId);
+    List<ExerciseLog> findAllByUserAndExerciseTypeName(@NonNull User user, @NonNull String exerciseTypeName);
+    Optional<ExerciseLog> findTopByUserOrderByIdDesc(@NonNull User user);
 }
