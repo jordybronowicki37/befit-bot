@@ -20,7 +20,7 @@
             {
               "name": "habit",
               "description": "The habit",
-              "type": 3,
+              "type": 4,
               "required": true,
               "autocomplete": true
             }
@@ -74,7 +74,7 @@
         {
           "name": "habit",
           "description": "The habit",
-          "type": 3,
+          "type": 4,
           "required": true,
           "autocomplete": true
         }

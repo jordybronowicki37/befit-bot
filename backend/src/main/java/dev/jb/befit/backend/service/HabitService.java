@@ -9,6 +9,8 @@ import dev.jb.befit.backend.data.models.User;
 import dev.jb.befit.backend.service.dto.HabitsByTimeRange;
 import dev.jb.befit.backend.service.exceptions.HabitNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -23,7 +25,7 @@ public class HabitService {
     private final HabitLogRepository habitLogRepository;
 
     public List<Habit> getHabitsByUser(User user) {
-        return habitRepository.findHabitByUser(user);
+        return habitRepository.findAllByUser(user);
     }
 
     public Optional<Habit> getHabitByUserAndId(User user, Long id) {
@@ -31,7 +33,11 @@ public class HabitService {
     }
 
     public List<Habit> getHabitsByUserAndTimeRange(User user, HabitTimeRange habitTimeRange) {
-        return habitRepository.findHabitByUserAndHabitTimeRange(user, habitTimeRange);
+        return habitRepository.findAllByUserAndHabitTimeRange(user, habitTimeRange);
+    }
+
+    public Page<Habit> searchHabit(User user, String filter, Pageable pageable) {
+        return habitRepository.findAllByUserAndNameIgnoreCaseContainingOrderByCreatedDesc(user, filter, pageable);
     }
 
     public HabitsByTimeRange getHabitsForToday(User user) {
@@ -39,16 +45,16 @@ public class HabitService {
         var isEndOfWeek = date.getDayOfWeek() == DayOfWeek.SUNDAY;
         var isEndOfMonth = date.plusDays(1).getDayOfMonth() == 1;
 
-        var daily = habitRepository.findHabitByUserAndHabitTimeRange(user, HabitTimeRange.DAILY);
+        var daily = habitRepository.findAllByUserAndHabitTimeRange(user, HabitTimeRange.DAILY);
         List<Habit> weekly = List.of();
         List<Habit> monthly = List.of();
 
         if (isEndOfWeek) {
-            weekly = habitRepository.findHabitByUserAndHabitTimeRange(user, HabitTimeRange.WEEKLY);
+            weekly = habitRepository.findAllByUserAndHabitTimeRange(user, HabitTimeRange.WEEKLY);
         }
 
         if (isEndOfMonth) {
-            monthly = habitRepository.findHabitByUserAndHabitTimeRange(user, HabitTimeRange.MONTHLY);
+            monthly = habitRepository.findAllByUserAndHabitTimeRange(user, HabitTimeRange.MONTHLY);
         }
 
         return new HabitsByTimeRange(daily, weekly, monthly);

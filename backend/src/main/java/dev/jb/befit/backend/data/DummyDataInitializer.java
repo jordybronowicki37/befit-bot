@@ -43,13 +43,13 @@ public class DummyDataInitializer implements CommandLineRunner {
         userAchievementsRepository.save(new UserAchievement(Achievement.CARDIO_ENTHUSIAST, webUser1));
 
         for (int i = 0; i < 10; i++) {
-            habitRepository.save(new Habit("My daily habit "+i, HabitTimeRange.DAILY, discordUser));
+            habitRepository.save(new Habit("My daily habit "+(i+1), HabitTimeRange.DAILY, discordUser));
         }
         for (int i = 0; i < 6; i++) {
-            habitRepository.save(new Habit("My weekly habit "+i, HabitTimeRange.WEEKLY, discordUser));
+            habitRepository.save(new Habit("My weekly habit "+(i+1), HabitTimeRange.WEEKLY, discordUser));
         }
         for (int i = 0; i < 2; i++) {
-            habitRepository.save(new Habit("My monthly habit "+i, HabitTimeRange.MONTHLY, discordUser));
+            habitRepository.save(new Habit("My monthly habit "+(i+1), HabitTimeRange.MONTHLY, discordUser));
         }
 
         var benchpress = new ExerciseType("Bench press", MeasurementType.KG, GoalDirection.INCREASING);

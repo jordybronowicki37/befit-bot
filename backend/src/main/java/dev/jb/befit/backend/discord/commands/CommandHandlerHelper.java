@@ -1,9 +1,6 @@
 package dev.jb.befit.backend.discord.commands;
 
-import dev.jb.befit.backend.data.models.DiscordUser;
-import dev.jb.befit.backend.data.models.HabitTimeRange;
-import dev.jb.befit.backend.data.models.User;
-import dev.jb.befit.backend.data.models.WebUser;
+import dev.jb.befit.backend.data.models.*;
 import dev.jb.befit.backend.discord.commands.exceptions.OptionNotFoundException;
 import dev.jb.befit.backend.discord.commands.exceptions.ValueNotFoundException;
 import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
@@ -20,10 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.text.DecimalFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_COMMAND;
@@ -233,5 +227,44 @@ public final class CommandHandlerHelper {
         // Reset hours to 19 hours
         currentDate = currentDate.plusHours(19 - currentDate.getHour());
         return currentDate;
+    }
+
+    public static Long getAmountOfHabitCheckUps(Habit habit) {
+        var start = habit.getCreated();
+        var now = LocalDateTime.now();
+        var amount = 0L;
+        switch (habit.getHabitTimeRange()) {
+            case DAILY:
+                start = start.minusHours(start.getHour()+19);
+                start = start.minusMinutes(start.getMinute());
+                start = start.minusSeconds(start.getSecond());
+
+                return Duration.between(start, now).toDays();
+            case WEEKLY:
+                // Reset to last day of week 19 hours
+                start = start.minusDays(start.getDayOfWeek().getValue()).plusDays(7);
+                start = start.minusHours(start.getHour()+19);
+                start = start.minusMinutes(start.getMinute());
+                start = start.minusSeconds(start.getSecond());
+
+                while (start.isBefore(now)) {
+                    amount += 1;
+                    start = start.plusWeeks(1);
+                }
+                break;
+            case MONTHLY:
+                // Reset to last day of month 19 hours
+                start = start.plusMonths(1).minusDays(start.getDayOfMonth());
+                start = start.minusHours(start.getHour()).plusHours(19);
+                start = start.minusMinutes(start.getMinute());
+                start = start.minusSeconds(start.getSecond());
+
+                while (start.isBefore(now)) {
+                    amount += 1;
+                    start = start.plusMonths(1);
+                }
+                break;
+        }
+        return amount;
     }
 }
