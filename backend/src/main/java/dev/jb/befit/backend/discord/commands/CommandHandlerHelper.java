@@ -1,6 +1,7 @@
 package dev.jb.befit.backend.discord.commands;
 
 import dev.jb.befit.backend.data.models.DiscordUser;
+import dev.jb.befit.backend.data.models.HabitTimeRange;
 import dev.jb.befit.backend.data.models.User;
 import dev.jb.befit.backend.data.models.WebUser;
 import dev.jb.befit.backend.discord.commands.exceptions.OptionNotFoundException;
@@ -206,5 +207,31 @@ public final class CommandHandlerHelper {
 
     public static String formatDateTime(LocalDateTime date) {
         return formatDate(date.toLocalDate()) + " " + formatTime(date.toLocalTime());
+    }
+
+    public static LocalDateTime getNextCheckListTimeForTimeRange(HabitTimeRange habitTimeRange) {
+        var currentDate = LocalDateTime.now();
+        // Reset seconds and minutes
+        currentDate = currentDate.minusSeconds(currentDate.getSecond());
+        currentDate = currentDate.minusMinutes(currentDate.getMinute());
+
+        switch (habitTimeRange) {
+            case DAILY:
+                if (currentDate.getHour() > 19) {
+                    currentDate = currentDate.plusDays(1);
+                }
+                break;
+            case WEEKLY:
+                var dayOfWeek = currentDate.getDayOfWeek().getValue();
+                currentDate = currentDate.plusDays(7 - dayOfWeek);
+                break;
+            case MONTHLY:
+                currentDate = currentDate.plusMonths(1);
+                currentDate = currentDate.minusDays(currentDate.getDayOfMonth());
+                break;
+        }
+        // Reset hours to 19 hours
+        currentDate = currentDate.plusHours(19 - currentDate.getHour());
+        return currentDate;
     }
 }

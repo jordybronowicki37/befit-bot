@@ -25,6 +25,7 @@ public class DummyDataInitializer implements CommandLineRunner {
     private final ExerciseSessionRepository exerciseSessionRepository;
     private final ExerciseTypeRepository exerciseTypeRepository;
     private final GoalRepository goalRepository;
+    private final HabitRepository habitRepository;
 
     @Value("${discord.dummy-user-id}")
     private String userId;
@@ -41,12 +42,15 @@ public class DummyDataInitializer implements CommandLineRunner {
         userAchievementsRepository.save(new UserAchievement(Achievement.DONE_FOR_TODAY, discordUser));
         userAchievementsRepository.save(new UserAchievement(Achievement.CARDIO_ENTHUSIAST, webUser1));
 
-//        var exercises = IntStream.range(1, 20).mapToObj(i -> new ExerciseType("exercise-"+i, MeasurementTypes.KG, GoalDirection.INCREASING)).toList();
-//        exerciseTypeRepository.saveAll(exercises);
-//        var myLogs = exercises.stream().map(e -> new ExerciseLog(10, e, discordUser)).toList();
-//        exerciseLogRepository.saveAll(myLogs);
-//        var myRecords = myLogs.stream().map(e -> new ExerciseRecord(discordUser, e.getExerciseType(), e.getAmount())).toList();
-//        exerciseRecordRepository.saveAll(myRecords);
+        for (int i = 0; i < 10; i++) {
+            habitRepository.save(new Habit("My daily habit "+i, HabitTimeRange.DAILY, discordUser));
+        }
+        for (int i = 0; i < 6; i++) {
+            habitRepository.save(new Habit("My weekly habit "+i, HabitTimeRange.WEEKLY, discordUser));
+        }
+        for (int i = 0; i < 2; i++) {
+            habitRepository.save(new Habit("My monthly habit "+i, HabitTimeRange.MONTHLY, discordUser));
+        }
 
         var benchpress = new ExerciseType("Bench press", MeasurementType.KG, GoalDirection.INCREASING);
         var pullUp = new ExerciseType("Pull ups", MeasurementType.AMOUNT, GoalDirection.INCREASING);

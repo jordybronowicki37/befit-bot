@@ -17,7 +17,7 @@ public abstract class DiscordButtonInteractionEventListener implements DiscordEv
     }
 
     public boolean acceptExecution(ButtonInteractionEvent event) {
-        return event.getCustomId().startsWith(getCommandNameFilter());
+        return event.getCustomId().startsWith(getCommandNameFilter()+'$');
     }
 
     public Mono<ButtonInteractionEvent> preExecute(ButtonInteractionEvent event) {

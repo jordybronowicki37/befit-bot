@@ -13,6 +13,11 @@ public final class CommandConstants {
     public static final String CommandGoalsAdd = "goals add";
     public static final String CommandGoalsView = "goals view";
     public static final String CommandGoalsCancel = "goals cancel";
+    public static final String CommandHabitsAdd = "habits add";
+    public static final String CommandHabitsCheck = "habits check";
+    public static final String CommandHabitsViewAll = "habits view all";
+    public static final String CommandHabitsViewOne = "habits view one";
+    public static final String CommandHabitsRemove = "habits remove";
     public static final String CommandHelp = "help";
     public static final String CommandHistory = "history";
     public static final String CommandLeaderboard = "leaderboard";

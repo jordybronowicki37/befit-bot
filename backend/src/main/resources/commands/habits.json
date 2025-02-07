@@ -1,0 +1,84 @@
+{
+  "name": "habits",
+  "description": "View, add or remove habits",
+  "options": [
+    {
+      "name": "view",
+      "description": "View habits",
+      "type": 2,
+      "options": [
+        {
+          "name": "all",
+          "description": "View all habits",
+          "type": 1
+        },
+        {
+          "name": "one",
+          "description": "View a single habit with more detailed information",
+          "type": 1,
+          "options": [
+            {
+              "name": "habit",
+              "description": "The habit",
+              "type": 3,
+              "required": true,
+              "autocomplete": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "check",
+      "description": "Request the checklist",
+      "type": 1
+    },
+    {
+      "name": "add",
+      "description": "Add a new habit",
+      "type": 1,
+      "options": [
+        {
+          "name": "name",
+          "description": "The name of the habit",
+          "type": 3,
+          "required": true
+        },
+        {
+          "name": "time-range",
+          "description": "The time range of the habit",
+          "type": 3,
+          "required": true,
+          "choices": [
+            {
+              "name": "Daily",
+              "value": "DAILY"
+            },
+            {
+              "name": "Weekly",
+              "value": "WEEKLY"
+            },
+            {
+              "name": "Monthly",
+              "value": "MONTHLY"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "remove",
+      "description": "Remove a habit",
+      "type": 1,
+      "options": [
+        {
+          "name": "habit",
+          "description": "The habit",
+          "type": 3,
+          "required": true,
+          "autocomplete": true
+        }
+      ]
+    }
+  ]
+}
