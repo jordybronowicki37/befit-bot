@@ -25,7 +25,7 @@ public class HabitService {
     private final HabitLogRepository habitLogRepository;
 
     public List<Habit> getHabitsByUser(User user) {
-        return habitRepository.findAllByUser(user);
+        return habitRepository.findAllByUserAndDeletedFalse(user);
     }
 
     public Optional<Habit> getHabitByUserAndId(User user, Long id) {
@@ -33,11 +33,11 @@ public class HabitService {
     }
 
     public List<Habit> getHabitsByUserAndTimeRange(User user, HabitTimeRange habitTimeRange) {
-        return habitRepository.findAllByUserAndHabitTimeRange(user, habitTimeRange);
+        return habitRepository.findAllByUserAndHabitTimeRangeAndDeletedFalse(user, habitTimeRange);
     }
 
     public Page<Habit> searchHabit(User user, String filter, Pageable pageable) {
-        return habitRepository.findAllByUserAndNameIgnoreCaseContainingOrderByCreatedDesc(user, filter, pageable);
+        return habitRepository.findAllByUserAndNameIgnoreCaseContainingAndDeletedFalseOrderByCreatedDesc(user, filter, pageable);
     }
 
     public HabitsByTimeRange getHabitsForToday(User user) {
@@ -45,16 +45,16 @@ public class HabitService {
         var isEndOfWeek = date.getDayOfWeek() == DayOfWeek.SUNDAY;
         var isEndOfMonth = date.plusDays(1).getDayOfMonth() == 1;
 
-        var daily = habitRepository.findAllByUserAndHabitTimeRange(user, HabitTimeRange.DAILY);
+        var daily = habitRepository.findAllByUserAndHabitTimeRangeAndDeletedFalse(user, HabitTimeRange.DAILY);
         List<Habit> weekly = List.of();
         List<Habit> monthly = List.of();
 
         if (isEndOfWeek) {
-            weekly = habitRepository.findAllByUserAndHabitTimeRange(user, HabitTimeRange.WEEKLY);
+            weekly = habitRepository.findAllByUserAndHabitTimeRangeAndDeletedFalse(user, HabitTimeRange.WEEKLY);
         }
 
         if (isEndOfMonth) {
-            monthly = habitRepository.findAllByUserAndHabitTimeRange(user, HabitTimeRange.MONTHLY);
+            monthly = habitRepository.findAllByUserAndHabitTimeRangeAndDeletedFalse(user, HabitTimeRange.MONTHLY);
         }
 
         return new HabitsByTimeRange(daily, weekly, monthly);
@@ -75,5 +75,11 @@ public class HabitService {
             habitLogRepository.delete(habitLog.get());
             return null;
         }
+    }
+
+    public void removeHabit(User user, Long habitId) {
+        var habit = habitRepository.findHabitByUserAndId(user, habitId).orElseThrow(() -> new HabitNotFoundException(habitId));
+        habit.setDeleted(true);
+        habitRepository.save(habit);
     }
 }

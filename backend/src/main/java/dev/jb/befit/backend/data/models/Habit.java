@@ -22,6 +22,9 @@ public class Habit {
 
     private LocalDateTime created = LocalDateTime.now();
 
+    @Setter
+    private boolean deleted = false;
+
     @NonNull
     @Setter
     @Column(length = 64)

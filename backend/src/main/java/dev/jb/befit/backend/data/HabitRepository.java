@@ -15,7 +15,7 @@ import java.util.Optional;
 @Repository
 public interface HabitRepository extends JpaRepository<Habit, Long> {
     Optional<Habit> findHabitByUserAndId(@NonNull User user, @NonNull Long id);
-    List<Habit> findAllByUser(@NonNull User user);
-    List<Habit> findAllByUserAndHabitTimeRange(@NonNull User user, @NonNull HabitTimeRange habitTimeRange);
-    Page<Habit> findAllByUserAndNameIgnoreCaseContainingOrderByCreatedDesc(@NonNull User user, @NonNull String name, @NonNull Pageable pageable);
+    List<Habit> findAllByUserAndDeletedFalse(@NonNull User user);
+    List<Habit> findAllByUserAndHabitTimeRangeAndDeletedFalse(@NonNull User user, @NonNull HabitTimeRange habitTimeRange);
+    Page<Habit> findAllByUserAndNameIgnoreCaseContainingAndDeletedFalseOrderByCreatedDesc(@NonNull User user, @NonNull String name, @NonNull Pageable pageable);
 }
