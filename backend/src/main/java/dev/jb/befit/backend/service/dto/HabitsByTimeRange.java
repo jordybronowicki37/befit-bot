@@ -17,4 +17,8 @@ public record HabitsByTimeRange(
                 habits.stream().filter(habit -> habit.getHabitTimeRange() == HabitTimeRange.MONTHLY).toList()
         );
     }
+
+    public boolean isEmpty() {
+        return daily.isEmpty() && weekly.isEmpty() && monthly.isEmpty();
+    }
 }
