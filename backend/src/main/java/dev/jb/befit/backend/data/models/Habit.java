@@ -20,6 +20,7 @@ public class Habit {
     @EqualsAndHashCode.Include
     private Long id;
 
+    @Setter
     private LocalDateTime created = LocalDateTime.now();
 
     @Setter

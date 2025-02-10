@@ -10,8 +10,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 
 @Slf4j
 @Component
@@ -26,6 +28,8 @@ public class DummyDataInitializer implements CommandLineRunner {
     private final ExerciseTypeRepository exerciseTypeRepository;
     private final GoalRepository goalRepository;
     private final HabitRepository habitRepository;
+    private final HabitLogRepository habitLogRepository;
+    private final Random random = new Random(1);
 
     @Value("${discord.dummy-user-id}")
     private String userId;
@@ -43,7 +47,15 @@ public class DummyDataInitializer implements CommandLineRunner {
         userAchievementsRepository.save(new UserAchievement(Achievement.CARDIO_ENTHUSIAST, webUser1));
 
         for (int i = 0; i < 10; i++) {
-            habitRepository.save(new Habit("My daily habit "+(i+1), HabitTimeRange.DAILY, discordUser));
+            var habit = new Habit("My daily habit "+(i+1), HabitTimeRange.DAILY, discordUser);
+            habit.setCreated(LocalDateTime.now().minusDays(10));
+            habitRepository.save(habit);
+            for (int j = 0; j < 10; j++) {
+                var date = LocalDate.now().minusDays(10).plusDays(j);
+                if (random.nextBoolean()) {
+                    habitLogRepository.save(new HabitLog(date, habit, discordUser));
+                }
+            }
         }
         for (int i = 0; i < 6; i++) {
             habitRepository.save(new Habit("My weekly habit "+(i+1), HabitTimeRange.WEEKLY, discordUser));
