@@ -7,6 +7,7 @@ import dev.jb.befit.backend.service.GoalService;
 import dev.jb.befit.backend.service.ServiceConstants;
 import dev.jb.befit.backend.service.UserExperienceService;
 import dev.jb.befit.backend.service.UserService;
+import dev.jb.befit.backend.service.visuals.UserExperienceImageService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionReplyEditSpec;
@@ -56,7 +57,7 @@ public class GoalAddCommandHandler extends DiscordChatInputInteractionEventListe
             var xpLevelData = UserExperienceService.getLevelData(userXp);
             var levelDescription = String.format(":dizzy: Earned: %dxp - %dxp required for next level", ServiceConstants.EarnedXpGoalCreated, xpLevelData.xpTopLevel());
             embed.addField("Experience", levelDescription, false);
-            var userLevelXpBar = UserExperienceService.getXpLevelPicture(userXp);
+            var userLevelXpBar = UserExperienceImageService.getXpLevelPicture(userXp);
             try {
                 inputStream = new FileInputStream(userLevelXpBar);
             } catch (FileNotFoundException e) {

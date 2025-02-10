@@ -4,7 +4,7 @@ import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.commands.exceptions.InvalidValueException;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
-import dev.jb.befit.backend.service.ProgressImageService;
+import dev.jb.befit.backend.service.visuals.ProgressImageService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.InteractionReplyEditSpec;
 import jakarta.transaction.Transactional;

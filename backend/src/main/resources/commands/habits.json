@@ -56,6 +56,33 @@
       "type": 1
     },
     {
+      "name": "progress",
+      "description": "Request a chart that shows your progress",
+      "type": 1,
+      "options": [
+        {
+          "name": "time-range",
+          "description": "The time range of the habit",
+          "type": 3,
+          "required": true,
+          "choices": [
+            {
+              "name": "Daily",
+              "value": "DAILY"
+            },
+            {
+              "name": "Weekly",
+              "value": "WEEKLY"
+            },
+            {
+              "name": "Monthly",
+              "value": "MONTHLY"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "add",
       "description": "Add a new habit",
       "type": 1,

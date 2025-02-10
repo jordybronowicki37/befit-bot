@@ -6,6 +6,7 @@ import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.*;
+import dev.jb.befit.backend.service.visuals.UserExperienceImageService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionReplyEditSpec;
@@ -70,7 +71,7 @@ public class StatsCommandHandler extends DiscordChatInputInteractionEventListene
             var xpLevelData = UserExperienceService.getLevelData(user.getXp());
             var levelDescription = String.format("\n:dizzy: %dxp required for next level", xpLevelData.xpTopLevel());
             embed.addField("Experience", levelDescription, false);
-            var userLevelXpBar = UserExperienceService.getXpLevelPicture(user.getXp());
+            var userLevelXpBar = UserExperienceImageService.getXpLevelPicture(user.getXp());
             try {
                 inputStream = new FileInputStream(userLevelXpBar);
             } catch (FileNotFoundException e) {

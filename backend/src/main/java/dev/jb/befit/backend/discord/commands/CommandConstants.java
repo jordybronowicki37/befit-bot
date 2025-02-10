@@ -18,6 +18,7 @@ public final class CommandConstants {
     public static final String CommandHabitsViewAll = "habits view all";
     public static final String CommandHabitsViewOne = "habits view one";
     public static final String CommandHabitsRemove = "habits remove";
+    public static final String CommandHabitsProgress = "habits progress";
     public static final String CommandHelp = "help";
     public static final String CommandHistory = "history";
     public static final String CommandLeaderboard = "leaderboard";

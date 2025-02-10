@@ -1,9 +1,13 @@
-package dev.jb.befit.backend.service;
+package dev.jb.befit.backend.service.visuals;
 
 import dev.jb.befit.backend.data.models.DiscordUser;
 import dev.jb.befit.backend.data.models.ExerciseLog;
 import dev.jb.befit.backend.data.models.User;
 import dev.jb.befit.backend.data.models.WebUser;
+import dev.jb.befit.backend.service.ExerciseLogService;
+import dev.jb.befit.backend.service.ExerciseTypeService;
+import dev.jb.befit.backend.service.GoalService;
+import dev.jb.befit.backend.service.UserService;
 import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import dev.jb.befit.backend.service.exceptions.NoProgressMadeException;
 import dev.jb.befit.backend.service.exceptions.NotEnoughProgressException;
@@ -140,7 +144,7 @@ public class ProgressImageService {
             ImageIO.write(image, "png", imageFile);
             return imageFile;
         } catch (IOException e) {
-            log.error("Error during saving line chart", e);
+            log.error("Error during saving progress line chart", e);
             throw new RuntimeException(e);
         }
     }

@@ -7,6 +7,7 @@ import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.discord.registration.EmojiRegistrarService;
 import dev.jb.befit.backend.service.*;
+import dev.jb.befit.backend.service.visuals.UserExperienceImageService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionReplyEditSpec;
@@ -133,7 +134,7 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
         {
             var levelDescription = String.format(":dizzy: Earned: %dxp - %dxp required for next level", logCreationStatus.earnedXp(), xpLevelData.xpTopLevel());
             embed.addField("Experience", levelDescription, false);
-            var userLevelXpBar = UserExperienceService.getXpLevelPicture(userXp);
+            var userLevelXpBar = UserExperienceImageService.getXpLevelPicture(userXp);
             try {
                 inputStream = new FileInputStream(userLevelXpBar);
             } catch (FileNotFoundException e) {
