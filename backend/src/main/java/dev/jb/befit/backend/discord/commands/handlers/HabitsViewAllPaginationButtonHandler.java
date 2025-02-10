@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.data.models.HabitTimeRange;
 import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.listeners.DiscordButtonInteractionEventListener;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
@@ -8,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -24,7 +27,13 @@ public class HabitsViewAllPaginationButtonHandler extends DiscordButtonInteracti
     @Transactional
     public Mono<Void> execute(ButtonInteractionEvent event) {
         var userId = event.getMessage().get().getInteraction().get().getUser().getId();
-        var page = Integer.parseInt(event.getCustomId().split("\\$")[1]);
-        return event.editReply(habitsViewAllCommandHandler.getReplyEditSpec(userId, page)).then();
+        var commandSplit = event.getCustomId().split("\\$");
+        var page = Integer.parseInt(commandSplit[2]);
+        var habitTimeRangeRaw = commandSplit[1];
+        HabitTimeRange habitTimeRange = null;
+        if (!Objects.equals(habitTimeRangeRaw, "null")) {
+            habitTimeRange = HabitTimeRange.valueOf(habitTimeRangeRaw);
+        }
+        return event.editReply(habitsViewAllCommandHandler.getReplyEditSpec(userId, page, habitTimeRange)).then();
     }
 }

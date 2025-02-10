@@ -1,5 +1,7 @@
 package dev.jb.befit.backend.discord.commands.handlers;
 
+import dev.jb.befit.backend.data.models.Habit;
+import dev.jb.befit.backend.data.models.HabitTimeRange;
 import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
@@ -13,6 +15,7 @@ import discord4j.core.spec.InteractionReplyEditSpec;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -33,12 +36,26 @@ public class HabitsViewAllCommandHandler extends DiscordChatInputInteractionEven
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
         var userId = event.getInteraction().getUser().getId();
-        return event.editReply(getReplyEditSpec(userId, 0)).then();
+        var subCommand = CommandHandlerHelper.getSubCommand(event, getCommandNameFilter());
+        assert subCommand != null;
+        var habitTimeRangeValue = CommandHandlerHelper.getOptionalOptionValue(subCommand, "time-range", null);
+        HabitTimeRange habitTimeRange = null;
+        if (habitTimeRangeValue != null) {
+            habitTimeRange = HabitTimeRange.valueOf(habitTimeRangeValue);
+        }
+        return event.editReply(getReplyEditSpec(userId, 0, habitTimeRange)).then();
     }
 
-    public InteractionReplyEditSpec getReplyEditSpec(Snowflake userId, int page) {
+    public InteractionReplyEditSpec getReplyEditSpec(Snowflake userId, int page, HabitTimeRange habitTimeRange) {
         var user = userService.getOrCreateDiscordUser(userId);
-        var habitsPage = habitService.getHabitsByUser(user, Pageable.ofSize(CommandConstants.PageSize).withPage(page));
+
+        Page<Habit> habitsPage;
+        if (habitTimeRange != null) {
+            habitsPage = habitService.getHabitsByUserAndTimeRange(user, habitTimeRange, Pageable.ofSize(CommandConstants.PageSize).withPage(page));
+        } else {
+            habitsPage = habitService.getHabitsByUser(user, Pageable.ofSize(CommandConstants.PageSize).withPage(page));
+        }
+
         var embed = EmbedCreateSpec.builder()
                 .title(":pencil: Your Habits")
                 .fields(
@@ -57,7 +74,7 @@ public class HabitsViewAllCommandHandler extends DiscordChatInputInteractionEven
                         }).toList()
                 )
                 .build();
-        var paginationControls = CommandHandlerHelper.getPaginationComponent(page, habitsPage.getTotalPages(), getCommandNameFilter());
+        var paginationControls = CommandHandlerHelper.getPaginationComponent(page, habitsPage.getTotalPages(), String.format("%s$%s", getCommandNameFilter(), habitTimeRange));
         return InteractionReplyEditSpec.builder().addEmbed(embed).addComponent(paginationControls).build();
     }
 }

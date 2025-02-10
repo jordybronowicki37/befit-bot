@@ -18,5 +18,6 @@ public interface HabitRepository extends JpaRepository<Habit, Long> {
     List<Habit> findAllByUserAndDeletedFalse(@NonNull User user);
     Page<Habit> findAllByUserAndDeletedFalse(@NonNull User user, @NonNull Pageable pageable);
     List<Habit> findAllByUserAndHabitTimeRangeAndDeletedFalse(@NonNull User user, @NonNull HabitTimeRange habitTimeRange);
+    Page<Habit> findAllByUserAndHabitTimeRangeAndDeletedFalse(@NonNull User user, @NonNull HabitTimeRange habitTimeRange, @NonNull Pageable pageable);
     Page<Habit> findAllByUserAndNameIgnoreCaseContainingAndDeletedFalseOrderByCreatedDesc(@NonNull User user, @NonNull String name, @NonNull Pageable pageable);
 }

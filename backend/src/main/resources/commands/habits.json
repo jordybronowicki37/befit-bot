@@ -10,7 +10,29 @@
         {
           "name": "all",
           "description": "View all habits",
-          "type": 1
+          "type": 1,
+          "options": [
+            {
+              "name": "time-range",
+              "description": "The time range of the habit",
+              "type": 3,
+              "required": false,
+              "choices": [
+                {
+                  "name": "Daily",
+                  "value": "DAILY"
+                },
+                {
+                  "name": "Weekly",
+                  "value": "WEEKLY"
+                },
+                {
+                  "name": "Monthly",
+                  "value": "MONTHLY"
+                }
+              ]
+            }
+          ]
         },
         {
           "name": "one",

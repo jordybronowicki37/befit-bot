@@ -110,14 +110,6 @@ public final class CommandHandlerHelper {
         return getOptionValueRaw(getOption(event, optionName)).asDouble();
     }
 
-    public static Integer getOptionValueAsInt(ApplicationCommandInteractionOption subCommand, String optionName) {
-        return Math.toIntExact(getOptionValueAsLong(subCommand, optionName));
-    }
-
-    public static Integer getOptionValueAsInt(ChatInputInteractionEvent event, String optionName) {
-        return Math.toIntExact(getOptionValueAsLong(event, optionName));
-    }
-
     public static ApplicationCommandInteractionOptionValue getOptionValueRaw(ApplicationCommandInteractionOption option) {
         return option.getValue().orElseThrow(() -> new ValueNotFoundException(option.getName()));
     }
@@ -236,8 +228,14 @@ public final class CommandHandlerHelper {
         var start = habit.getCreated();
         var now = LocalDateTime.now();
         var amount = 0L;
+
+        // If later than 19 hours, count from next day
+        if (start.getHour() >= 19) {
+            start = start.plusDays(1);
+        }
         switch (habit.getHabitTimeRange()) {
             case DAILY:
+                // Reset to 19 hours
                 start = start.minusHours(start.getHour()).plusHours(19);
                 start = start.minusMinutes(start.getMinute());
                 start = start.minusSeconds(start.getSecond());

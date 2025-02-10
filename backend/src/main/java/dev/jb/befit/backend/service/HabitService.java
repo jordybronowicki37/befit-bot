@@ -40,6 +40,10 @@ public class HabitService {
         return habitRepository.findAllByUserAndHabitTimeRangeAndDeletedFalse(user, habitTimeRange);
     }
 
+    public Page<Habit> getHabitsByUserAndTimeRange(User user, HabitTimeRange habitTimeRange, Pageable pageable) {
+        return habitRepository.findAllByUserAndHabitTimeRangeAndDeletedFalse(user, habitTimeRange, pageable);
+    }
+
     public Page<Habit> searchHabit(User user, String filter, Pageable pageable) {
         return habitRepository.findAllByUserAndNameIgnoreCaseContainingAndDeletedFalseOrderByCreatedDesc(user, filter, pageable);
     }
