@@ -17,7 +17,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.text.DecimalFormat;
-import java.time.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
 import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_COMMAND;
@@ -235,15 +238,19 @@ public final class CommandHandlerHelper {
         var amount = 0L;
         switch (habit.getHabitTimeRange()) {
             case DAILY:
-                start = start.minusHours(start.getHour()+19);
+                start = start.minusHours(start.getHour()).plusHours(19);
                 start = start.minusMinutes(start.getMinute());
                 start = start.minusSeconds(start.getSecond());
 
-                return Duration.between(start, now).toDays();
+                while (start.isBefore(now)) {
+                    amount += 1;
+                    start = start.plusDays(1);
+                }
+                break;
             case WEEKLY:
                 // Reset to last day of week 19 hours
                 start = start.minusDays(start.getDayOfWeek().getValue()).plusDays(7);
-                start = start.minusHours(start.getHour()+19);
+                start = start.minusHours(start.getHour()).plusHours(19);
                 start = start.minusMinutes(start.getMinute());
                 start = start.minusSeconds(start.getSecond());
 

@@ -28,6 +28,10 @@ public class HabitService {
         return habitRepository.findAllByUserAndDeletedFalse(user);
     }
 
+    public Page<Habit> getHabitsByUser(User user, Pageable pageable) {
+        return habitRepository.findAllByUserAndDeletedFalse(user, pageable);
+    }
+
     public Optional<Habit> getHabitByUserAndId(User user, Long id) {
         return habitRepository.findHabitByUserAndId(user, id);
     }
