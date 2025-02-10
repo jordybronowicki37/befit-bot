@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SessionLastCommandHandler extends DiscordChatInputInteractionEventListener {
+public class SessionViewLastCommandHandler extends DiscordChatInputInteractionEventListener {
     private final ExerciseSessionService exerciseSessionService;
     private final UserService userService;
 
@@ -31,7 +31,7 @@ public class SessionLastCommandHandler extends DiscordChatInputInteractionEventL
         var userId = event.getInteraction().getUser().getId();
         var user = userService.getOrCreateDiscordUser(userId);
         var session = exerciseSessionService.getLastByUser(user).orElseThrow(SessionNotFoundException::new);
-        var embed = SessionGetCommandHandler.getEmbed(session).build();
+        var embed = SessionViewOneCommandHandler.getEmbed(session).build();
         return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();
     }
 }

@@ -36,7 +36,7 @@ public class SessionStopCommandHandler extends DiscordChatInputInteractionEventL
         var user = userService.getOrCreateDiscordUser(userId);
         var session = exerciseSessionService.updateStatus(user, sessionId, ExerciseSessionStatus.STOPPED);
 
-        var embed = SessionGetCommandHandler.getEmbed(session).title("Session is stopped").build();
+        var embed = SessionViewOneCommandHandler.getEmbed(session).title("Session is stopped").build();
         return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();
     }
 }

@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ExerciseGetCommandHandler extends DiscordChatInputInteractionEventListener {
+public class ExerciseViewOneCommandHandler extends DiscordChatInputInteractionEventListener {
     private final ExerciseTypeService exerciseService;
     private final ExerciseLogService exerciseLogService;
     private final GoalService goalService;

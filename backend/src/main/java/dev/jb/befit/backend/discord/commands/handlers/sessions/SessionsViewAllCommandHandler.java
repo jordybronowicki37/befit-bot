@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SessionsGetCommandHandler extends DiscordChatInputInteractionEventListener {
+public class SessionsViewAllCommandHandler extends DiscordChatInputInteractionEventListener {
     private final ExerciseSessionService exerciseSessionService;
     private final UserService userService;
 

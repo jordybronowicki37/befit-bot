@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ExercisesMyCommandHandler extends DiscordChatInputInteractionEventListener {
+public class ExercisesViewMyCommandHandler extends DiscordChatInputInteractionEventListener {
     private final ExerciseLogService exerciseLogService;
     private final UserService userService;
     private final GoalService goalService;

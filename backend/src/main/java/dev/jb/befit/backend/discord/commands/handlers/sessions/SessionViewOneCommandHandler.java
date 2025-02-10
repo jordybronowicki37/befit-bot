@@ -23,7 +23,7 @@ import java.util.Comparator;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SessionGetCommandHandler extends DiscordChatInputInteractionEventListener {
+public class SessionViewOneCommandHandler extends DiscordChatInputInteractionEventListener {
     private final ExerciseSessionService exerciseSessionService;
     private final UserService userService;
 
