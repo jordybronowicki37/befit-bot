@@ -4,7 +4,7 @@ on:
     inputs:
       default_bump:
         description: The default version bump
-        required: true
+        required: false
         type: string
         default: patch
     outputs:
@@ -15,7 +15,7 @@ on:
     inputs:
       default_bump:
         description: The default version bump
-        required: true
+        required: false
         type: string
         default: patch
         options:
