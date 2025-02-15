@@ -70,9 +70,9 @@ public class HabitsViewAllCommandHandler extends DiscordChatInputInteractionEven
                             description.append(String.format("\nCheck percentage: %d%%", amountOfCheckups != 0 ? amountOfChecks * 100L / amountOfCheckups : 0));
                             return EmbedCreateFields.Field.of(habit.getName(), description.toString(), false);
                         }).toList()
-                )
-                .build();
+                );
+        if (habitsPage.isEmpty()) embed.description("You have no habits yet, try adding some!");
         var paginationControls = CommandHandlerHelper.getPaginationComponent(page, habitsPage.getTotalPages(), String.format("%s$%s", getCommandNameFilter(), habitTimeRange));
-        return InteractionReplyEditSpec.builder().addEmbed(embed).addComponent(paginationControls).build();
+        return InteractionReplyEditSpec.builder().addEmbed(embed.build()).addComponent(paginationControls).build();
     }
 }
