@@ -65,11 +65,9 @@ public class HabitsViewAllCommandHandler extends DiscordChatInputInteractionEven
                             var amountOfChecks = habit.getHabitLogs().size();
                             var description = new StringBuilder();
                             description.append(String.format("\nTime range: %s", habit.getHabitTimeRange().name().toLowerCase()));
-                            description.append(String.format("\nCreated: %s", CommandHandlerHelper.discordFormatDateTime(habit.getCreated())));
+                            description.append(String.format("\nCreated: %s", CommandHandlerHelper.discordTimeAgoText(habit.getCreated())));
                             description.append(String.format("\nNext checkup: %s", CommandHandlerHelper.discordFormatDateTime(nextCheckupDate)));
-                            description.append(String.format("\nTotal checkups: %s", amountOfCheckups));
-                            description.append(String.format("\nTotal checks: %d", amountOfChecks));
-                            if (amountOfCheckups != 0) description.append(String.format("\nCheck percentage: %d%%", amountOfChecks * 100L / amountOfCheckups));
+                            description.append(String.format("\nCheck percentage: %d%%", amountOfCheckups != 0 ? amountOfChecks * 100L / amountOfCheckups : 0));
                             return EmbedCreateFields.Field.of(habit.getName(), description.toString(), false);
                         }).toList()
                 )
