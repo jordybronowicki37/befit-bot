@@ -40,8 +40,9 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build and push the Docker image
         run: |
-          docker buildx build . --push --platform linux/arm64/v8,linux/amd64 \
+          docker buildx build . --push --progress plain \
           --file Dockerfile \
+          --platform linux/arm64/v8,linux/amd64 \
           --tag ghcr.io/${{ github.actor }}/${{ inputs.image_name }}:${{ inputs.version }} \
-          --tag ghcr.io/${{ github.actor }}/${{ inputs.image_name }}:latest \
+          --tag ghcr.io/${{ github.actor }}/${{ inputs.image_name }}:latest
         working-directory: backend
