@@ -16,6 +16,7 @@ import reactor.core.publisher.Mono;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.time.LocalDate;
 
 @Slf4j
 @Service
@@ -37,8 +38,14 @@ public class HabitsProgressCommandHandler extends DiscordChatInputInteractionEve
         var subCommand = CommandHandlerHelper.getSubCommand(event, getCommandNameFilter());
         var habitTimeRange = HabitTimeRange.valueOf(CommandHandlerHelper.getOptionValue(subCommand, "time-range"));
 
+        var startDate = switch (habitTimeRange) {
+            case DAILY -> LocalDate.now().minusDays(30);
+            case WEEKLY -> LocalDate.now().minusWeeks(26);
+            case MONTHLY -> LocalDate.now().minusMonths(12);
+        };
+
         try {
-            var habitsChartImage = habitImageService.getHabitReportChart(user, habitTimeRange);
+            var habitsChartImage = habitImageService.getHabitReportChart(user, habitTimeRange, startDate);
             var inputStream = new FileInputStream(habitsChartImage);
             return event.editReply(InteractionReplyEditSpec.builder().addFile("habits-chart.png", inputStream).build()).then();
         } catch (FileNotFoundException e) {
