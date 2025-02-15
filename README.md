@@ -4,12 +4,12 @@
 [![Docker image](https://img.shields.io/static/v1.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=Docker&message=latest&logo=docker)](https://github.com/jordybronowicki37/befit-bot/pkgs/container/befit)
 
 ```
-██████╗ ███████╗███████╗██╗████████╗
-██╔══██╗██╔════╝██╔════╝██║╚══██╔══╝
-██████╔╝█████╗  █████╗  ██║   ██║   
-██╔══██╗██╔══╝  ██╔══╝  ██║   ██║   
-██████╔╝███████╗██║     ██║   ██║   
-╚═════╝ ╚══════╝╚═╝     ╚═╝   ╚═╝   
+██████╗ ███████╗███████╗██╗████████╗   ██████╗  ██████╗ ████████╗
+██╔══██╗██╔════╝██╔════╝██║╚══██╔══╝   ██╔══██╗██╔═══██╗╚══██╔══╝
+██████╔╝█████╗  █████╗  ██║   ██║█████╗██████╔╝██║   ██║   ██║   
+██╔══██╗██╔══╝  ██╔══╝  ██║   ██║╚════╝██╔══██╗██║   ██║   ██║   
+██████╔╝███████╗██║     ██║   ██║      ██████╔╝╚██████╔╝   ██║   
+╚═════╝ ╚══════╝╚═╝     ╚═╝   ╚═╝      ╚═════╝  ╚═════╝    ╚═╝   
 ```
 
 # BeFit gains tracker
@@ -94,7 +94,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   > With this command you can cancel a goal. This will update the goal's status to `CANCELLED`.
   > See [goal-status](#goal-status) for all possible statuses.
   >
-  > Format: `/goals cancel {goal}`
+  > Format: `/goals cancel {goal}` \
   > Example: \
   > ![Goal cancel command response example](docs/examples/goalCancelCommandExample.png)
 
@@ -109,6 +109,74 @@ This cool bot can help you with improving your fitness. It can track your progre
   > Format: `/goals view` \
   > Example: \
   > ![View goals command response example](docs/examples/goalsViewCommandExample.png)
+
+</details>
+
+<details>
+  <summary>Add a new habit</summary>
+
+> Use this command to add a new habit. See [habit time-ranges](#habit-time-ranges) for all the possible options.
+>
+> Format: `/habits add {name} {time-range}` \
+> Example: \
+> ![Habit add command response example](docs/examples/habitsAddCommandExample.png)
+
+</details>
+
+<details>
+  <summary>Check off a habit</summary>
+
+> This action will ask you what habit you have completed in the past time-range. The daily habits will be asked every day, 
+> the weekly habits will be asked each sunday and the monthly habits will be asked on the last day of the month.
+>
+> Note: this is not really a command, instead it is automatically being sent to you via a private channel. \
+> Example: \
+> ![Habit check command response example](docs/examples/habitsCheckCommandExample.png)
+
+</details>
+
+<details>
+  <summary>View all your habits</summary>
+
+> Use this command to view all your habits, optionally you can filter on a specific time-range. 
+> See [habit time-ranges](#habit-time-ranges) for all the possible options.
+>
+> Format: `/habits view all ?{time-range}` \
+> Example: \
+> ![Habit view all command response example](docs/examples/habitsViewAllCommandExample.png)
+
+</details>
+
+<details>
+  <summary>View one of your habits</summary>
+
+> Use this command to get a detailed view of one of your habits.
+>
+> Format: `/habits view one {habit}` \
+> Example: \
+> ![Habit view one command response example](docs/examples/habitsViewOneCommandExample.png)
+
+</details>
+
+<details>
+  <summary>View your progress on a habit</summary>
+
+> Use this command to generate a chart of your logged habits.
+>
+> Format: `/habits progress {time-range}` \
+> Example: \
+> ![Habit daily progress command response example](docs/examples/habitsProgressDailyCommandExample.png)
+> ![Habit weekly progress command response example](docs/examples/habitsProgressWeeklyCommandExample.png)
+> ![Habit monthly progress command response example](docs/examples/habitsProgressMonthlyCommandExample.png)
+
+</details>
+
+<details>
+  <summary>Remove one of your habits</summary>
+
+> Use this command to remove one of your habits.
+>
+> Format: `/habits remove {habit}`
 
 </details>
 
@@ -309,6 +377,10 @@ server with these visuals, it is advisable to create this separate server.
 - Cancelled (manually)
 - Overwritten (when a goal with the same exercise is created)
 - Completed
+### Habit time ranges
+- Daily
+- Weekly
+- Monthly
 ### Job types
 - Gym reminder (sends a reminder to go to the gym)
 - Motivational message (sends a motivational message)
