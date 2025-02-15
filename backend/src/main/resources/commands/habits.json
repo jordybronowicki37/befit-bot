@@ -51,11 +51,6 @@
       ]
     },
     {
-      "name": "check",
-      "description": "Request the checklist",
-      "type": 1
-    },
-    {
       "name": "progress",
       "description": "Request a chart that shows your progress",
       "type": 1,
