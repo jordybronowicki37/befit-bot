@@ -1,6 +1,7 @@
 package dev.jb.befit.backend.data;
 
 import dev.jb.befit.backend.data.models.*;
+import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import discord4j.common.util.Snowflake;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -46,46 +47,30 @@ public class DummyDataInitializer implements CommandLineRunner {
         userAchievementsRepository.save(new UserAchievement(Achievement.DONE_FOR_TODAY, discordUser));
         userAchievementsRepository.save(new UserAchievement(Achievement.CARDIO_ENTHUSIAST, webUser1));
 
-        var amountOfDailyHabitLogs = 100;
-        for (int i = 0; i < 10; i++) {
-            var habit = new Habit("My daily habit "+(i+1), HabitTimeRange.DAILY, discordUser);
-            habit.setCreated(LocalDateTime.now().minusDays(amountOfDailyHabitLogs));
-            habitRepository.save(habit);
-            for (int j = 0; j < amountOfDailyHabitLogs; j++) {
-                var date = LocalDate.now().minusDays(amountOfDailyHabitLogs).plusDays(j);
-                if (random.nextBoolean()) {
-                    habitLogRepository.save(new HabitLog(date, habit, discordUser));
-                }
-            }
-        }
-        var amountOfWeeklyHabitLogs = 52;
-        var weekDate = LocalDate.now();
-        weekDate = weekDate.minusDays(weekDate.getDayOfWeek().getValue());
-        for (int i = 0; i < 6; i++) {
-            var habit = new Habit("My weekly habit "+(i+1), HabitTimeRange.WEEKLY, discordUser);
-            habit.setCreated(weekDate.minusWeeks(amountOfWeeklyHabitLogs).atStartOfDay());
-            habitRepository.save(habit);
-            for (int j = 0; j < amountOfWeeklyHabitLogs; j++) {
-                var date = weekDate.minusWeeks(amountOfWeeklyHabitLogs).plusWeeks(j);
-                if (random.nextBoolean()) {
-                    habitLogRepository.save(new HabitLog(date, habit, discordUser));
-                }
-            }
-        }
-        var amountOfMonthlyHabitLogs = 20;
-        var monthDate = LocalDate.now();
-        monthDate = monthDate.minusDays(monthDate.getDayOfWeek().getValue());
-        for (int i = 0; i < 4; i++) {
-            var habit = new Habit("My monthly habit "+(i+1), HabitTimeRange.MONTHLY, discordUser);
-            habit.setCreated(monthDate.minusMonths(amountOfMonthlyHabitLogs).atStartOfDay());
-            habitRepository.save(habit);
-            for (int j = 0; j < amountOfMonthlyHabitLogs; j++) {
-                var date = monthDate.minusMonths(amountOfMonthlyHabitLogs).plusMonths(j);
-                if (random.nextBoolean()) {
-                    habitLogRepository.save(new HabitLog(date, habit, discordUser));
-                }
-            }
-        }
+        var habit1 = new Habit("Walked for 30 minutes", HabitTimeRange.DAILY, discordUser);
+        habit1.setCreated(LocalDateTime.now().minusDays(60));
+        addRandomLogsToHabit(habit1, discordUser);
+        var habit2 = new Habit("Did some stretches", HabitTimeRange.DAILY, discordUser);
+        habit2.setCreated(LocalDateTime.now().minusDays(60));
+        addRandomLogsToHabit(habit2, discordUser);
+        var habit3 = new Habit("Stayed out of the cookie jar", HabitTimeRange.DAILY, discordUser);
+        habit3.setCreated(LocalDateTime.now().minusDays(50));
+        addRandomLogsToHabit(habit3, discordUser);
+        var habit4 = new Habit("Read a 'real' book for 30 minutes", HabitTimeRange.DAILY, discordUser);
+        habit4.setCreated(LocalDateTime.now().minusDays(45));
+        addRandomLogsToHabit(habit4, discordUser);
+        var habit5 = new Habit("Went to the gym 3x", HabitTimeRange.WEEKLY, discordUser);
+        habit5.setCreated(LocalDateTime.now().minusDays(40));
+        addRandomLogsToHabit(habit5, discordUser);
+        var habit6 = new Habit("Finished a book", HabitTimeRange.MONTHLY, discordUser);
+        habit6.setCreated(LocalDateTime.now().minusDays(40));
+        addRandomLogsToHabit(habit6, discordUser);
+        var habit7 = new Habit("Had a good feeling about last week", HabitTimeRange.WEEKLY, discordUser);
+        habit7.setCreated(LocalDateTime.now().minusDays(25));
+        addRandomLogsToHabit(habit7, discordUser);
+        var habit8 = new Habit("Said 'I love myself' in the mirror for 5x", HabitTimeRange.DAILY, discordUser);
+        habit8.setCreated(LocalDateTime.now().minusDays(20));
+        addRandomLogsToHabit(habit8, discordUser);
 
         var benchpress = new ExerciseType("Bench press", MeasurementType.KG, GoalDirection.INCREASING);
         var pullUp = new ExerciseType("Pull ups", MeasurementType.AMOUNT, GoalDirection.INCREASING);
@@ -143,5 +128,65 @@ public class DummyDataInitializer implements CommandLineRunner {
         goalRepository.save(new Goal(10d, pullUp, discordUser));
 
         log.info("Finished dummy-data initialization");
+    }
+
+    private void addManyHabits(User user) {
+        for (int i = 0; i < 10; i++) {
+            var habit = new Habit("My daily habit " + (i + 1), HabitTimeRange.DAILY, user);
+            habit.setCreated(LocalDateTime.now().minusDays(100));
+            addRandomLogsToHabit(habit, user);
+        }
+        var weekDate = LocalDate.now();
+        weekDate = weekDate.minusDays(weekDate.getDayOfWeek().getValue()).minusWeeks(52);
+        for (int i = 0; i < 6; i++) {
+            var habit = new Habit("My weekly habit " + (i + 1), HabitTimeRange.WEEKLY, user);
+            habit.setCreated(weekDate.atStartOfDay());
+            addRandomLogsToHabit(habit, user);
+        }
+        var monthDate = LocalDate.now();
+        monthDate = monthDate.minusDays(monthDate.getDayOfWeek().getValue()).minusMonths(20);
+        for (int i = 0; i < 4; i++) {
+            var habit = new Habit("My monthly habit " + (i + 1), HabitTimeRange.MONTHLY, user);
+            habit.setCreated(monthDate.atStartOfDay());
+            addRandomLogsToHabit(habit, user);
+        }
+    }
+
+    private void addRandomLogsToHabit(Habit habit, User user) {
+        var amountOfCheckups = CommandHandlerHelper.getAmountOfHabitCheckUps(habit);
+        habitRepository.save(habit);
+        switch (habit.getHabitTimeRange()) {
+            case DAILY: {
+                for (int j = 0; j < amountOfCheckups; j++) {
+                    var date = LocalDate.now().minusDays(amountOfCheckups).plusDays(j);
+                    if (random.nextBoolean()) {
+                        habitLogRepository.save(new HabitLog(date, habit, user));
+                    }
+                }
+                break;
+            }
+            case WEEKLY: {
+                var weekDate = LocalDate.now();
+                weekDate = weekDate.minusDays(weekDate.getDayOfWeek().getValue());
+                for (int j = 0; j < amountOfCheckups; j++) {
+                    var date = weekDate.minusWeeks(amountOfCheckups).plusWeeks(j);
+                    if (random.nextBoolean()) {
+                        habitLogRepository.save(new HabitLog(date, habit, user));
+                    }
+                }
+                break;
+            }
+            case MONTHLY: {
+                var monthDate = LocalDate.now();
+                monthDate = monthDate.minusDays(monthDate.getDayOfWeek().getValue());
+                for (int j = 0; j < amountOfCheckups; j++) {
+                    var date = monthDate.minusMonths(amountOfCheckups).plusMonths(j);
+                    if (random.nextBoolean()) {
+                        habitLogRepository.save(new HabitLog(date, habit, user));
+                    }
+                }
+                break;
+            }
+        }
     }
 }
