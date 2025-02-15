@@ -4,9 +4,9 @@ on:
     inputs:
       default_bump:
         description: The default version bump
-        required: false
+        required: true
         type: string
-        default: minor
+        default: patch
     outputs:
       tag:
         description: The new tag version
@@ -15,9 +15,9 @@ on:
     inputs:
       default_bump:
         description: The default version bump
-        required: false
+        required: true
         type: string
-        default: minor
+        default: patch
         options:
           - none
           - patch
