@@ -13,8 +13,8 @@ public class EmojiRegistrarRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        log.info("Started registering all custom emojis");
+        log.info("Started registering custom emojis");
         emojiRegistrarService.registerEmojis();
-        log.info("Finished registering all custom emojis");
+        log.info("Finished registering custom emojis");
     }
 }

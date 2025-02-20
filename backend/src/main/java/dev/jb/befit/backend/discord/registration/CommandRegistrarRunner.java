@@ -13,8 +13,8 @@ public class CommandRegistrarRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        log.info("Started registering all guild commands");
+        log.info("Started registering commands");
         commandRegistrarService.registerAllCommands();
-        log.info("Finished registering all guild commands");
+        log.info("Finished registering commands");
     }
 }

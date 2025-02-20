@@ -81,8 +81,8 @@ public class CommandRegistrarService {
         assert applicationId != null;
 
         applicationService.bulkOverwriteGlobalApplicationCommand(applicationId, commands)
-                .doOnNext(cmd -> log.debug("Successfully updated guild command: {}", cmd.name()))
-                .doOnError(e -> log.error("Failed to update guild command: ", e))
+                .doOnNext(cmd -> log.debug("Successfully updated global command: {}", cmd.name()))
+                .doOnError(e -> log.error("Failed to update global command: ", e))
                 .subscribe();
     }
 
