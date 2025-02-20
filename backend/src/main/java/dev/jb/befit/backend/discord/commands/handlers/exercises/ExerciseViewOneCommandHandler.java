@@ -61,7 +61,7 @@ public class ExerciseViewOneCommandHandler extends DiscordChatInputInteractionEv
             progressDescriptionBuilder.append(String.format("\nLast: %s %s - %s", CommandHandlerHelper.formatDouble(lastLog.getAmount()), measurement.getShortName(), CommandHandlerHelper.discordFormatDate(lastLog.getCreated())));
 
             var goal = goalService.getActiveUserGoal(user, exerciseName);
-            goal.ifPresent(value -> progressDescriptionBuilder.append(String.format("\nGoal: %s", CommandHandlerHelper.formatDouble(value.getAmount()))));
+            goal.ifPresent(value -> progressDescriptionBuilder.append(String.format("\nGoal: %s %s", CommandHandlerHelper.formatDouble(value.getAmount()), measurement.getShortName())));
 
             progressDescriptionBuilder.append(String.format("\nPr: %s %s", CommandHandlerHelper.formatDouble(ServiceHelper.getCurrentPr(logs)), measurement.getShortName()));
 
