@@ -42,6 +42,7 @@ public class CommandRegistrarService {
     public void registerAllCommands() throws IOException {
         final var guilds = getAllGuilds();
         final var managementGuilds = guilds.filter(g -> g.id().asLong() == managementGuildId);
+        final var regularGuilds = guilds.filter(g -> g.id().asLong() != managementGuildId);
 
         var allCommands = getAllCommandConfigFiles();
         var globalCommands = allCommands.stream().filter(c -> !"management".equals(c.name())).toList();
@@ -49,6 +50,8 @@ public class CommandRegistrarService {
 
         bulkUpdateGlobalCommands(globalCommands);
         bulkUpdateGuildCommands(managementCommands, managementGuilds);
+        // Reset guild commands for regular servers that were still using the old way of only using guild commands instead of global commands
+        bulkUpdateGuildCommands(List.of(), regularGuilds);
     }
 
     private Flux<UserGuildData> getAllGuilds() {
