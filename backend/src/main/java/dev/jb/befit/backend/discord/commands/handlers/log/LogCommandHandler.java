@@ -65,7 +65,7 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
             var descriptionBuilder = new StringBuilder();
             // Add session
             if (logCreationStatus.session().isPresent()) {
-                descriptionBuilder.append(String.format("Added to session: %s\n", logCreationStatus.session().get().getName()));
+                descriptionBuilder.append(String.format("Session: `%s`\n", logCreationStatus.session().get().getName()));
             }
             descriptionBuilder.append(String.format("Value: %s %s\n", CommandHandlerHelper.formatDouble(exerciseLog.getAmount()), measurementName));
             // Add last log value
