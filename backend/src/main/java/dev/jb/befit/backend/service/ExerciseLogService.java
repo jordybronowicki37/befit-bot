@@ -2,6 +2,7 @@ package dev.jb.befit.backend.service;
 
 import dev.jb.befit.backend.data.ExerciseLogRepository;
 import dev.jb.befit.backend.data.ExerciseRecordRepository;
+import dev.jb.befit.backend.data.UserAchievementsRepository;
 import dev.jb.befit.backend.data.models.*;
 import dev.jb.befit.backend.service.dto.LogCreationStatus;
 import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
@@ -26,6 +27,7 @@ public class ExerciseLogService {
     private final ExerciseTypeService exerciseTypeService;
     private final ExerciseRecordRepository exerciseRecordRepository;
     private final GoalService goalService;
+    private final UserAchievementsRepository userAchievementsRepository;
     private final UserExperienceService userExperienceService;
 
     public List<ExerciseLog> getAllByUser(User user) {
@@ -74,20 +76,23 @@ public class ExerciseLogService {
         var achievements = new LinkedList<UserAchievement>();
         var exerciseType = exerciseTypeService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
         var allExistingLogs = getAllByUserAndExerciseName(user, exerciseName);
+        var lastExerciseLog = allExistingLogs.stream().skip(allExistingLogs.isEmpty() ? 0 : allExistingLogs.size()-1).findFirst().orElse(null);
         var exerciseLog = new ExerciseLog(amount, exerciseType, user);
+        exerciseLog.setFirstLogOfExercise(allExistingLogs.isEmpty());
         var exerciseRecord = exerciseType.getExerciseRecords().stream().filter(r -> r.getUser().equals(user)).findFirst().orElse(null);
+        var earnedXp = ServiceConstants.EarnedXpLogCreated;
+        var oldUserXp = user.getXp();
 
-        long earnedXp = ServiceConstants.EarnedXpLogCreated;
-        var newRecordReached = false;
-        var goalReached = false;
-
-        var session = exerciseSessionService.getLastActiveByUser(user);
-        if (session.isPresent()) {
-            exerciseLog.setSession(session.get());
+        // Add session if one is active
+        var session = exerciseSessionService.getLastActiveByUser(user).orElse(null);
+        if (session != null) {
+            exerciseLog.setSession(session);
+            session.getExerciseLogs().add(exerciseLog);
             earnedXp += ServiceConstants.EarnedXpLogAddedToSession;
-            exerciseSessionService.extendAutomaticFinalization(user, session.get().getId());
+            exerciseSessionService.extendAutomaticFinalization(user, session.getId());
         }
 
+        // Add a record if none is found, else update the record if it is improved
         if (exerciseRecord == null) {
             var newRecord = new ExerciseRecord(user, exerciseType, amount);
             exerciseType.getExerciseRecords().add(newRecord);
@@ -96,42 +101,45 @@ public class ExerciseLogService {
         } else if (ServiceHelper.isRecordImproved(exerciseRecord, exerciseLog)) {
             exerciseRecord.setAmount(exerciseLog.getAmount());
             exerciseRecord = exerciseRecordRepository.save(exerciseRecord);
-            newRecordReached = true;
+            exerciseLog.setPrImproved(true);
             earnedXp += ServiceConstants.EarnedXpRecordImproved;
         }
 
-        var goalOpt = goalService.getActiveUserGoal(user, exerciseName);
-        if (goalOpt.isPresent()) {
-            var goal = goalOpt.get();
+        // Finish goal if it exists and is reached
+        var goal = goalService.getActiveUserGoal(user, exerciseName).orElse(null);
+        if (goal != null) {
             if (ServiceHelper.isGoalReached(goal, exerciseLog)) {
                 goal.setStatus(GoalStatus.COMPLETED);
                 goal.setCompletedAt(LocalDateTime.now());
                 exerciseLog.setReachedGoal(goal);
                 earnedXp += ServiceConstants.EarnedXpGoalCompleted;
-                goalReached = true;
                 achievements.addAll(achievementsRulesHandler.checkGoalCompletedAchievements(user, goal));
             }
         }
 
+        // Check and then add achievements
         achievements.addAll(achievementsRulesHandler.checkLogCreationAchievements(user, exerciseLog));
+        exerciseLog.getAchievements().addAll(achievements);
 
-        userExperienceService.addExperience(user.getId(), earnedXp);
-
+        // Finalize earned xp
         earnedXp += achievements.stream().mapToLong(a -> UserAchievementService.getEarnedAchievementXp(a.getAchievement())).sum();
+        exerciseLog.setEarnedXp(earnedXp);
+        userExperienceService.addExperience(user.getId(), earnedXp);
+        var oldXpLevelData = UserExperienceService.getLevelData(oldUserXp);
+        var newXpLevelData = UserExperienceService.getLevelData(oldUserXp+earnedXp);
+        if (oldXpLevelData.level() < newXpLevelData.level()) exerciseLog.setLevelCompleted(true);
 
+        // Save the log and then save the achievements so that they get linked correctly
         var newExerciseLog = exerciseLogRepository.save(exerciseLog);
+        achievements.forEach(a -> a.setLog(newExerciseLog));
+        userAchievementsRepository.saveAll(achievements);
+
         return new LogCreationStatus(
                 newExerciseLog,
-                allExistingLogs.stream().skip(allExistingLogs.isEmpty() ? 0 : allExistingLogs.size()-1).findFirst().orElse(null),
+                lastExerciseLog,
                 allExistingLogs.size() + 1,
-                session,
                 exerciseRecord,
-                goalOpt.orElse(null),
-                achievements,
-                earnedXp,
-                allExistingLogs.isEmpty(),
-                newRecordReached,
-                goalReached
+                goal
         );
     }
 }

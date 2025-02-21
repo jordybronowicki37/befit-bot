@@ -27,4 +27,8 @@ public class UserAchievement {
     @NonNull
     @ManyToOne
     private User user;
+
+    @Setter
+    @ManyToOne
+    private ExerciseLog log;
 }

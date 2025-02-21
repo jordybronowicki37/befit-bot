@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,6 +30,10 @@ public class ExerciseLog {
     @ManyToOne
     private ExerciseType exerciseType;
 
+    @NonNull
+    @ManyToOne
+    private User user;
+
     @Setter
     @OneToOne
     private Goal reachedGoal;
@@ -36,7 +42,26 @@ public class ExerciseLog {
     @ManyToOne
     private ExerciseSession session;
 
-    @NonNull
-    @ManyToOne
-    private User user;
+    @OneToMany(mappedBy = "log")
+    private List<UserAchievement> achievements = new ArrayList<>();
+
+    @Setter
+    @Column(columnDefinition="BIGINT DEFAULT 0", nullable = false)
+    private Long earnedXp = 0L;
+
+    @Setter
+    @Column(columnDefinition="BOOLEAN DEFAULT FALSE")
+    private boolean prImproved = false;
+
+    @Setter
+    @Column(columnDefinition="BOOLEAN DEFAULT FALSE")
+    private boolean levelCompleted = false;
+
+    @Setter
+    @Column(columnDefinition="BOOLEAN DEFAULT FALSE")
+    private boolean firstLogOfExercise = false;
+
+    public boolean isGoalReached() {
+        return reachedGoal != null;
+    }
 }

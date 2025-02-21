@@ -64,8 +64,8 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
             var workoutTitle = String.format("#%d %s - Log #%d", exerciseType.getId(), exerciseType.getName(), logCreationStatus.amountOfLogs());
             var descriptionBuilder = new StringBuilder();
             // Add session
-            if (logCreationStatus.session().isPresent()) {
-                descriptionBuilder.append(String.format("Session: `%s`\n", logCreationStatus.session().get().getName()));
+            if (exerciseLog.getSession() != null) {
+                descriptionBuilder.append(String.format("Session: `%s`\n", exerciseLog.getSession().getName()));
             }
             descriptionBuilder.append(String.format("Value: %s %s\n", CommandHandlerHelper.formatDouble(exerciseLog.getAmount()), measurementName));
             // Add last log value
@@ -74,7 +74,7 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
                 descriptionBuilder.append(String.format("Last: %s %s - %s\n", CommandHandlerHelper.formatDouble(previousLog.getAmount()), measurementName, CommandHandlerHelper.discordTimeAgoText(previousLog.getCreated())));
             }
             // Add goal if it is present and not yet reached
-            if (goal != null && !logCreationStatus.goalReached()) {
+            if (goal != null && !exerciseLog.isGoalReached()) {
                 descriptionBuilder.append(String.format("Goal: %s %s\n", CommandHandlerHelper.formatDouble(goal.getAmount()), measurementName));
             }
             // Add current pr
@@ -91,35 +91,30 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
         // Add user congratulations
         {
             var descriptionBuilder = new StringBuilder();
-            var anyIsApplied = false;
             // Add new pr reached congratulations
-            if (logCreationStatus.firstLog()) {
+            if (exerciseLog.isFirstLogOfExercise()) {
                 descriptionBuilder.append(":sparkles: New exercise started!\n");
-                anyIsApplied = true;
             }
             // Add new pr reached congratulations
-            if (logCreationStatus.newRecordReached()) {
+            if (exerciseLog.isPrImproved()) {
                 descriptionBuilder.append(":rocket: New PR reached!\n");
-                anyIsApplied = true;
             }
             // Add goal reached congratulations
-            if (logCreationStatus.goalReached()) {
+            if (exerciseLog.isGoalReached()) {
                 descriptionBuilder.append(":chart_with_upwards_trend: Goal completed!\n");
-                anyIsApplied = true;
             }
             // Add new level reached congratulations
-            if (xpLevelData.xpCompletedInLevel() < logCreationStatus.earnedXp()) {
+            if (exerciseLog.isLevelCompleted()) {
                 descriptionBuilder.append(":star2: Level completed!\n");
-                anyIsApplied = true;
             }
-            if (anyIsApplied) embed.addField("Congratulations", descriptionBuilder.toString(), false);
+            if (!descriptionBuilder.isEmpty()) embed.addField("Congratulations", descriptionBuilder.toString(), false);
         }
 
         // Add user achievements
-        if (!logCreationStatus.completedAchievements().isEmpty()) {
+        if (!exerciseLog.getAchievements().isEmpty()) {
             var descriptionBuilder = new StringBuilder();
 
-            logCreationStatus.completedAchievements().stream()
+            exerciseLog.getAchievements().stream()
                     .map(UserAchievement::getAchievement)
                     .sorted(Comparator.comparing(Achievement::getTitle))
                     .forEach(a -> {
@@ -132,7 +127,7 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
         // Add user xp field
         FileInputStream inputStream;
         {
-            var levelDescription = String.format(":dizzy: Earned: %dxp - %dxp required for next level", logCreationStatus.earnedXp(), xpLevelData.xpTopLevel());
+            var levelDescription = String.format(":dizzy: Earned: %dxp - %dxp required for next level", exerciseLog.getEarnedXp(), xpLevelData.xpTopLevel());
             embed.addField("Experience", levelDescription, false);
             var userLevelXpBar = UserExperienceImageService.getXpLevelPicture(userXp);
             try {
