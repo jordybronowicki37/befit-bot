@@ -14,6 +14,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import java.text.DecimalFormat;
@@ -22,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_COMMAND;
 import static discord4j.core.object.command.ApplicationCommandOption.Type.SUB_COMMAND_GROUP;
@@ -271,5 +274,13 @@ public final class CommandHandlerHelper {
                 break;
         }
         return amount;
+    }
+
+    public static <T> PageImpl<T> getPageForList(int pageNum, int pageSize, List<T> list) {
+        var pageRequest = PageRequest.of(pageNum, pageSize);
+        var start = (int) pageRequest.getOffset();
+        var end = Math.min((start + pageRequest.getPageSize()), list.size());
+        var pageContent = list.subList(start, end);
+        return new PageImpl<>(pageContent, pageRequest, list.size());
     }
 }

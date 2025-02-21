@@ -18,8 +18,6 @@ import discord4j.rest.util.Color;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -50,7 +48,6 @@ public class LeaderboardCommandHandler extends DiscordChatInputInteractionEventL
     }
 
     public InteractionReplyEditSpec getReplyEditSpec(Snowflake userId, int page) {
-        var pageSize = CommandConstants.PageSizeSmallItems;
         var usersPoints = new HashMap<User, Long>();
         AtomicReference<Long> mostPoints = new AtomicReference<>();
         AtomicReference<Integer> bestRank = new AtomicReference<>();
@@ -103,14 +100,8 @@ public class LeaderboardCommandHandler extends DiscordChatInputInteractionEventL
             description.append(String.format("Gained points for this exercise: %d pts\n", mostPoints.get()));
         }
 
-        // Create page
-        var pageRequest = PageRequest.of(page, pageSize);
-        var start = (int) pageRequest.getOffset();
-        var end = Math.min((start + pageRequest.getPageSize()), ranking.size());
-        var pageContent = ranking.subList(start, end);
-        var rankingPage = new PageImpl<>(pageContent, pageRequest, ranking.size());
-
         description.append("### Global leaderboard");
+        var rankingPage = CommandHandlerHelper.getPageForList(page, CommandConstants.PageSizeSmallItems, ranking);
         rankingPage.forEach(ur -> {
             var userName = CommandHandlerHelper.getUserStringValue(ur.user());
             description.append(String.format("\n**%s - %d pts - %s**", CommandHandlerHelper.getLeaderboardValue(ur.rank()), ur.points(), userName));

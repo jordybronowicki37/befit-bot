@@ -18,8 +18,6 @@ import discord4j.rest.util.Color;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -56,13 +54,7 @@ public class ExercisesViewMyCommandHandler extends DiscordChatInputInteractionEv
                 .entrySet().stream()
                 .sorted(Comparator.comparingLong(e -> e.getKey().getId())).toList();
 
-        // Create page
-        var pageRequest = PageRequest.of(page, CommandConstants.PageSize);
-        var start = (int) pageRequest.getOffset();
-        var end = Math.min((start + pageRequest.getPageSize()), groupedLogs.size());
-        var pageContent = groupedLogs.subList(start, end);
-        var groupedLogsPage = new PageImpl<>(pageContent, pageRequest, groupedLogs.size());
-
+        var groupedLogsPage = CommandHandlerHelper.getPageForList(page, CommandConstants.PageSize, groupedLogs);
         var embed = EmbedCreateSpec.builder()
                 .title("Your exercises")
                 .fields(groupedLogsPage

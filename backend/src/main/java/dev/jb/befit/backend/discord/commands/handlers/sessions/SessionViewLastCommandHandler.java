@@ -6,7 +6,6 @@ import dev.jb.befit.backend.service.ExerciseSessionService;
 import dev.jb.befit.backend.service.UserService;
 import dev.jb.befit.backend.service.exceptions.SessionNotFoundException;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import discord4j.core.spec.InteractionReplyEditSpec;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +30,6 @@ public class SessionViewLastCommandHandler extends DiscordChatInputInteractionEv
         var userId = event.getInteraction().getUser().getId();
         var user = userService.getOrCreateDiscordUser(userId);
         var session = exerciseSessionService.getLastByUser(user).orElseThrow(SessionNotFoundException::new);
-        var embed = SessionViewOneCommandHandler.getEmbed(session).build();
-        return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();
+        return event.editReply(SessionViewOneCommandHandler.getReplyEditSpec(session, SessionCommandType.VIEW, 0)).then();
     }
 }

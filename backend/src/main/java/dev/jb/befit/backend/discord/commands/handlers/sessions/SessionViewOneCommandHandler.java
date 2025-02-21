@@ -30,6 +30,7 @@ import java.util.List;
 public class SessionViewOneCommandHandler extends DiscordChatInputInteractionEventListener {
     private final ExerciseSessionService exerciseSessionService;
     private final UserService userService;
+    private static final String itemSpacing = "\u200B \u200B \u200B ";
 
     @Override
     public String getCommandNameFilter() {
@@ -42,20 +43,19 @@ public class SessionViewOneCommandHandler extends DiscordChatInputInteractionEve
         var userId = event.getInteraction().getUser().getId();
         var subCommand = CommandHandlerHelper.getSubCommand(event, getCommandNameFilter());
         var sessionId = CommandHandlerHelper.getOptionValueAsLong(subCommand, CommandConstants.AutoCompletePropSession);
-
         var user = userService.getOrCreateDiscordUser(userId);
         var session = exerciseSessionService.getByUserAndId(user, sessionId).orElseThrow(() -> new SessionNotFoundException(sessionId));
-        var embed = getEmbed(session).build();
-        return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();
+        return event.editReply(getReplyEditSpec(session, SessionCommandType.VIEW, 0)).then();
     }
 
-    public static EmbedCreateSpec.Builder getEmbed(ExerciseSession session) {
+    public static InteractionReplyEditSpec getReplyEditSpec(ExerciseSession session, SessionCommandType commandType, int page) {
         var logs = session.getExerciseLogs();
+        var logsPage = CommandHandlerHelper.getPageForList(page, CommandConstants.PageSize, logs);
         var logsDescriptionBuilder = new StringBuilder();
 
-        if (logs.isEmpty()) logsDescriptionBuilder.append("_You have not added any logs yet._");
+        if (logsPage.isEmpty()) logsDescriptionBuilder.append("_You have not added any logs yet._");
         else {
-            logs.stream().sorted(Comparator.comparing(ExerciseLog::getCreated)).forEach(log -> {
+            logsPage.stream().sorted(Comparator.comparing(ExerciseLog::getCreated)).forEach(log -> {
                 addGeneralLogString(logsDescriptionBuilder, log);
                 addAchievementsString(logsDescriptionBuilder, log.getAchievements().stream().map(UserAchievement::getAchievement).toList());
                 addCongratulationsString(logsDescriptionBuilder, log);
@@ -70,10 +70,25 @@ public class SessionViewOneCommandHandler extends DiscordChatInputInteractionEve
         descriptionBuilder.append(String.format("Total logs: %d\n", logs.size()));
         descriptionBuilder.append(String.format("### Logs\n%s", logsDescriptionBuilder));
 
-        return EmbedCreateSpec.builder()
-                .title(":notepad_spiral: Session")
+        var embed = EmbedCreateSpec.builder()
+                .title(SessionCommandsConstants.sessionViewEmbedTitle)
                 .description(descriptionBuilder.toString())
                 .color(Color.GREEN);
+
+        var commandName = switch (commandType) {
+            case CREATE -> {
+                embed.title(SessionCommandsConstants.sessionCreateEmbedTitle);
+                yield CommandConstants.CommandSessionsCreate;
+            }
+            case STOP -> {
+                embed.title(SessionCommandsConstants.sessionStopEmbedTitle);
+                yield CommandConstants.CommandSessionsStop;
+            }
+            default -> CommandConstants.CommandSessionsViewOne;
+        };
+
+        var paginationControls = CommandHandlerHelper.getPaginationComponent(page, logsPage.getTotalPages(), String.format("%s$%d", commandName, session.getId()));
+        return InteractionReplyEditSpec.builder().addEmbed(embed.build()).addComponent(paginationControls).build();
     }
 
     private static void addGeneralLogString(StringBuilder stringBuilder, ExerciseLog log) {
@@ -88,7 +103,7 @@ public class SessionViewOneCommandHandler extends DiscordChatInputInteractionEve
         if (achievements.isEmpty()) return;
         stringBuilder.append("Achievements:\n");
         for (var achievement : achievements) {
-            stringBuilder.append(String.format("\u200B \u200B \u200B  <:%s:%s> %s \n", achievement.getDisplayName(), EmojiRegistrarService.getEmojiId(achievement, false).asString(), achievement.getTitle()));
+            stringBuilder.append(itemSpacing).append(String.format("<:%s:%s> %s \n", achievement.getDisplayName(), EmojiRegistrarService.getEmojiId(achievement, false).asString(), achievement.getTitle()));
         }
     }
 
@@ -96,20 +111,20 @@ public class SessionViewOneCommandHandler extends DiscordChatInputInteractionEve
         var congratulations = new StringBuilder();
         // Add new pr reached congratulations
         if (log.isFirstLogOfExercise()) {
-            congratulations.append("\u200B \u200B \u200B :sparkles: New exercise started!\n");
+            congratulations.append(itemSpacing).append(":sparkles: New exercise started!\n");
         }
         // Add new pr reached congratulations
         if (log.isPrImproved()) {
-            congratulations.append("\u200B \u200B \u200B :rocket: New PR reached!\n");
+            congratulations.append(itemSpacing).append(":rocket: New PR reached!\n");
         }
         // Add goal reached congratulations
         if (log.isGoalReached()) {
-            congratulations.append("\u200B \u200B \u200B :chart_with_upwards_trend: Goal completed!\n");
+            congratulations.append(itemSpacing).append(":chart_with_upwards_trend: Goal completed!\n");
         }
         // Add new level reached congratulations
         if (log.isLevelCompleted()) {
-            congratulations.append("\u200B \u200B \u200B :star2: Level completed!\n");
+            congratulations.append(itemSpacing).append(":star2: Level completed!\n");
         }
-        if (!congratulations.isEmpty()) stringBuilder.append("Congratulations:\n").append(congratulations).append("\n");
+        if (!congratulations.isEmpty()) stringBuilder.append("Congratulations:\n").append(congratulations);
     }
 }

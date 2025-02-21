@@ -6,7 +6,6 @@ import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventLi
 import dev.jb.befit.backend.service.ExerciseSessionService;
 import dev.jb.befit.backend.service.UserService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import discord4j.core.spec.InteractionReplyEditSpec;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,10 +30,8 @@ public class SessionCreateCommandHandler extends DiscordChatInputInteractionEven
         var userId = event.getInteraction().getUser().getId();
         var subCommand = CommandHandlerHelper.getSubCommand(event, getCommandNameFilter());
         var sessionName = CommandHandlerHelper.getOptionValue(subCommand, "name");
-
         var user = userService.getOrCreateDiscordUser(userId);
         var session = exerciseSessionService.create(user, sessionName);
-        var embed = SessionViewOneCommandHandler.getEmbed(session).title(":notepad_spiral: New session created").build();
-        return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();
+        return event.editReply(SessionViewOneCommandHandler.getReplyEditSpec(session, SessionCommandType.CREATE, 0)).then();
     }
 }
