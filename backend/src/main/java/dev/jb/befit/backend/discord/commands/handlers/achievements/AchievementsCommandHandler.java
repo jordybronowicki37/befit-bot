@@ -25,7 +25,6 @@ import java.util.Arrays;
 @Service
 @RequiredArgsConstructor
 public class AchievementsCommandHandler extends DiscordChatInputInteractionEventListener {
-    private final EmojiRegistrarService emojiRegistrarService;
     private final UserService userService;
     private final UserAchievementService achievementService;
 
@@ -57,7 +56,7 @@ public class AchievementsCommandHandler extends DiscordChatInputInteractionEvent
                 .limit(pageSize)
                 .forEach(a -> {
                     var userAchievement = userAchievements.stream().filter(u -> u.getAchievement().equals(a)).findFirst();
-                    var emoji = emojiRegistrarService.getEmojiId(a, userAchievement.isEmpty());
+                    var emoji = EmojiRegistrarService.getEmojiId(a, userAchievement.isEmpty());
 
                     description.append(String.format("# <:%s:%s> %s\n***%s***\n", a.getDisplayName(), emoji.asString(), a.getTitle(), a.getDescription()));
 

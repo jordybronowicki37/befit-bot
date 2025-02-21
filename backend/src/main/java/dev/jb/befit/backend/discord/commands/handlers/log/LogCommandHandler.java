@@ -26,7 +26,6 @@ import java.util.Comparator;
 @Service
 @RequiredArgsConstructor
 public class LogCommandHandler extends DiscordChatInputInteractionEventListener {
-    private final EmojiRegistrarService emojiRegistrarService;
     private final ExerciseLogService logService;
     private final UserService userService;
     private final MotivationalService motivationalService;
@@ -118,7 +117,7 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
                     .map(UserAchievement::getAchievement)
                     .sorted(Comparator.comparing(Achievement::getTitle))
                     .forEach(a -> {
-                        var emoji = emojiRegistrarService.getEmojiId(a, false);
+                        var emoji = EmojiRegistrarService.getEmojiId(a, false);
                         descriptionBuilder.append(String.format("<:%s:%s> %s\n*%s*\n\n", a.getDisplayName(), emoji.asString(), a.getTitle(), a.getDescription()));
                     });
             embed.addField("Completed achievements", descriptionBuilder.toString(), false);

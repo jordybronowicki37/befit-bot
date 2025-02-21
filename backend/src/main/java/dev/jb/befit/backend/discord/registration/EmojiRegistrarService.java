@@ -36,8 +36,8 @@ public class EmojiRegistrarService {
     private final GatewayDiscordClient discordClient;
     private final ResourceLoader resourceLoader;
 
-    private final Map<Achievement, Snowflake> achievementEmojiIds = new HashMap<>();
-    private final Map<Achievement, Snowflake> lockedAchievementEmojiIds = new HashMap<>();
+    private static final Map<Achievement, Snowflake> achievementEmojiIds = new HashMap<>();
+    private static final Map<Achievement, Snowflake> lockedAchievementEmojiIds = new HashMap<>();
 
     public void registerEmojis() throws IOException {
         var managementGuild = discordClient.getGuildById(Snowflake.of(managementGuildId)).timeout(Duration.ofSeconds(5)).block();
@@ -108,7 +108,7 @@ public class EmojiRegistrarService {
         log.info("Removed all emojis from management guild");
     }
 
-    public Snowflake getEmojiId(Achievement achievement, boolean locked) {
+    public static Snowflake getEmojiId(Achievement achievement, boolean locked) {
         if (locked) return lockedAchievementEmojiIds.get(achievement);
         return achievementEmojiIds.get(achievement);
     }
