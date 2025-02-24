@@ -6,7 +6,7 @@ RUN mvn clean install -DskipTests
 RUN java -Djarmode=layertools -jar target/*.jar extract --destination target/extracted
 
 
-FROM eclipse-temurin:17-jre AS runtime
+FROM eclipse-temurin:17-jre-alpine AS runtime
 WORKDIR /app
 COPY --from=builder app/target/extracted/dependencies/ ./
 COPY --from=builder app/target/extracted/spring-boot-loader/ ./
