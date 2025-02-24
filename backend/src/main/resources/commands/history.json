@@ -3,7 +3,7 @@
   "description": "See your most recent logs",
   "options": [
     {
-      "name": "exercise-name",
+      "name": "my-exercise-name",
       "description": "Filter on an exercise type",
       "type": 3,
       "required": false,

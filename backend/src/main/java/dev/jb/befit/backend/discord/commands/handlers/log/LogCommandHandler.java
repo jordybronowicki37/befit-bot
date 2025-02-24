@@ -90,7 +90,7 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
         // Add user congratulations
         {
             var descriptionBuilder = new StringBuilder();
-            // Add new pr reached congratulations
+            // Add new exercise started congratulations
             if (exerciseLog.isFirstLogOfExercise()) {
                 descriptionBuilder.append(":sparkles: New exercise started!\n");
             }

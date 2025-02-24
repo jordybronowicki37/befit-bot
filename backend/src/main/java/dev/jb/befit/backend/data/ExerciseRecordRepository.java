@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 public interface ExerciseRecordRepository extends JpaRepository<ExerciseRecord, ExerciseRecord.ExerciseRecordId> {
     List<ExerciseRecord> findAllByUser(@NonNull User user);
+    List<ExerciseRecord> findByUserAndExerciseTypeNameIgnoreCaseContaining(@NonNull User user, @NonNull String name);
 }

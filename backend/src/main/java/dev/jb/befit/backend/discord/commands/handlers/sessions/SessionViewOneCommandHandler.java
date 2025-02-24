@@ -109,7 +109,7 @@ public class SessionViewOneCommandHandler extends DiscordChatInputInteractionEve
 
     private static void addCongratulationsString(StringBuilder stringBuilder, ExerciseLog log) {
         var congratulations = new StringBuilder();
-        // Add new pr reached congratulations
+        // Add exercise started congratulations
         if (log.isFirstLogOfExercise()) {
             congratulations.append(itemSpacing).append(":sparkles: New exercise started!\n");
         }

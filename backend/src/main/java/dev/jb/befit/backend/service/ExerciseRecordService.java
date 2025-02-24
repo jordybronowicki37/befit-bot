@@ -22,4 +22,8 @@ public class ExerciseRecordService {
     public List<ExerciseRecord> getAll() {
         return exerciseRecordRepository.findAll();
     }
+
+    public List<ExerciseRecord> getFiltered(User user, String filter) {
+        return exerciseRecordRepository.findByUserAndExerciseTypeNameIgnoreCaseContaining(user, filter);
+    }
 }
