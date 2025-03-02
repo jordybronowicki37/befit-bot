@@ -1,6 +1,7 @@
 package dev.jb.befit.backend.discord.commands.handlers.exercises;
 
 import dev.jb.befit.backend.data.models.ExerciseRecord;
+import dev.jb.befit.backend.data.models.GoalDirection;
 import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputAutoCompleteEventListener;
@@ -38,8 +39,8 @@ public class ExerciseTypeMyAutoCompleteHandler extends DiscordChatInputAutoCompl
                 .map(ExerciseRecord::getExerciseType)
                 .map(e ->
                         ApplicationCommandOptionChoiceData.builder()
-                                .name(e.getName())
-                                .value(e.getName())
+                                .name(String.format("%s - %s %s", e.getName(), e.getMeasurementType().getLongName(), e.getGoalDirection().equals(GoalDirection.INCREASING) ? "⇑" : "️⇓"))
+                                .value(String.format("#%d", e.getId()))
                                 .build()
                 )
                 .toList();
