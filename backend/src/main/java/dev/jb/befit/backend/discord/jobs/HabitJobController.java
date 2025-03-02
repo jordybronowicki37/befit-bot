@@ -105,8 +105,8 @@ public class HabitJobController {
     private static String getTimeRangeTitle(HabitTimeRange timeRange) {
         return switch (timeRange) {
             case DAILY -> "## Daily habits\nHow was your day today? I hope that you had some time to complete today's habits.";
-            case WEEKLY -> "## Weekly habits\nThe week has come to an end. Lets check off those weekly habits.";
-            case MONTHLY -> "## Monthly habits\nLets reflect on the past month.";
+            case WEEKLY -> "## Weekly habits\nThe week has come to an end. Let's check off those weekly habits.";
+            case MONTHLY -> "## Monthly habits\nLet's reflect on the past month.";
         };
     }
 
