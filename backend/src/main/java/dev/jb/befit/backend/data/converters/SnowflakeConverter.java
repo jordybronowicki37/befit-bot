@@ -8,11 +8,13 @@ import jakarta.persistence.Converter;
 public class SnowflakeConverter implements AttributeConverter<Snowflake, Long> {
     @Override
     public Long convertToDatabaseColumn(Snowflake snowflake) {
+        if (snowflake == null) return null;
         return snowflake.asLong();
     }
 
     @Override
     public Snowflake convertToEntityAttribute(Long aLong) {
+        if (aLong == null) return null;
         return Snowflake.of(aLong);
     }
 }

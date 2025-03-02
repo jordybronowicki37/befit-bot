@@ -1,6 +1,8 @@
 package dev.jb.befit.backend.data.models;
 
+import dev.jb.befit.backend.data.converters.SnowflakeConverter;
 import dev.jb.befit.backend.service.ServiceConstants;
+import discord4j.common.util.Snowflake;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,4 +43,11 @@ public class ExerciseSession {
     @NonNull
     @ManyToOne
     private User user;
+
+    @Setter
+    @Convert(converter = SnowflakeConverter.class)
+    private Snowflake discordChannelId;
+
+    @Setter
+    private Integer rating = null;
 }

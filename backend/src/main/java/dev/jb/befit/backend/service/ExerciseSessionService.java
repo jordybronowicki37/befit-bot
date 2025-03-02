@@ -5,6 +5,7 @@ import dev.jb.befit.backend.data.models.ExerciseSession;
 import dev.jb.befit.backend.data.models.ExerciseSessionStatus;
 import dev.jb.befit.backend.data.models.User;
 import dev.jb.befit.backend.service.exceptions.SessionNotFoundException;
+import discord4j.common.util.Snowflake;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -52,6 +53,10 @@ public class ExerciseSessionService {
     }
 
     public ExerciseSession create(User user, String name) {
+        return create(user, name, null);
+    }
+
+    public ExerciseSession create(User user, String name, Snowflake channelId) {
         var lastSession = getLastActiveByUser(user);
         lastSession.ifPresent(s -> {
             s.setStatus(ExerciseSessionStatus.OVERWRITTEN);
@@ -59,6 +64,7 @@ public class ExerciseSessionService {
         });
 
         var session = new ExerciseSession(name, user);
+        session.setDiscordChannelId(channelId);
         return exerciseSessionRepository.save(session);
     }
 
@@ -75,6 +81,13 @@ public class ExerciseSessionService {
         var session = getByUserAndId(user, id).orElseThrow(() -> new SessionNotFoundException(id));
         session.setStatus(status);
         if (!status.equals(ExerciseSessionStatus.ACTIVE)) session.setEnded(LocalDateTime.now());
+        return exerciseSessionRepository.save(session);
+    }
+
+    public ExerciseSession updateRating(User user, Long id, Integer rating) {
+        if (rating < 1 || rating > 5) throw new IllegalArgumentException("Rating must be from 1 to 5");
+        var session = getByUserAndId(user, id).orElseThrow(() -> new SessionNotFoundException(id));
+        session.setRating(rating);
         return exerciseSessionRepository.save(session);
     }
 }

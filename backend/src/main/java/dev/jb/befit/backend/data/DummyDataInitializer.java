@@ -26,7 +26,6 @@ public class DummyDataInitializer implements CommandLineRunner {
     private final UserAchievementsRepository userAchievementsRepository;
     private final ExerciseLogService exerciseLogService;
     private final ExerciseLogRepository exerciseLogRepository;
-    private final ExerciseRecordRepository exerciseRecordRepository;
     private final ExerciseSessionRepository exerciseSessionRepository;
     private final ExerciseTypeRepository exerciseTypeRepository;
     private final GoalRepository goalRepository;
