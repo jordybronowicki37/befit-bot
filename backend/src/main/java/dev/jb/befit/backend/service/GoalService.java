@@ -51,9 +51,17 @@ public class GoalService {
         var activeUserGoals = getAllByUserAndExerciseName(user, exerciseName).stream().filter(g -> g.getStatus() == GoalStatus.ACTIVE).toList();
         if (activeUserGoals.isEmpty()) return Optional.empty();
         if (activeUserGoals.size() == 1) return Optional.of(activeUserGoals.get(0));
-        log.error("More than 1 goal???");
-        // TODO cancel other goals
-        return Optional.of(activeUserGoals.get(activeUserGoals.size() - 1));
+
+        log.error("User {} has more than one goal for exercise {}", user, exerciseName);
+
+        for (int i = 0; i < activeUserGoals.size(); i++) {
+            var goal = activeUserGoals.get(i);
+            if (i == activeUserGoals.size() - 1) return Optional.of(goal);
+            goal.setStatus(GoalStatus.OVERWRITTEN);
+            goalRepository.save(goal);
+        }
+
+        return Optional.empty();
     }
 
     public Goal create(User user, String exerciseName, Double amount) {
