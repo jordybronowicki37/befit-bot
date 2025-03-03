@@ -3,6 +3,7 @@ package dev.jb.befit.backend.discord.commands.handlers.sessions;
 import dev.jb.befit.backend.data.models.ExerciseSessionStatus;
 import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
+import dev.jb.befit.backend.discord.jobs.SessionCompletionJobController;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ExerciseSessionService;
 import dev.jb.befit.backend.service.UserService;
@@ -19,6 +20,7 @@ import reactor.core.publisher.Mono;
 public class SessionStopCommandHandler extends DiscordChatInputInteractionEventListener {
     private final ExerciseSessionService exerciseSessionService;
     private final UserService userService;
+    private final SessionCompletionJobController sessionCompletionJobController;
 
     @Override
     public String getCommandNameFilter() {
@@ -33,6 +35,9 @@ public class SessionStopCommandHandler extends DiscordChatInputInteractionEventL
         var sessionId = CommandHandlerHelper.getOptionValueAsLong(subCommand, CommandConstants.AutoCompletePropSessionActive);
         var user = userService.getOrCreateDiscordUser(userId);
         var session = exerciseSessionService.updateStatus(user, sessionId, ExerciseSessionStatus.STOPPED);
-        return event.editReply(SessionViewOneCommandHandler.getReplyEditSpec(session, SessionCommandType.STOP, 0)).then();
+        return event
+                .editReply(SessionViewOneCommandHandler.getReplyEditSpec(session, SessionCommandType.STOP, 0))
+                .then(sessionCompletionJobController.sendRatingReport(Mono.empty(), session))
+                .then();
     }
 }

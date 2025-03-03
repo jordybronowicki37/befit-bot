@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.jobs;
 
+import dev.jb.befit.backend.data.models.ExerciseSession;
 import dev.jb.befit.backend.data.models.ExerciseSessionStatus;
 import dev.jb.befit.backend.discord.commands.handlers.sessions.SessionRateButtonHandler;
 import dev.jb.befit.backend.service.ExerciseSessionService;
@@ -33,19 +34,23 @@ public class SessionCompletionJobController {
                 log.debug("Completed session {}", session.getId());
             }
 
-            if (session.getExerciseLogs().isEmpty()) continue;
-            var channelId = session.getDiscordChannelId();
-            if (channelId == null) continue;
-
-            mono = mono.then(client.getChannelById(channelId).flatMap(channel -> {
-                log.debug("Sending session rating form to channel {}", channelId);
-                var message = MessageCreateSpec.builder();
-                message.content(String.format("# :notepad_spiral: Rate your session\nHow was your session? Are you satisfied with the result? Give your session a rating.\n%s", SessionRateButtonHandler.getSessionRecap(session)));
-                message.addComponent(SessionRateButtonHandler.getRatingRow(session));
-                return channel.getRestChannel().createMessage(message.build().asRequest());
-            }));
+            mono = sendRatingReport(mono, session);
         }
 
         mono.subscribe();
+    }
+
+    public Mono<Object> sendRatingReport(Mono<Object> mono, ExerciseSession session) {
+        if (session.getExerciseLogs().isEmpty()) return mono;
+        var channelId = session.getDiscordChannelId();
+        if (channelId == null) return mono;
+
+        return mono.then(client.getChannelById(channelId).flatMap(channel -> {
+            log.debug("Sending session rating form to channel {}", channelId);
+            var message = MessageCreateSpec.builder();
+            message.content(String.format("# :notepad_spiral: Rate your session\nHow was your session? Are you satisfied with the result? Give your session a rating.\n%s", SessionRateButtonHandler.getSessionRecap(session)));
+            message.addComponent(SessionRateButtonHandler.getRatingRow(session));
+            return channel.getRestChannel().createMessage(message.build().asRequest());
+        }));
     }
 }

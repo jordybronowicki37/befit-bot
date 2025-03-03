@@ -27,11 +27,12 @@ public class SessionCreateCommandHandler extends DiscordChatInputInteractionEven
     @Override
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
+        var channelId = event.getInteraction().getChannelId();
         var userId = event.getInteraction().getUser().getId();
         var subCommand = CommandHandlerHelper.getSubCommand(event, getCommandNameFilter());
         var sessionName = CommandHandlerHelper.getOptionValue(subCommand, "name");
         var user = userService.getOrCreateDiscordUser(userId);
-        var session = exerciseSessionService.create(user, sessionName);
+        var session = exerciseSessionService.create(user, sessionName, channelId);
         return event.editReply(SessionViewOneCommandHandler.getReplyEditSpec(session, SessionCommandType.CREATE, 0)).then();
     }
 }
