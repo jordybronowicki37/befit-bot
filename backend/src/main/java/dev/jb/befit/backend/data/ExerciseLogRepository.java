@@ -20,6 +20,7 @@ public interface ExerciseLogRepository extends JpaRepository<ExerciseLog, Long> 
     @Query("select count(distinct e.exerciseType) from ExerciseLog e where e.user = :user")
     long countDistinctExerciseTypeByUser(@NonNull @Param("user") User user);
     List<ExerciseLog> findAllByUser(@NonNull User user);
+    Optional<ExerciseLog> findByUserAndId(@NonNull User user, @NonNull Long id);
     Page<ExerciseLog> findAllByUserOrderByCreatedDesc(@NonNull User user, @NonNull Pageable pageable);
     Page<ExerciseLog> findAllByUserAndExerciseTypeIdOrderByCreatedDesc(@NonNull User user, @NonNull Long exerciseTypeId, @NonNull Pageable pageable);
     List<ExerciseLog> findAllByUserAndCreatedAfter(@NonNull User user, @NonNull LocalDateTime from);

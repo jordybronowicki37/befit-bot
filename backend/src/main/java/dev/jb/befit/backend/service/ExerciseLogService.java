@@ -6,6 +6,7 @@ import dev.jb.befit.backend.data.UserAchievementsRepository;
 import dev.jb.befit.backend.data.models.*;
 import dev.jb.befit.backend.service.dto.LogCreationStatus;
 import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
+import dev.jb.befit.backend.service.exceptions.LogNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -32,6 +33,10 @@ public class ExerciseLogService {
 
     public List<ExerciseLog> getAllByUser(User user) {
         return exerciseLogRepository.findAllByUser(user);
+    }
+
+    public Optional<ExerciseLog> getByUserAndId(User user, Long id) {
+        return exerciseLogRepository.findByUserAndId(user, id);
     }
 
     public long countAllByUser(User user) {
@@ -141,5 +146,40 @@ public class ExerciseLogService {
                 exerciseRecord,
                 goal
         );
+    }
+
+    public ExerciseLog undoLogCreation(User user, Long logId) {
+        var log = getByUserAndId(user, logId).orElseThrow(() -> new LogNotFoundException(logId));
+
+        if (log.isPrImproved()) {
+            var exerciseType = log.getExerciseType();
+            var logsStream = getAllByUserAndExerciseName(user, exerciseType.getName()).stream().filter(l -> !l.equals(log)).map(ExerciseLog::getAmount);
+            var oldPr = exerciseType.getGoalDirection().equals(GoalDirection.INCREASING) ? logsStream.max(Double::compareTo) : logsStream.min(Double::compareTo);
+            var record = exerciseRecordRepository.findByUserAndExerciseType(user, exerciseType);
+
+            if (oldPr.isPresent()) {
+                if (record.isPresent()) {
+                    record.get().setAmount(oldPr.get());
+                    exerciseRecordRepository.save(record.get());
+                } else {
+                    exerciseRecordRepository.save(new ExerciseRecord(user, exerciseType, oldPr.get()));
+                }
+            } else {
+                record.ifPresent(exerciseRecordRepository::delete);
+            }
+        }
+
+        if (log.getReachedGoal() != null) {
+            var goal = log.getReachedGoal();
+            goal.setStatus(GoalStatus.ACTIVE);
+            goal.setCompletedAt(null);
+        }
+
+        userAchievementsRepository.deleteAll(log.getAchievements());
+        user.setXp(user.getXp() - log.getEarnedXp());
+
+        exerciseLogRepository.delete(log);
+
+        return log;
     }
 }

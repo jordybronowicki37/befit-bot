@@ -23,6 +23,7 @@ public final class CommandConstants {
     public static final String CommandHistory = "history";
     public static final String CommandLeaderboard = "leaderboard";
     public static final String CommandLog = "log";
+    public static final String CommandLogUndo = "log undo";
     public static final String CommandManagementRestart = "management restart";
     public static final String CommandManagementRefreshCommands = "management refresh-commands";
     public static final String CommandManagementJobsAdd = "management jobs add";

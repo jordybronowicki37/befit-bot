@@ -9,6 +9,8 @@ import dev.jb.befit.backend.discord.registration.EmojiRegistrarService;
 import dev.jb.befit.backend.service.*;
 import dev.jb.befit.backend.service.visuals.UserExperienceImageService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
+import discord4j.core.object.component.ActionRow;
+import discord4j.core.object.component.Button;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionReplyEditSpec;
 import discord4j.rest.util.Color;
@@ -137,6 +139,7 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
             embed.image("attachment://level-xp-bar.png");
         }
 
-        return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed.build()).addFile("level-xp-bar.png", inputStream).build()).then();
+        var undoButton = ActionRow.of(Button.secondary(String.format("%s$%d", CommandConstants.CommandLogUndo, exerciseLog.getId()), "Undo log"));
+        return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed.build()).addFile("level-xp-bar.png", inputStream).addComponent(undoButton).build()).then();
     }
 }
