@@ -34,7 +34,9 @@ public class LogUndoButtonHandler extends DiscordButtonInteractionEventListener 
 
         var replySpec = InteractionReplyEditSpec.builder();
         replySpec.contentOrNull("Log successfully removed");
+        replySpec.componentsOrNull(null);
+        replySpec.embedsOrNull(null);
 
-        return event.editReply(replySpec.build()).then();
+        return event.editReply(replySpec.build()).flatMap(m -> m.edit().withAttachments()).then();
     }
 }
