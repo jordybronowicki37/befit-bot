@@ -36,6 +36,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Read Description
+        id: description
+        run: |
+          echo "DESC<<EOF" >> $GITHUB_ENV
+          cat backend/description.md >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -58,3 +65,5 @@ jobs:
             ghcr.io/${{ github.actor }}/${{ inputs.image_name }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            IMAGE_DESCRIPTION=${{ env.DESC }}
