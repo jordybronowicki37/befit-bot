@@ -313,6 +313,17 @@ This cool bot can help you with improving your fitness. It can track your progre
 </details>
 
 <details>
+  <summary>Rate session</summary>
+
+  > When a session is manually or automatically stopped, then the user is sent a message to rate their session.
+  > 
+  > Note: this is not really a command, instead it is automatically being sent to you via the channel you originally created the session. \
+  > Example: \
+  > ![Session Rate command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/sessionRateCommandExample.png)
+
+</details>
+
+<details>
   <summary>User stats</summary>
 
   > With this command you can see your own stats or optionally see the stats of one of your friends.
