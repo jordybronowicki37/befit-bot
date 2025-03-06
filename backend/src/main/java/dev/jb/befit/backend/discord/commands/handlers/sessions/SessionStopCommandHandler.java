@@ -30,11 +30,13 @@ public class SessionStopCommandHandler extends DiscordChatInputInteractionEventL
     @Override
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
+        var channelId = event.getInteraction().getChannelId();
         var userId = event.getInteraction().getUser().getId();
         var subCommand = CommandHandlerHelper.getSubCommand(event, getCommandNameFilter());
         var sessionId = CommandHandlerHelper.getOptionValueAsLong(subCommand, CommandConstants.AutoCompletePropSessionActive);
         var user = userService.getOrCreateDiscordUser(userId);
         var session = exerciseSessionService.updateStatus(user, sessionId, ExerciseSessionStatus.STOPPED);
+        session = exerciseSessionService.updateChannel(user, sessionId, channelId);
         return event
                 .editReply(SessionViewOneCommandHandler.getReplyEditSpec(session, SessionCommandType.STOP, 0))
                 .then(sessionCompletionJobController.sendRatingReport(Mono.empty(), session))

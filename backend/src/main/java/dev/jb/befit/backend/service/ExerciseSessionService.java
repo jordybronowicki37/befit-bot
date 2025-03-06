@@ -84,6 +84,12 @@ public class ExerciseSessionService {
         return exerciseSessionRepository.save(session);
     }
 
+    public ExerciseSession updateChannel(User user, Long id, Snowflake channelId) {
+        var session = getByUserAndId(user, id).orElseThrow(() -> new SessionNotFoundException(id));
+        session.setDiscordChannelId(channelId);
+        return exerciseSessionRepository.save(session);
+    }
+
     public ExerciseSession updateRating(User user, Long id, Integer rating) {
         if (rating < 1 || rating > 5) throw new IllegalArgumentException("Rating must be from 1 to 5");
         var session = getByUserAndId(user, id).orElseThrow(() -> new SessionNotFoundException(id));
