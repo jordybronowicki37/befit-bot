@@ -67,7 +67,8 @@ public class SessionViewOneCommandHandler extends DiscordChatInputInteractionEve
         descriptionBuilder.append(String.format("Name: %s\n", session.getName()));
         descriptionBuilder.append(String.format("Started: %s\n", CommandHandlerHelper.discordFormatDateTime(session.getCreated())));
         descriptionBuilder.append(String.format("Status: %s\n", session.getStatus().getDisplayName()));
-        descriptionBuilder.append(String.format("Total logs: %d\n", logs.size()));
+        if (session.getRating() != null) descriptionBuilder.append(String.format("Rating: %s\n", CommandHandlerHelper.getRatingString(session.getRating())));
+        descriptionBuilder.append(String.format("Logs: %d\n", logs.size()));
         descriptionBuilder.append(String.format("### Logs\n%s", logsDescriptionBuilder));
 
         var embed = EmbedCreateSpec.builder()

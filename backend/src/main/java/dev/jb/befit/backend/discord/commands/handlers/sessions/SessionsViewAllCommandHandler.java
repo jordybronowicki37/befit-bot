@@ -49,6 +49,7 @@ public class SessionsViewAllCommandHandler extends DiscordChatInputInteractionEv
                             var descriptionBuilder = new StringBuilder();
                             descriptionBuilder.append(String.format("Started: %s\n", CommandHandlerHelper.discordTimeAgoText(session.getCreated())));
                             descriptionBuilder.append(String.format("Status: %s\n", session.getStatus().getDisplayName()));
+                            if (session.getRating() != null) descriptionBuilder.append(String.format("Rating: %s\n", CommandHandlerHelper.getRatingString(session.getRating())));
                             descriptionBuilder.append(String.format("Logs: %s\n", session.getExerciseLogs().size()));
                             return EmbedCreateFields.Field.of(
                                     session.getName(),

@@ -149,6 +149,14 @@ public final class CommandHandlerHelper {
         };
     }
 
+    public static String getRatingString(Integer rating) {
+        var string = new StringBuilder();
+        for (int i = 0; i < rating; i++) {
+            string.append(":star2:");
+        }
+        return string.toString();
+    }
+
     public static String getUserStringValue(User user) {
         if (user instanceof DiscordUser discordUser) return String.format("<@%s>", discordUser.getDiscordId().asString());
         if (user instanceof WebUser webUser) return String.format("`%s`", webUser.getUsername());
