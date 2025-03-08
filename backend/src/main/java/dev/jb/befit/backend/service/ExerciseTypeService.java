@@ -4,6 +4,7 @@ import dev.jb.befit.backend.data.ExerciseTypeRepository;
 import dev.jb.befit.backend.data.models.ExerciseType;
 import dev.jb.befit.backend.data.models.GoalDirection;
 import dev.jb.befit.backend.data.models.MeasurementType;
+import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import dev.jb.befit.backend.service.exceptions.InvalidExerciseNameException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,13 @@ public class ExerciseTypeService {
     public ExerciseType create(String name, MeasurementType measurementType, GoalDirection goalDirection) {
         if (name.startsWith("#")) throw new InvalidExerciseNameException("An exercise name can not start with '#'");
         var exerciseType = new ExerciseType(name, measurementType, goalDirection);
+        return exerciseTypeRepository.save(exerciseType);
+    }
+
+    public ExerciseType rename(String name, String newName) {
+        if (newName.startsWith("#")) throw new InvalidExerciseNameException("An exercise name can not start with '#'");
+        var exerciseType = getByName(name).orElseThrow(() -> new ExerciseNotFoundException(name));
+        exerciseType.setName(newName);
         return exerciseTypeRepository.save(exerciseType);
     }
 }

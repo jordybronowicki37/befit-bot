@@ -59,6 +59,26 @@
           "choices": []
         }
       ]
+    },
+    {
+      "name": "rename",
+      "description": "Rename an exercise type",
+      "type": 1,
+      "options": [
+        {
+          "name": "exercise-name",
+          "description": "The name of the exercise type",
+          "type": 3,
+          "required": true,
+          "autocomplete": true
+        },
+        {
+          "name": "new-name",
+          "description": "The new name of the exercise",
+          "type": 3,
+          "required": true
+        }
+      ]
     }
   ]
 }
