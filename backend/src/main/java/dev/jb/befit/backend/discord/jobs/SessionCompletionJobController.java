@@ -47,9 +47,10 @@ public class SessionCompletionJobController {
 
         return mono.then(client.getChannelById(channelId).flatMap(channel -> {
             log.debug("Sending session rating form to channel {}", channelId);
-            var message = MessageCreateSpec.builder();
-            message.content(String.format("# :notepad_spiral: Rate your session\nHow was your session? Are you satisfied with the result? Give your session a rating.\n%s", SessionRateButtonHandler.getSessionRecap(session)));
-            message.addComponent(SessionRateButtonHandler.getRatingRow(session));
+            var message = MessageCreateSpec.builder()
+                    .content("# :notepad_spiral: Rate your session\nHow was your session? Are you satisfied with the result? Give your session a rating.")
+                    .addComponent(SessionRateButtonHandler.getRatingRow(session))
+                    .addEmbed(SessionRateButtonHandler.getSessionRecap(session));
             return channel.getRestChannel().createMessage(message.build().asRequest());
         }));
     }

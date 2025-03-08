@@ -14,6 +14,7 @@ import discord4j.core.object.component.ActionComponent;
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
 import discord4j.core.object.reaction.ReactionEmoji;
+import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionReplyEditSpec;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -48,14 +49,15 @@ public class SessionRateButtonHandler extends DiscordButtonInteractionEventListe
         var sessionId = Long.parseLong(optionsSplit[1]);
         var session = exerciseSessionService.updateRating(user, sessionId, rating);
 
-        var replySpec = InteractionReplyEditSpec.builder();
-        replySpec.contentOrNull(String.format("# :notepad_spiral: Rate your session\n%s\n%s", getRatingMessage(rating), getSessionRecap(session)));
-        replySpec.components(List.of(getRatingRow(session)));
+        var replySpec = InteractionReplyEditSpec.builder()
+                .contentOrNull(String.format("# :notepad_spiral: Rate your session\n%s", getRatingMessage(rating)))
+                .components(List.of(getRatingRow(session)))
+                .addEmbed(getSessionRecap(session));
 
         return event.editReply(replySpec.build()).then();
     }
 
-    public static String getSessionRecap(ExerciseSession session) {
+    public static EmbedCreateSpec getSessionRecap(ExerciseSession session) {
         var achievements = new LinkedList<Achievement>();
         var prsImproved = 0;
         var goalsCompleted = 0;
@@ -70,7 +72,7 @@ public class SessionRateButtonHandler extends DiscordButtonInteractionEventListe
             experienceEarned += log.getEarnedXp();
         }
 
-        var description = new StringBuilder("## Session recap\n");
+        var description = new StringBuilder();
         description.append(String.format("Name: %s\n", session.getName()));
         description.append(String.format("Logs added: %d\n", session.getExerciseLogs().size()));
         description.append(String.format("Experience earned: %d\n", experienceEarned));
@@ -84,9 +86,13 @@ public class SessionRateButtonHandler extends DiscordButtonInteractionEventListe
             }
             description.append('\n');
         }
-        description.append('\u200B');
 
-        return description.toString();
+        var embed = EmbedCreateSpec
+                .builder()
+                .title("Session recap")
+                .description(description.toString());
+
+        return embed.build();
     }
 
     public static ActionRow getRatingRow(ExerciseSession session) {
