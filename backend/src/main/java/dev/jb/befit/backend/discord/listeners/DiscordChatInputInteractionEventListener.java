@@ -3,11 +3,14 @@ package dev.jb.befit.backend.discord.listeners;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.service.exceptions.MyException;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
+import discord4j.core.event.domain.interaction.DeferrableInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionReplyEditSpec;
 import discord4j.rest.util.Color;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Slf4j
 public abstract class DiscordChatInputInteractionEventListener implements DiscordEventListener<ChatInputInteractionEvent> {
@@ -32,21 +35,29 @@ public abstract class DiscordChatInputInteractionEventListener implements Discor
 
     public Mono<Void> replyWithErrorMessage(Throwable error, ChatInputInteractionEvent initialEvent) {
         if (error instanceof MyException) {
-            var embed = EmbedCreateSpec.builder()
-                    .title("Something went wrong")
-                    .description(error.getMessage())
-                    .color(Color.RED)
-                    .build();
-            return initialEvent.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();
+            return editReplyToError(initialEvent, "Something went wrong", error.getMessage());
         }
         else {
             log.error("An unhandled error has occurred", error);
-            var embed = EmbedCreateSpec.builder()
-                    .title("Something went wrong")
-                    .description("Please try again later.")
-                    .color(Color.RED)
-                    .build();
-            return initialEvent.editReply(InteractionReplyEditSpec.builder().addEmbed(embed).build()).then();
+            return editReplyToError(initialEvent, "Something went wrong", "Please try again later.");
         }
+    }
+
+    public static Mono<Void> editReplyToError(DeferrableInteractionEvent event, String title, String description) {
+        var embed = EmbedCreateSpec.builder()
+                .title(title)
+                .description(description)
+                .color(Color.RED)
+                .build();
+        var reply = InteractionReplyEditSpec
+                .builder()
+                .embeds(List.of(embed))
+                .componentsOrNull(null)
+                .contentOrNull(null)
+                .build();
+        return event
+                .editReply(reply)
+                .flatMap(m -> m.edit().withAttachments())
+                .then();
     }
 }
