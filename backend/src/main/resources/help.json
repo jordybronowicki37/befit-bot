@@ -1,0 +1,321 @@
+{
+  "commands": [
+    {
+      "command": "achievements",
+      "arguments": [],
+      "description": "With this command you can view all of your earned and locked achievements. It can also display the completion percentage of the entire community.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/achievementsCommandExample.png"
+    },
+    {
+      "command": "exercises create",
+      "arguments": [
+        {
+          "name": "name",
+          "description": "The name of the exercise.",
+          "required": true
+        },
+        {
+          "name": "measurement-type",
+          "description": "The measurement type of the exercise.",
+          "required": true,
+          "choices": true
+        },
+        {
+          "name": "goal-direction",
+          "description": "The direction of the goal.",
+          "required": true,
+          "choices": true
+        }
+      ],
+      "description": "With this command you can create new exercises so that you can track your progress on all of your favorite exercises.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/createExerciseCommandExample.png"
+    },
+    {
+      "command": "exercises rename",
+      "arguments": [
+        {
+          "name": "exercise-name",
+          "description": "The name of the exercise type.",
+          "required": true,
+          "autocomplete": true
+        },
+        {
+          "name": "new-name",
+          "description": "The new name of the exercise.",
+          "required": true
+        }
+      ],
+      "description": "With this command you can rename an exercise.",
+      "image": null
+    },
+    {
+      "command": "exercises view all",
+      "arguments": [],
+      "description": "With this command you van view all available exercises. The extended data will also show how many people are participating and who is in first place.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/allExercisesCommandExample.png"
+    },
+    {
+      "command": "exercises view one",
+      "arguments": [
+        {
+          "name": "exercise-name",
+          "description": "The name of the exercise type.",
+          "required": true,
+          "autocomplete": true
+        }
+      ],
+      "description": "With this command you can view extended data on a single exercise. It can show global information and statistics, your personal statistics and also a larger leaderboard.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/oneExercisesCommandExample.png"
+    },
+    {
+      "command": "exercises view my",
+      "arguments": [],
+      "description": "With this command you can view all the exercises you are participating in. The extended data will show the amount of logs you've made, the goal if you have added any, your personal record and your place in the leaderboard.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/myExercisesCommandExample.png"
+    },
+    {
+      "command": "goals add",
+      "arguments": [
+        {
+          "name": "exercise-name",
+          "description": "The name of the exercise type.",
+          "required": true,
+          "autocomplete": true
+        },
+        {
+          "name": "amount",
+          "description": "The amount of the goal.",
+          "required": true
+        }
+      ],
+      "description": "With this command you can set a goal for a specific exercise to work towards.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/goalAddCommandExample.png"
+    },
+    {
+      "command": "goals cancel",
+      "arguments": [
+        {
+          "name": "goal",
+          "description": "The goal that is to be cancelled.",
+          "required": true,
+          "autocomplete": true
+        }
+      ],
+      "description": "With this command you can cancel a goal. This will update the goal's status to `CANCELLED`.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/goalCancelCommandExample.png"
+    },
+    {
+      "command": "goals view",
+      "arguments": [],
+      "description": "With this command you can view all of your active goals.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/goalsViewCommandExample.png"
+    },
+    {
+      "command": "habits add",
+      "arguments": [
+        {
+          "name": "name",
+          "description": "The name of the habit.",
+          "required": true
+        },
+        {
+          "name": "time-range",
+          "description": "The time range of the habit.",
+          "required": true,
+          "choices": true
+        }
+      ],
+      "description": "Use this command to add a new habit.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/habitsAddCommandExample.png"
+    },
+    {
+      "command": "habits progress",
+      "arguments": [
+        {
+          "name": "time-range",
+          "description": "The time range of the habit.",
+          "required": true,
+          "choices": true
+        }
+      ],
+      "description": "Use this command to generate a chart of your logged habits.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/habitsProgressDailyCommandExample.png"
+    },
+    {
+      "command": "habits remove",
+      "arguments": [
+        {
+          "name": "habit",
+          "description": "The habit.",
+          "required": true,
+          "autocomplete": true
+        }
+      ],
+      "description": "Use this command to remove one of your habits.",
+      "image": null
+    },
+    {
+      "command": "habits view all",
+      "arguments": [
+        {
+          "name": "time-range",
+          "description": "The time range of the habit.",
+          "required": false,
+          "choices": true
+        }
+      ],
+      "description": "Use this command to view all your habits, optionally you can filter on a specific time-range.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/habitsViewAllCommandExample.png"
+    },
+    {
+      "command": "habits view one",
+      "arguments": [
+        {
+          "name": "habit",
+          "description": "The habit.",
+          "required": true,
+          "autocomplete": true
+        }
+      ],
+      "description": "Use this command to get a detailed view of one of your habits.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/habitsViewOneCommandExample.png"
+    },
+    {
+      "command": "help",
+      "arguments": [
+        {
+          "name": "command",
+          "description": "The command you want information on.",
+          "required": false,
+          "autocomplete": true
+        }
+      ],
+      "description": "Use this command to get an overview of the most common and useful commands. You also get some information of the bot.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/helpCommandExample.png"
+    },
+    {
+      "command": "history",
+      "arguments": [
+        {
+          "name": "my-exercise-name",
+          "description": "Filter on an exercise type.",
+          "required": false,
+          "autocomplete": true
+        }
+      ],
+      "description": "With this command you can see your entire log history or filter it by an exercise.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/historyCommandExample.png"
+    },
+    {
+      "command": "leaderboard",
+      "arguments": [],
+      "description": "With this command you can view the global leaderboard. This leaderboard is based on the users total xp.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/leaderboardCommandExample.png"
+    },
+    {
+      "command": "log",
+      "arguments": [
+        {
+          "name": "exercise-name",
+          "description": "The name of the exercise type.",
+          "required": true,
+          "autocomplete": true
+        },
+        {
+          "name": "amount",
+          "description": "The amount of the exercise.",
+          "required": true
+        }
+      ],
+      "description": "With this command you can create a log of an exercise. In the response you can see multiple personal statistics of the exercise, get congratulations on your reached result, see your reached achievements, view the received amount of experience and finally get some motivation. This is perhaps the most important, used and complex command of the bot.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/logCommandExample.png"
+    },
+    {
+      "command": "motivation",
+      "arguments": [],
+      "description": "With this command you can receive a random motivational quote.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/motivationCommandExample.png"
+    },
+    {
+      "command": "progress",
+      "arguments": [
+        {
+          "name": "exercise-name",
+          "description": "The name of the exercise type.",
+          "required": true,
+          "autocomplete": true
+        },
+        {
+          "name": "view-mode",
+          "description": "The visualisation mode.",
+          "required": false,
+          "choices": true
+        }
+      ],
+      "description": "With this command you can get a progress chart of a single exercise. By using the view mode you can specify if you only want to view your own data or of all participants. To view the progress of an exercise you must have made at least two logs for that specific exercise.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/progressCommandExample.png"
+    },
+    {
+      "command": "sessions create",
+      "arguments": [
+        {
+          "name": "name",
+          "description": "The name of the session.",
+          "required": true
+        }
+      ],
+      "description": "With this command you can create a session. With a session you can group subsequent logs and get an overview of your entire workout. A session will get automatically finished when there is no log created for at least an hour.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/sessionCreateCommandExample.png"
+    },
+    {
+      "command": "sessions stop",
+      "arguments": [
+        {
+          "name": "active-session",
+          "description": "The active session.",
+          "required": true,
+          "autocomplete": true
+        }
+      ],
+      "description": "With this command you can manually stop a session. This will update the session's status to `STOPPED`.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/sessionStopCommandExample.png"
+    },
+    {
+      "command": "sessions view all",
+      "arguments": [],
+      "description": "With this command you can see all of your created sessions.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/sessionsViewAllCommandExample.png"
+    },
+    {
+      "command": "sessions view last",
+      "arguments": [],
+      "description": "With this command you can view more expanded data on your last session.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/sessionViewOneCommandExample.png"
+    },
+    {
+      "command": "sessions view one",
+      "arguments": [
+        {
+          "name": "session",
+          "description": "The session.",
+          "required": true,
+          "autocomplete": true
+        }
+      ],
+      "description": "With this command you can view more expanded data on a specific session.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/sessionViewOneCommandExample.png"
+    },
+    {
+      "command": "stats",
+      "arguments": [
+        {
+          "name": "user",
+          "description": "The user you want to see the stats for.",
+          "required": false
+        }
+      ],
+      "description": "With this command you can see your own stats or optionally see the stats of one of your friends.",
+      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/statsCommandExample.png"
+    }
+  ]
+}

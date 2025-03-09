@@ -1,4 +1,13 @@
 {
   "name": "help",
-  "description": "Get a small instruction about this bot"
+  "description": "Get a small instruction about this bot",
+  "options": [
+    {
+      "name": "command",
+      "description": "The command you want information on",
+      "type": 3,
+      "required": false,
+      "autocomplete": true
+    }
+  ]
 }

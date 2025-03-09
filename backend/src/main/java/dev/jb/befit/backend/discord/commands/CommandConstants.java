@@ -39,6 +39,7 @@ public final class CommandConstants {
     public static final String CommandSessionsStop = "sessions stop";
     public static final String CommandStats = "stats";
 
+    public static final String AutoCompletePropCommand = "command";
     public static final String AutoCompletePropExerciseName = "exercise-name";
     public static final String AutoCompletePropMyExerciseName = "my-exercise-name";
     public static final String AutoCompletePropGoal = "goal";

@@ -77,6 +77,15 @@ This cool bot can help you with improving your fitness. It can track your progre
 </details>
 
 <details>
+  <summary>Renaming an exercise type</summary>
+
+> With this command you can rename an exercise.
+>
+> Format: `/exercises rename {exercise-name} {new-name}`
+
+</details>
+
+<details>
   <summary>Create a new goal for yourself</summary>
   
   > With this command you can set a goal for a specific exercise to work towards. 
@@ -184,8 +193,9 @@ This cool bot can help you with improving your fitness. It can track your progre
   <summary>Help</summary>
   
   > Use this command to get an overview of the most common and useful commands. You also get some information of the bot.
+  > Optionally you can also get more information on a specific command. 
   >
-  > Format: `/help` \
+  > Format: `/help ?{command}` \
   > Example: \
   > ![Help command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/helpCommandExample.png)
 
