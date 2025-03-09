@@ -58,7 +58,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   > With this command you can view extended data on a single exercise. It can show global information and statistics,
   > your personal statistics and also a larger leaderboard.
   >
-  > Format: `/exercises view one {exercise-name}` \
+  > Format: `/exercises view one {exercise}` \
   > Example: \
   > ![One exercise command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/oneExercisesCommandExample.png)
 
@@ -81,7 +81,7 @@ This cool bot can help you with improving your fitness. It can track your progre
 
 > With this command you can rename an exercise.
 >
-> Format: `/exercises rename {exercise-name} {new-name}`
+> Format: `/exercises rename {exercise} {new-name}`
 
 </details>
 
@@ -91,7 +91,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   > With this command you can set a goal for a specific exercise to work towards. 
   > See [goal-status](#goal-status) for all possible statuses.
   >
-  > Format: `/goals add {exercise-name} {amount}` \
+  > Format: `/goals add {exercise} {amount}` \
   > Example: \
   > ![Create goal command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/goalAddCommandExample.png)
 
@@ -217,7 +217,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   
   > With this command you can see your entire log history or filter it by an exercise.
   >
-  > Format: `/history {exercise-name}` \
+  > Format: `/history {exercise}` \
   > Example: \
   > ![History command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/historyCommandExample.png)
 
@@ -231,7 +231,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   > amount of experience and finally get some motivation.
   > This is perhaps the most important, used and complex command of the bot.
   >
-  > Format: `/log {exercise-name} {amount}` \
+  > Format: `/log {exercise} {amount}` \
   > Example: \
   > ![Log command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/logCommandExample.png)
 
@@ -255,7 +255,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   > only want to view your own data or of all participants. To view the progress of an exercise you must have made at 
   > least two logs for that specific exercise.
   >
-  > Format: `/progress {exercise-name} ?{view-mode}` \
+  > Format: `/progress {exercise} ?{view-mode}` \
   > Example: \
   > ![Progress command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/progressCommandExample.png)
 

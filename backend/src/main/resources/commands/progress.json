@@ -3,7 +3,7 @@
   "description": "View your progress on an exercise",
   "options": [
     {
-      "name": "exercise-name",
+      "name": "exercise",
       "description": "The name of the exercise type",
       "type": 3,
       "required": true,
