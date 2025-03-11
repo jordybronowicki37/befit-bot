@@ -40,7 +40,7 @@ jobs:
         id: description
         run: |
           echo "DESC<<EOF" >> $GITHUB_ENV
-          cat backend/description.md >> $GITHUB_ENV
+          cat README.md >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
