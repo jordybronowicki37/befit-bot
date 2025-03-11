@@ -1,0 +1,1 @@
+This cool bot can help you with improving your fitness. It can track your progress, motivate you, manage your goals and compare your progress to others. See https://github.com/jordybronowicki37/befit-bot for install and setup instructions.
