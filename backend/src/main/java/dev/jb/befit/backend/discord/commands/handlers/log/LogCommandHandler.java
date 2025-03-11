@@ -140,6 +140,12 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
         }
 
         var undoButton = ActionRow.of(Button.secondary(String.format("%s$%d", CommandConstants.CommandLogUndo, exerciseLog.getId()), "Undo log"));
-        return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed.build()).addFile("level-xp-bar.png", inputStream).addComponent(undoButton).build()).then();
+        return event
+                .editReply(InteractionReplyEditSpec.builder().addEmbed(embed.build()).addFile("level-xp-bar.png", inputStream).addComponent(undoButton).build())
+                .flatMap(m -> {
+                    logService.scheduleUndoExpiry(user, exerciseLog.getId(), m.getChannelId(), m.getId());
+                    return Mono.empty();
+                })
+                .then();
     }
 }

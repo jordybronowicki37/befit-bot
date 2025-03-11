@@ -1,5 +1,7 @@
 package dev.jb.befit.backend.data.models;
 
+import dev.jb.befit.backend.data.converters.SnowflakeConverter;
+import discord4j.common.util.Snowflake;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,6 +43,14 @@ public class ExerciseLog {
     @Setter
     @ManyToOne
     private ExerciseSession session;
+
+    @Setter
+    @Convert(converter = SnowflakeConverter.class)
+    private Snowflake channelId;
+
+    @Setter
+    @Convert(converter = SnowflakeConverter.class)
+    private Snowflake messageId;
 
     @OneToMany(mappedBy = "log")
     private List<UserAchievement> achievements = new ArrayList<>();

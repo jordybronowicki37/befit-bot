@@ -23,6 +23,7 @@ public interface ExerciseLogRepository extends JpaRepository<ExerciseLog, Long> 
     Optional<ExerciseLog> findByUserAndId(@NonNull User user, @NonNull Long id);
     Page<ExerciseLog> findAllByUserOrderByCreatedDesc(@NonNull User user, @NonNull Pageable pageable);
     Page<ExerciseLog> findAllByUserAndExerciseTypeIdOrderByCreatedDesc(@NonNull User user, @NonNull Long exerciseTypeId, @NonNull Pageable pageable);
+    List<ExerciseLog> findAllByCreatedBeforeAndChannelIdNotNullAndMessageIdNotNull(@NonNull LocalDateTime dateBefore);
     List<ExerciseLog> findAllByUserAndCreatedAfter(@NonNull User user, @NonNull LocalDateTime from);
     List<ExerciseLog> findAllByExerciseTypeId(@NonNull Long exerciseTypeId);
     List<ExerciseLog> findAllByExerciseTypeName(@NonNull String exerciseTypeName);

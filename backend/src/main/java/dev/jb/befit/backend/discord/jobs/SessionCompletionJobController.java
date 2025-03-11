@@ -13,8 +13,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.util.concurrent.TimeUnit;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -23,7 +21,7 @@ public class SessionCompletionJobController {
     private final GatewayDiscordClient client;
 
     @Transactional
-    @Scheduled(fixedRate = 10, timeUnit = TimeUnit.SECONDS)
+    @Scheduled(cron = "0 * * * * *")
     public void finalizeSessions() {
         var mono = Mono.empty();
         var sessions = exerciseSessionService.getAllActiveAndOutdated();

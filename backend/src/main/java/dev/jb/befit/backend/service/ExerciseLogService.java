@@ -7,6 +7,7 @@ import dev.jb.befit.backend.data.models.*;
 import dev.jb.befit.backend.service.dto.LogCreationStatus;
 import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import dev.jb.befit.backend.service.exceptions.LogNotFoundException;
+import discord4j.common.util.Snowflake;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -59,6 +60,10 @@ public class ExerciseLogService {
         return exerciseLogRepository.findAllByUserAndExerciseTypeIdOrderByCreatedDesc(user, exerciseTypeId, pageable);
     }
 
+    public List<ExerciseLog> getAllExpiredUndoSchedules() {
+        return exerciseLogRepository.findAllByCreatedBeforeAndChannelIdNotNullAndMessageIdNotNull(LocalDateTime.now().minusHours(1));
+    }
+
     public List<ExerciseLog> getAllByExerciseName(String exerciseName) {
         if (exerciseName.startsWith("#")) {
             var idString = exerciseName.substring(1);
@@ -75,6 +80,20 @@ public class ExerciseLogService {
             return exerciseLogRepository.findAllByUserAndExerciseTypeId(user, id);
         }
         return exerciseLogRepository.findAllByUserAndExerciseTypeName(user, exerciseName);
+    }
+
+    public ExerciseLog scheduleUndoExpiry(User user, Long id, Snowflake channelId, Snowflake messageId) {
+        var exerciseLog = getByUserAndId(user, id).orElseThrow(() -> new LogNotFoundException(id));
+        exerciseLog.setChannelId(channelId);
+        exerciseLog.setMessageId(messageId);
+        return exerciseLogRepository.save(exerciseLog);
+    }
+
+    public ExerciseLog removeUndoExpiry(User user, Long id) {
+        var exerciseLog = getByUserAndId(user, id).orElseThrow(() -> new LogNotFoundException(id));
+        exerciseLog.setChannelId(null);
+        exerciseLog.setMessageId(null);
+        return exerciseLogRepository.save(exerciseLog);
     }
 
     public LogCreationStatus create(User user, String exerciseName, Double amount) {
