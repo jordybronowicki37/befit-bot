@@ -38,10 +38,7 @@ jobs:
 
       - name: Read Description
         id: description
-        run: |
-          echo "DESC<<EOF" >> $GITHUB_ENV
-          cat backend/description.txt >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+        run: echo "DESC=$(cat backend/description.txt | tr '\n' ' ')" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
