@@ -20,6 +20,7 @@ public interface ExerciseSessionRepository extends JpaRepository<ExerciseSession
     Page<ExerciseSession> findAllByUserAndStatusOrderByCreatedDesc(@NonNull User user, @NonNull ExerciseSessionStatus status, @NonNull Pageable pageable);
     Page<ExerciseSession> findAllByUserAndNameIgnoreCaseContainingOrderByCreatedDesc(@NonNull User user, @NonNull String name, @NonNull Pageable pageable);
     List<ExerciseSession> findAllByStatusAndEndedBeforeOrderByCreatedAsc(@NonNull ExerciseSessionStatus status, @NonNull LocalDateTime date);
+    List<ExerciseSession> findAllByDiscordMessageIdNotNullAndEndedBeforeOrderByCreatedAsc(@NonNull LocalDateTime date);
     Optional<ExerciseSession> findByUserAndId(@NonNull User user, @NonNull Long id);
     Optional<ExerciseSession> findTopByUserOrderByIdDesc(@NonNull User user);
     Optional<ExerciseSession> findTopByUserAndStatusOrderByIdDesc(@NonNull User user, @NonNull ExerciseSessionStatus status);

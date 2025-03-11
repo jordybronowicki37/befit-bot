@@ -84,15 +84,15 @@ public class ExerciseLogService {
 
     public ExerciseLog scheduleUndoExpiry(User user, Long id, Snowflake channelId, Snowflake messageId) {
         var exerciseLog = getByUserAndId(user, id).orElseThrow(() -> new LogNotFoundException(id));
-        exerciseLog.setChannelId(channelId);
-        exerciseLog.setMessageId(messageId);
+        exerciseLog.setDiscordChannelId(channelId);
+        exerciseLog.setDiscordMessageId(messageId);
         return exerciseLogRepository.save(exerciseLog);
     }
 
     public ExerciseLog removeUndoExpiry(User user, Long id) {
         var exerciseLog = getByUserAndId(user, id).orElseThrow(() -> new LogNotFoundException(id));
-        exerciseLog.setChannelId(null);
-        exerciseLog.setMessageId(null);
+        exerciseLog.setDiscordChannelId(null);
+        exerciseLog.setDiscordMessageId(null);
         return exerciseLogRepository.save(exerciseLog);
     }
 

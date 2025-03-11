@@ -24,7 +24,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -51,10 +50,14 @@ public class SessionRateButtonHandler extends DiscordButtonInteractionEventListe
 
         var replySpec = InteractionReplyEditSpec.builder()
                 .contentOrNull(String.format("# :notepad_spiral: Rate your session\n%s", getRatingMessage(rating)))
-                .components(List.of(getRatingRow(session)))
+                .addComponent(getRatingRow(session))
+                .addComponent(getExtendSessionRow(session))
                 .addEmbed(getSessionRecap(session));
 
-        return event.editReply(replySpec.build()).then();
+        return event
+                .editReply(replySpec.build())
+                .flatMap(m -> Mono.just(exerciseSessionService.updateMessage(user, sessionId, m.getId())))
+                .then();
     }
 
     public static EmbedCreateSpec getSessionRecap(ExerciseSession session) {
@@ -111,6 +114,12 @@ public class SessionRateButtonHandler extends DiscordButtonInteractionEventListe
         }
 
         return ActionRow.of(components);
+    }
+
+    public static ActionRow getExtendSessionRow(ExerciseSession session) {
+        return ActionRow.of(
+                Button.secondary(String.format("%s$%d", CommandConstants.CommandSessionsExtend, session.getId()), "Not done yet? Extend session")
+        );
     }
 
     public static String getRatingMessage(Integer rating) {

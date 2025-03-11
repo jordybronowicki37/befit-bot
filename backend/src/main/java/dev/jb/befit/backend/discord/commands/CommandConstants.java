@@ -33,6 +33,7 @@ public final class CommandConstants {
     public static final String CommandProgress = "progress";
     public static final String CommandSessionsCreate = "sessions create";
     public static final String CommandSessionsRate = "sessions rate";
+    public static final String CommandSessionsExtend = "sessions extend";
     public static final String CommandSessionsViewAll = "sessions view all";
     public static final String CommandSessionsViewOne = "sessions view one";
     public static final String CommandSessionsViewLast = "sessions view last";

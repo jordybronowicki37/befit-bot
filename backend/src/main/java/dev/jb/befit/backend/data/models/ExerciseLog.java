@@ -46,11 +46,11 @@ public class ExerciseLog {
 
     @Setter
     @Convert(converter = SnowflakeConverter.class)
-    private Snowflake channelId;
+    private Snowflake discordChannelId;
 
     @Setter
     @Convert(converter = SnowflakeConverter.class)
-    private Snowflake messageId;
+    private Snowflake discordMessageId;
 
     @OneToMany(mappedBy = "log")
     private List<UserAchievement> achievements = new ArrayList<>();

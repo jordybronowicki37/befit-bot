@@ -4,6 +4,7 @@ import dev.jb.befit.backend.data.models.ExerciseSession;
 import dev.jb.befit.backend.data.models.ExerciseSessionStatus;
 import dev.jb.befit.backend.discord.commands.handlers.sessions.SessionRateButtonHandler;
 import dev.jb.befit.backend.service.ExerciseSessionService;
+import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.spec.MessageCreateSpec;
 import jakarta.transaction.Transactional;
@@ -48,8 +49,12 @@ public class SessionCompletionJobController {
             var message = MessageCreateSpec.builder()
                     .content("# :notepad_spiral: Rate your session\nHow was your session? Are you satisfied with the result? Give your session a rating.")
                     .addComponent(SessionRateButtonHandler.getRatingRow(session))
+                    .addComponent(SessionRateButtonHandler.getExtendSessionRow(session))
                     .addEmbed(SessionRateButtonHandler.getSessionRecap(session));
-            return channel.getRestChannel().createMessage(message.build().asRequest());
+            return channel
+                    .getRestChannel()
+                    .createMessage(message.build().asRequest())
+                    .flatMap(m -> Mono.just(exerciseSessionService.updateMessage(session.getUser(), session.getId(), Snowflake.of(m.id()))));
         }));
     }
 }

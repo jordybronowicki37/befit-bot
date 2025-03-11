@@ -32,6 +32,10 @@ public class ExerciseSessionService {
         return exerciseSessionRepository.findAllByStatusAndEndedBeforeOrderByCreatedAsc(ExerciseSessionStatus.ACTIVE, LocalDateTime.now());
     }
 
+    public List<ExerciseSession> getAllOutdatedExtends() {
+        return exerciseSessionRepository.findAllByDiscordMessageIdNotNullAndEndedBeforeOrderByCreatedAsc(LocalDateTime.now().plusHours(1));
+    }
+
     public Page<ExerciseSession> getAllActiveByUser(User user, Pageable pageable) {
         return exerciseSessionRepository.findAllByUserAndStatusOrderByCreatedDesc(user, ExerciseSessionStatus.ACTIVE, pageable);
     }
@@ -70,10 +74,8 @@ public class ExerciseSessionService {
 
     public ExerciseSession extendAutomaticFinalization(User user, Long id) {
         var session = getByUserAndId(user, id).orElseThrow(() -> new SessionNotFoundException(id));
-        if (!session.getStatus().equals(ExerciseSessionStatus.ACTIVE)) return session;
-
-        session.setEnded(LocalDateTime.now().plusSeconds(ServiceConstants.SessionTimeout.getEpochSecond()));
-
+        session.setStatus(ExerciseSessionStatus.ACTIVE);
+        session.setEnded(LocalDateTime.now());
         return exerciseSessionRepository.save(session);
     }
 
@@ -87,6 +89,12 @@ public class ExerciseSessionService {
     public ExerciseSession updateChannel(User user, Long id, Snowflake channelId) {
         var session = getByUserAndId(user, id).orElseThrow(() -> new SessionNotFoundException(id));
         session.setDiscordChannelId(channelId);
+        return exerciseSessionRepository.save(session);
+    }
+
+    public ExerciseSession updateMessage(User user, Long id, Snowflake messageId) {
+        var session = getByUserAndId(user, id).orElseThrow(() -> new SessionNotFoundException(id));
+        session.setDiscordMessageId(messageId);
         return exerciseSessionRepository.save(session);
     }
 

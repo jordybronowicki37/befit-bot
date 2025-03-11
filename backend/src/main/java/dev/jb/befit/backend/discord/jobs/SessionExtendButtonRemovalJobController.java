@@ -1,6 +1,6 @@
 package dev.jb.befit.backend.discord.jobs;
 
-import dev.jb.befit.backend.service.ExerciseLogService;
+import dev.jb.befit.backend.service.ExerciseSessionService;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.spec.MessageEditSpec;
 import lombok.RequiredArgsConstructor;
@@ -9,23 +9,21 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
-import java.util.List;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class LogUndoButtonRemovalJobController {
+public class SessionExtendButtonRemovalJobController {
     private final GatewayDiscordClient client;
-    private final ExerciseLogService exerciseLogService;
+    private final ExerciseSessionService exerciseSessionService;
 
     @Scheduled(cron = "0 * * * * *")
     public void checkLogsForUndoButtonRemoval() {
-        var logs = exerciseLogService.getAllExpiredUndoSchedules();
-        Flux.fromIterable(logs)
-                .flatMap(l -> client.getMessageById(l.getDiscordChannelId(), l.getDiscordMessageId())
+        var sessions = exerciseSessionService.getAllOutdatedExtends();
+        Flux.fromIterable(sessions)
+                .flatMap(s -> client.getMessageById(s.getDiscordChannelId(), s.getDiscordMessageId())
                         .flatMap(m -> {
-                            exerciseLogService.removeUndoExpiry(l.getUser(), l.getId());
-                            return m.edit(MessageEditSpec.builder().components(List.of()).build());
+                            exerciseSessionService.updateMessage(s.getUser(), s.getId(), null);
+                            return m.edit(MessageEditSpec.builder().addComponent(m.getComponents().get(0)).build());
                         })
                 )
                 .subscribe();

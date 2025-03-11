@@ -49,5 +49,9 @@ public class ExerciseSession {
     private Snowflake discordChannelId;
 
     @Setter
+    @Convert(converter = SnowflakeConverter.class)
+    private Snowflake discordMessageId;
+
+    @Setter
     private Integer rating = null;
 }
