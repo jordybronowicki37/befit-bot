@@ -17,28 +17,7 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=false"
     env_file:
-      - .env
-
-  postgres-backup:
-    image: kartoza/pg-backup:16-3.4
-    container_name: postgres-backup
-    restart: unless-stopped
-    depends_on:
-      - postgres
-    environment:
-      POSTGRES_USER: ${POSTGRES_ADMIN_USERNAME}
-      POSTGRES_PASS: ${POSTGRES_ADMIN_PASSWORD}
-      POSTGRES_PORT: 5432
-      POSTGRES_HOST: postgres
-      DBLIST: befit
-      REMOVE_BEFORE: 90
-      CRON_SCHEDULE: "0 0 * * *"
-    volumes:
-      - postgres-backups:/backups
-    labels:
-      - "com.centurylinklabs.watchtower.enable=false"
-    env_file:
-      - .env
+      - .env.local
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -57,24 +36,29 @@ services:
     volumes:
       - pgadmin-data:/var/lib/pgadmin
     env_file:
-      - .env
+      - .env.local
 
   befit:
-    image: ghcr.io/jordybronowicki37/befit:latest
     container_name: befit
+    pull_policy: build
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     restart: unless-stopped
-    pull_policy: always
     depends_on:
       - postgres
     environment:
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: dev,dummy-data  # Add dummy-data profile to automatically clear en fill the database on startup
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/befit
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_ADMIN_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_ADMIN_PASSWORD}
       DISCORD_TOKEN: ${BEFIT_DISCORD_TOKEN}
       DISCORD_GUILDS_MANAGEMENT: ${BEFIT_DISCORD_GUILDS_MANAGEMENT}
+      DISCORD_DUMMY_USER_ID: ${BEFIT_DISCORD_DUMMY_USER_ID}
+      BEFIT_TIMEFORMAT: ${BEFIT_TIMEFORMAT}
+      BEFIT_DATEFORMAT: ${BEFIT_DATEFORMAT}
     env_file:
-      - .env
+      - .env.local
 
 volumes:
   postgres-data:
