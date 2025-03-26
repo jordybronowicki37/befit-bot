@@ -3,11 +3,11 @@
 LOG_PREFIX="\n-------------------------\n>"
 
 # Update system packages.
-echo -e "$LOG_PREFIX Updating system packages"
+echo -e "$LOG_PREFIX Updating system packages $LOG_PREFIX"
 sudo apt-get -y update
 
 # Install some necessary packages.
-echo -e "$LOG_PREFIX Install some necessary packages"
+echo -e "$LOG_PREFIX Install some necessary packages $LOG_PREFIX"
 sudo apt-get -y install \
         ca-certificates \
         curl \
@@ -15,16 +15,16 @@ sudo apt-get -y install \
         lsb-release
 
 # Add Docker's official GPG key.
-echo -e "$LOG_PREFIX Adding the Docker's official GPG key"
+echo -e "$LOG_PREFIX Adding the Docker's official GPG key $LOG_PREFIX"
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor --yes -o /usr/share/keyrings/docker-archive-keyring.gpg
 
 # Set up the stable repository.
-echo -e "$LOG_PREFIX Setting up the stable Docker repository"
+echo -e "$LOG_PREFIX Setting up the stable Docker repository $LOG_PREFIX"
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
     $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 # Installing Docker.
-echo -e "$LOG_PREFIX Installing Docker"
+echo -e "$LOG_PREFIX Installing Docker $LOG_PREFIX"
 sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 # Setting up env file.
@@ -45,7 +45,7 @@ nano -m $ENV_FILE_PATH
 
 # Check for non filled in params
 if grep -q "[=>]$" "$ENV_FILE_PATH"; then
-    echo -e "$LOG_PREFIX Error: Some parameters are not filled in. Please complete all parameters."
+    echo -e "$LOG_PREFIX Error: Some parameters are not filled in. Please complete all parameters. $LOG_PREFIX"
     exit 1
 fi
 
@@ -55,20 +55,20 @@ DATABASE_PASSWORD=$(grep "^SPRING_DATASOURCE_PASSWORD=" "$ENV_FILE_PATH" | cut -
 
 # Error handling if values are not found
 if [ -z "$DATABASE_USERNAME" ]; then
-    echo -e "$LOG_PREFIX Error: SPRING_DATASOURCE_USERNAME not found in $ENV_FILE_PATH"
+    echo -e "$LOG_PREFIX Error: SPRING_DATASOURCE_USERNAME not found in $ENV_FILE_PATH  $LOG_PREFIX"
     exit 1
 fi
 if [ -z "$DATABASE_PASSWORD" ]; then
-    echo -e "$LOG_PREFIX Error: SPRING_DATASOURCE_PASSWORD not found in $ENV_FILE_PATH"
+    echo -e "$LOG_PREFIX Error: SPRING_DATASOURCE_PASSWORD not found in $ENV_FILE_PATH  $LOG_PREFIX"
     exit 1
 fi
 
 # Create a custom Docker network.
-echo -e "$LOG_PREFIX Creating a custom Docker network"
+echo -e "$LOG_PREFIX Creating a custom Docker network $LOG_PREFIX"
 sudo docker network create befit
 
 # Create a container for the database.
-echo -e "$LOG_PREFIX Creating a container for the database"
+echo -e "$LOG_PREFIX Creating a container for the database $LOG_PREFIX"
 sudo docker run -d --name postgres \
         --network befit \
         --restart on-failure \
@@ -80,13 +80,13 @@ sudo docker run -d --name postgres \
         postgres:latest
 
 # Pull the befit Docker image.
-echo -e "$LOG_PREFIX Pulling the befit image"
+echo -e "$LOG_PREFIX Pulling the befit image $LOG_PREFIX"
 sudo docker pull ghcr.io/jordybronowicki37/befit:latest
 sudo docker tag ghcr.io/jordybronowicki37/befit:latest befit
 sudo docker rmi ghcr.io/jordybronowicki37/befit:latest
 
 # Create a container for the befit image.
-echo -e "$LOG_PREFIX Creating a container for the befit image"
+echo -e "$LOG_PREFIX Creating a container for the befit image $LOG_PREFIX"
 sudo docker run -d --name befit \
         --network befit \
         --restart on-failure \

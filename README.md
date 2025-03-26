@@ -459,8 +459,8 @@ There are 20 achievements for you to complete. Each increasing in difficulty. Ar
 </details>
 
 ## Deployment
-### Docker
-Follow the instructions as mentioned in the [how-to](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/how-to-run-on-docker.md)
+Follow the instructions as mentioned in the [how-to](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/how-to-run-on-docker.md).
 
-### RaspberryPi
-Follow the instructions as mentioned in the [how-to](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/how-to-run-on-raspberrypi-using-docker.md)
+## Domain
+See the domain model to view all the entities and their relationships.
+![Domain model](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/domain.drawio.svg)

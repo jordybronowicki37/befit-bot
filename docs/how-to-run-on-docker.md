@@ -1,32 +1,32 @@
 # How to build and run the Befit-bot on Docker
 
-1. Add a file for the environment variables. On the path `befit/backend` create a file with the name `.env.local`, inside of the file add the variables seen below and specify the values.
+## Run production using Docker compose
+1. Copy the file `example.env` and rename it as `.env`. Inside the file you must fill in all values.
+2. Build the project
    ```shell
-   SPRING_PROFILES_ACTIVE=prod
-   SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/befit
-   SPRING_DATASOURCE_USERNAME=<DATABASE-USERNAME>
-   SPRING_DATASOURCE_PASSWORD=<DATABASE-PASSWORD>
-   DISCORD_TOKEN=<TOKEN>
-   DISCORD_GUILDS_MANAGEMENT=<GUILD-ID>
+   docker-compose up -d -f docker-compose.yml
    ```
+
+## Run production using separately deployed containers
+1. Copy the file `example.env` and rename it as `.env`. Inside the file you must fill in all values.
 2. Get an image by either:
    1. Building the image yourself
       ```shell
-      sudo docker build -t befit .
+      docker build -t befit ./backend
       ```
    2. Pulling the image from GitHub
       ```shell
-      sudo docker pull ghcr.io/jordybronowicki37/befit:latest
-      sudo docker tag ghcr.io/jordybronowicki37/befit:latest befit
-      sudo docker rmi ghcr.io/jordybronowicki37/befit:latest
+      docker pull ghcr.io/jordybronowicki37/befit:latest
+      docker tag ghcr.io/jordybronowicki37/befit:latest befit
+      docker rmi ghcr.io/jordybronowicki37/befit:latest
       ```
 3. Create a custom docker network
    ```shell
-   sudo docker network create befit
+   docker network create befit
    ```
 4. Create a container for the database.
    ```shell
-   sudo docker run -d --name postgres \
+   docker run -d --name postgres \
        --network befit \
        --restart on-failure \
        -p 5432:5432 \
@@ -38,9 +38,16 @@
    ```
 5. Create a container for the `befit` image we just created.
    ```shell
-   sudo docker run -d --name befit \
+   docker run -d --name befit \
        --network befit \
        --restart on-failure \
-       --env-file .env.local \
+       --env-file .env \
        befit
+   ```
+
+## Run development using Docker compose
+1. Copy the file `example.env.local` and rename it as `.env.local`. Inside the file you must fill in all values.
+2. Build the project
+   ```shell
+   docker-compose up -f docker-compose-local.yml
    ```
