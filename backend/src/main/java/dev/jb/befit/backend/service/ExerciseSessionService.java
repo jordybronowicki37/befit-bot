@@ -33,7 +33,7 @@ public class ExerciseSessionService {
     }
 
     public List<ExerciseSession> getAllOutdatedExtends() {
-        return exerciseSessionRepository.findAllByDiscordMessageIdNotNullAndEndedBeforeOrderByCreatedAsc(LocalDateTime.now().plusHours(1));
+        return exerciseSessionRepository.findAllByDiscordMessageIdNotNullAndEndedBeforeOrderByCreatedAsc(LocalDateTime.now().minusSeconds(ServiceConstants.SessionExtensionExpireTimeout.getEpochSecond()));
     }
 
     public Page<ExerciseSession> getAllActiveByUser(User user, Pageable pageable) {
@@ -75,7 +75,8 @@ public class ExerciseSessionService {
     public ExerciseSession extendAutomaticFinalization(User user, Long id) {
         var session = getByUserAndId(user, id).orElseThrow(() -> new SessionNotFoundException(id));
         session.setStatus(ExerciseSessionStatus.ACTIVE);
-        session.setEnded(LocalDateTime.now().plusHours(1));
+        session.setEnded(LocalDateTime.now().plusSeconds(ServiceConstants.SessionTimeout.getEpochSecond()));
+        session.setDiscordMessageId(null);
         return exerciseSessionRepository.save(session);
     }
 

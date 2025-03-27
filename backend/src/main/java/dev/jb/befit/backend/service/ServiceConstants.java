@@ -22,4 +22,6 @@ public final class ServiceConstants {
     public static final long EarnedXpAchievementCompletedImpossible = 1350;
 
     public static final Instant SessionTimeout = Instant.ofEpochSecond(60 * 60); // 1 hour
+    public static final Instant SessionExtensionExpireTimeout = Instant.ofEpochSecond(60 * 60); // 1 hour
+    public static final Instant LogUndoExpireTimeout = Instant.ofEpochSecond(60 * 60); // 1 hour
 }

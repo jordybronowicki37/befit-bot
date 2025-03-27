@@ -8,6 +8,7 @@ import dev.jb.befit.backend.discord.commands.exceptions.InvalidValueException;
 import dev.jb.befit.backend.discord.listeners.DiscordButtonInteractionEventListener;
 import dev.jb.befit.backend.discord.registration.EmojiRegistrarService;
 import dev.jb.befit.backend.service.ExerciseSessionService;
+import dev.jb.befit.backend.service.ServiceConstants;
 import dev.jb.befit.backend.service.UserService;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.object.component.ActionComponent;
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -51,8 +53,11 @@ public class SessionRateButtonHandler extends DiscordButtonInteractionEventListe
         var replySpec = InteractionReplyEditSpec.builder()
                 .contentOrNull(String.format("# :notepad_spiral: Rate your session\n%s", getRatingMessage(rating)))
                 .addComponent(getRatingRow(session))
-                .addComponent(getExtendSessionRow(session))
                 .addEmbed(getSessionRecap(session));
+
+        if (session.getEnded().isAfter(LocalDateTime.now().minusSeconds(ServiceConstants.SessionExtensionExpireTimeout.getEpochSecond()))) {
+            replySpec.addComponent(getExtendSessionRow(session));
+        }
 
         return event
                 .editReply(replySpec.build())

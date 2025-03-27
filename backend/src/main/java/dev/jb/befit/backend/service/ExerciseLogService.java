@@ -61,7 +61,7 @@ public class ExerciseLogService {
     }
 
     public List<ExerciseLog> getAllExpiredUndoSchedules() {
-        return exerciseLogRepository.findAllByCreatedBeforeAndDiscordChannelIdNotNullAndDiscordMessageIdNotNull(LocalDateTime.now().minusHours(1));
+        return exerciseLogRepository.findAllByCreatedBeforeAndDiscordChannelIdNotNullAndDiscordMessageIdNotNull(LocalDateTime.now().minusSeconds(ServiceConstants.LogUndoExpireTimeout.getEpochSecond()));
     }
 
     public List<ExerciseLog> getAllByExerciseName(String exerciseName) {
