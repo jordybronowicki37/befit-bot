@@ -34,6 +34,7 @@ public abstract class DiscordChatInputInteractionEventListener implements Discor
 
     public Mono<Void> replyWithErrorMessage(Throwable error, ChatInputInteractionEvent initialEvent) {
         if (error instanceof MyException) {
+            log.error("An handled error has occurred", error);
             return editReplyToError(initialEvent, "Something went wrong", error.getMessage());
         }
         log.error("An unhandled error has occurred", error);

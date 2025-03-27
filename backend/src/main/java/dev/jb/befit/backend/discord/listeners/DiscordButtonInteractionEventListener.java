@@ -32,6 +32,7 @@ public abstract class DiscordButtonInteractionEventListener implements DiscordEv
 
     public Mono<Void> replyWithErrorMessage(Throwable error, ButtonInteractionEvent initialEvent) {
         if (error instanceof MyException) {
+            log.error("An handled error has occurred", error);
             return editReplyToError(initialEvent, "Something went wrong", error.getMessage());
         }
         log.error("An unhandled error has occurred", error);
