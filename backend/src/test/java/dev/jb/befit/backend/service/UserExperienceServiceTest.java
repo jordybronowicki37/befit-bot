@@ -13,10 +13,10 @@ class UserExperienceServiceTest {
     static Stream<Arguments> levelTestData() {
         return Stream.of(
                 Arguments.of(90, 1, 10, 90, 0, 100),
-                Arguments.of(130, 2, 100, 30, 100, 230),
-                Arguments.of(240, 3, 290, 10, 230, 530),
-                Arguments.of(600, 4, 620, 70, 530, 1220),
-                Arguments.of(2000, 5, 810, 780, 1220, 2810)
+                Arguments.of(130, 2, 90, 30, 100, 220),
+                Arguments.of(240, 3, 230, 20, 220, 470),
+                Arguments.of(600, 4, 390, 130, 470, 990),
+                Arguments.of(2000, 5, 80, 1010, 990, 2080)
         );
     }
 

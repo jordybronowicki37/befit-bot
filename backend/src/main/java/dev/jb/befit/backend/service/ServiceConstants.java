@@ -7,7 +7,7 @@ import java.time.Instant;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ServiceConstants {
-    public static final double XpGrowthRate = 1.3;
+    public static final double XpGrowthRate = 1.1;
     public static final long XpStartingLimit = 100;
 
     public static final long EarnedXpLogCreated = 10;
