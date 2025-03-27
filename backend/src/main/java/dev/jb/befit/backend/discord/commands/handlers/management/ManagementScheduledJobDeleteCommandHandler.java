@@ -24,7 +24,7 @@ public class ManagementScheduledJobDeleteCommandHandler extends DiscordChatInput
 
     @Override
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        var subCommand = CommandHandlerHelper.getOption(event, getCommandNameFilter());
+        var subCommand = CommandHandlerHelper.getSubCommand(event, getCommandNameFilter());
         var jobId = CommandHandlerHelper.getOptionValueAsLong(subCommand, CommandConstants.AutoCompletePropScheduledJob);
 
         scheduledJobService.delete(jobId);
