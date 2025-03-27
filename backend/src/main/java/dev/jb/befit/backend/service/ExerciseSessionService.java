@@ -75,7 +75,7 @@ public class ExerciseSessionService {
     public ExerciseSession extendAutomaticFinalization(User user, Long id) {
         var session = getByUserAndId(user, id).orElseThrow(() -> new SessionNotFoundException(id));
         session.setStatus(ExerciseSessionStatus.ACTIVE);
-        session.setEnded(LocalDateTime.now());
+        session.setEnded(LocalDateTime.now().plusHours(1));
         return exerciseSessionRepository.save(session);
     }
 
