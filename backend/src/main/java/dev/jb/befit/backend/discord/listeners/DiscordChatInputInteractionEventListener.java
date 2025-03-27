@@ -3,7 +3,6 @@ package dev.jb.befit.backend.discord.listeners;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.service.exceptions.MyException;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import discord4j.core.event.domain.interaction.DeferrableInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionReplyEditSpec;
 import discord4j.rest.util.Color;
@@ -37,13 +36,11 @@ public abstract class DiscordChatInputInteractionEventListener implements Discor
         if (error instanceof MyException) {
             return editReplyToError(initialEvent, "Something went wrong", error.getMessage());
         }
-        else {
-            log.error("An unhandled error has occurred", error);
-            return editReplyToError(initialEvent, "Something went wrong", "Please try again later.");
-        }
+        log.error("An unhandled error has occurred", error);
+        return editReplyToError(initialEvent, "Something went wrong", "Please try again later.");
     }
 
-    public static Mono<Void> editReplyToError(DeferrableInteractionEvent event, String title, String description) {
+    public static Mono<Void> editReplyToError(ChatInputInteractionEvent event, String title, String description) {
         var embed = EmbedCreateSpec.builder()
                 .title(title)
                 .description(description)
