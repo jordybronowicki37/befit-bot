@@ -24,7 +24,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   >
   > Format: `/achievements` \
   > Example: \
-  > ![All exercises command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/achievementsCommandExample.png)
+  > ![All exercises command response example](./docs/examples/achievementsCommandExample.png)
   
 </details>
 
@@ -36,7 +36,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   >
   > Format: `/exercises view all` \
   > Example: \
-  > ![All exercises command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/allExercisesCommandExample.png)
+  > ![All exercises command response example](./docs/examples/allExercisesCommandExample.png)
   
 </details>
 
@@ -48,7 +48,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   >
   > Format: `/exercises view my` \
   > Example: \
-  > ![My exercises command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/myExercisesCommandExample.png)
+  > ![My exercises command response example](./docs/examples/myExercisesCommandExample.png)
   
 </details>
 
@@ -60,7 +60,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   >
   > Format: `/exercises view one {exercise}` \
   > Example: \
-  > ![One exercise command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/oneExercisesCommandExample.png)
+  > ![One exercise command response example](./docs/examples/oneExercisesCommandExample.png)
 
 </details>
 
@@ -72,7 +72,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   >
   > Format: `/exercises create {name} {measurement-type} {goal-direction}` \
   > Example: \
-  > ![Create exercise command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/createExerciseCommandExample.png)
+  > ![Create exercise command response example](./docs/examples/createExerciseCommandExample.png)
 
 </details>
 
@@ -93,7 +93,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   >
   > Format: `/goals add {exercise} {amount}` \
   > Example: \
-  > ![Create goal command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/goalAddCommandExample.png)
+  > ![Create goal command response example](./docs/examples/goalAddCommandExample.png)
 
 </details>
 
@@ -105,7 +105,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   >
   > Format: `/goals cancel {goal}` \
   > Example: \
-  > ![Goal cancel command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/goalCancelCommandExample.png)
+  > ![Goal cancel command response example](./docs/examples/goalCancelCommandExample.png)
 
 </details>
 
@@ -117,7 +117,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   >
   > Format: `/goals view` \
   > Example: \
-  > ![View goals command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/goalsViewCommandExample.png)
+  > ![View goals command response example](./docs/examples/goalsViewCommandExample.png)
 
 </details>
 
@@ -128,7 +128,7 @@ This cool bot can help you with improving your fitness. It can track your progre
 >
 > Format: `/habits add {name} {time-range}` \
 > Example: \
-> ![Habit add command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/habitsAddCommandExample.png)
+> ![Habit add command response example](./docs/examples/habitsAddCommandExample.png)
 
 </details>
 
@@ -140,7 +140,7 @@ This cool bot can help you with improving your fitness. It can track your progre
 >
 > Note: this is not really a command, instead it is automatically being sent to you via a private channel. \
 > Example: \
-> ![Habit check command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/habitsCheckCommandExample.png)
+> ![Habit check command response example](./docs/examples/habitsCheckCommandExample.png)
 
 </details>
 
@@ -152,7 +152,7 @@ This cool bot can help you with improving your fitness. It can track your progre
 >
 > Format: `/habits view all ?{time-range}` \
 > Example: \
-> ![Habit view all command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/habitsViewAllCommandExample.png)
+> ![Habit view all command response example](./docs/examples/habitsViewAllCommandExample.png)
 
 </details>
 
@@ -163,7 +163,7 @@ This cool bot can help you with improving your fitness. It can track your progre
 >
 > Format: `/habits view one {habit}` \
 > Example: \
-> ![Habit view one command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/habitsViewOneCommandExample.png)
+> ![Habit view one command response example](./docs/examples/habitsViewOneCommandExample.png)
 
 </details>
 
@@ -174,9 +174,9 @@ This cool bot can help you with improving your fitness. It can track your progre
 >
 > Format: `/habits progress {time-range}` \
 > Example: \
-> ![Habit daily progress command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/habitsProgressDailyCommandExample.png)
-> ![Habit weekly progress command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/habitsProgressWeeklyCommandExample.png)
-> ![Habit monthly progress command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/habitsProgressMonthlyCommandExample.png)
+> ![Habit daily progress command response example](./docs/examples/habitsProgressDailyCommandExample.png)
+> ![Habit weekly progress command response example](./docs/examples/habitsProgressWeeklyCommandExample.png)
+> ![Habit monthly progress command response example](./docs/examples/habitsProgressMonthlyCommandExample.png)
 
 </details>
 
@@ -197,7 +197,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   >
   > Format: `/help ?{command}` \
   > Example: \
-  > ![Help command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/helpCommandExample.png)
+  > ![Help command response example](./docs/examples/helpCommandExample.png)
 
 </details>
 
@@ -208,7 +208,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   >
   > Format: `/leaderboard` \
   > Example: \
-  > ![Leaderboard command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/leaderboardCommandExample.png)
+  > ![Leaderboard command response example](./docs/examples/leaderboardCommandExample.png)
 
 </details>
 
@@ -219,7 +219,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   >
   > Format: `/history {exercise}` \
   > Example: \
-  > ![History command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/historyCommandExample.png)
+  > ![History command response example](./docs/examples/historyCommandExample.png)
 
 </details>
 
@@ -233,7 +233,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   >
   > Format: `/log {exercise} {amount}` \
   > Example: \
-  > ![Log command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/logCommandExample.png)
+  > ![Log command response example](./docs/examples/logCommandExample.png)
 
 </details>
 
@@ -244,7 +244,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   >
   > Format: `/motivation` \
   > Example: \
-  > ![Motivation command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/motivationCommandExample.png)
+  > ![Motivation command response example](./docs/examples/motivationCommandExample.png)
 
 </details>
 
@@ -257,7 +257,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   >
   > Format: `/progress {exercise} ?{view-mode}` \
   > Example: \
-  > ![Progress command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/progressCommandExample.png)
+  > ![Progress command response example](./docs/examples/progressCommandExample.png)
 
 </details>
 
@@ -270,7 +270,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   >
   > Format: `/sessions create {name}` \
   > Example: \
-  > ![Session create command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/sessionCreateCommandExample.png)
+  > ![Session create command response example](./docs/examples/sessionCreateCommandExample.png)
 
 </details>
 
@@ -282,7 +282,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   >
   > Format: `/sessions view all` \
   > Example: \
-  > ![Session view all command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/sessionsViewAllCommandExample.png)
+  > ![Session view all command response example](./docs/examples/sessionsViewAllCommandExample.png)
 
 </details>
 
@@ -294,7 +294,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   >
   > Format: `/sessions view last` \
   > Example: \
-  > ![Session view last command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/sessionViewOneCommandExample.png)
+  > ![Session view last command response example](./docs/examples/sessionViewOneCommandExample.png)
 
 </details>
 
@@ -306,7 +306,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   >
   > Format: `/sessions view one {session}` \
   > Example: \
-  > ![Session view one command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/sessionViewOneCommandExample.png)
+  > ![Session view one command response example](./docs/examples/sessionViewOneCommandExample.png)
 
 </details>
 
@@ -318,7 +318,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   > 
   > Format: `/sessions stop {session}` \
   > Example: \
-  > ![Session stop command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/sessionStopCommandExample.png)
+  > ![Session stop command response example](./docs/examples/sessionStopCommandExample.png)
 
 </details>
 
@@ -329,7 +329,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   > 
   > Note: this is not really a command, instead it is automatically being sent to you via the channel you originally created the session. \
   > Example: \
-  > ![Session Rate command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/sessionRateCommandExample.png)
+  > ![Session Rate command response example](./docs/examples/sessionRateCommandExample.png)
 
 </details>
 
@@ -340,7 +340,7 @@ This cool bot can help you with improving your fitness. It can track your progre
   >
   > Format: `/stats ?{user-id}` \
   > Example: \
-  > ![Stats command response example](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/statsCommandExample.png)
+  > ![Stats command response example](./docs/examples/statsCommandExample.png)
 
 </details>
 
@@ -431,36 +431,36 @@ There are 20 achievements for you to complete. Each increasing in difficulty. Ar
 <details>
   <summary>Achievements</summary>
 
-  > ![Achievements](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/achievements.png)
+  > ![Achievements](./docs/achievements.png)
   > 
   > | Icon                                                                                                                                                                    | Title                   | Description                                                                          | Difficulty |
   > |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------|--------------------------------------------------------------------------------------|------------|
-  > | ![Achievement icon](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/backend/src/main/resources/achievement-icons/icon-achievement-03.png) | Heart monitor           | Log an exercise which uses bpm as a measurement.                                     | EASY       |
-  > | ![Achievement icon](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/backend/src/main/resources/achievement-icons/icon-achievement-17.png) | Let's get healthy       | Create your first log.                                                               | EASY       |
-  > | ![Achievement icon](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/backend/src/main/resources/achievement-icons/icon-achievement-12.png) | Reach your potential    | Complete a goal.                                                                     | EASY       |
-  > | ![Achievement icon](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/backend/src/main/resources/achievement-icons/icon-achievement-19.png) | Cardio enthusiast       | Do any exercise for 30 minutes.                                                      | MEDIUM     |
-  > | ![Achievement icon](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/backend/src/main/resources/achievement-icons/icon-achievement-08.png) | Done for today          | Create 10 logs on a single day.                                                      | MEDIUM     |
-  > | ![Achievement icon](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/backend/src/main/resources/achievement-icons/icon-achievement-07.png) | Full workout            | Within 24h, log an exercise for the following categories: weight, time and distance. | MEDIUM     |
-  > | ![Achievement icon](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/backend/src/main/resources/achievement-icons/icon-achievement-09.png) | Keep on stacking        | Have 5 concurrent logs of a single exercise that keep increasing.                    | MEDIUM     |
-  > | ![Achievement icon](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/backend/src/main/resources/achievement-icons/icon-achievement-20.png) | Love to lift            | Lift something weighing more than 50kg for 3 days in a row.                          | MEDIUM     |
-  > | ![Achievement icon](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/backend/src/main/resources/achievement-icons/icon-achievement-04.png) | On a roll               | Log an exercise 4 days in a row.                                                     | MEDIUM     |
-  > | ![Achievement icon](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/backend/src/main/resources/achievement-icons/icon-achievement-11.png) | On the bench            | Add 5 logs to a single session.                                                      | MEDIUM     |
-  > | ![Achievement icon](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/backend/src/main/resources/achievement-icons/icon-achievement-16.png) | The right mindset       | Set 5 goals and complete these within a month.                                       | MEDIUM     |
-  > | ![Achievement icon](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/backend/src/main/resources/achievement-icons/icon-achievement-05.png) | Think about your health | Log an exercise that burns 200 calories.                                             | MEDIUM     |
-  > | ![Achievement icon](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/backend/src/main/resources/achievement-icons/icon-achievement-18.png) | Feels like home         | Log an exercise 10 days in a row.                                                    | HARD       |
-  > | ![Achievement icon](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/backend/src/main/resources/achievement-icons/icon-achievement-13.png) | Let's go places         | Reach a distance of 20km.                                                            | HARD       |
-  > | ![Achievement icon](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/backend/src/main/resources/achievement-icons/icon-achievement-14.png) | Show off                | Reach the first place on an exercise leaderboard that has at least 6 participants.   | HARD       |
-  > | ![Achievement icon](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/backend/src/main/resources/achievement-icons/icon-achievement-15.png) | The goat                | Create a total of 100 logs.                                                          | HARD       |
-  > | ![Achievement icon](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/backend/src/main/resources/achievement-icons/icon-achievement-06.png) | The hulk                | Lift something weighing more than 100kg.                                             | HARD       |
-  > | ![Achievement icon](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/backend/src/main/resources/achievement-icons/icon-achievement-01.png) | Bodybuilder             | Add 10 logs to a single session.                                                     | IMPOSSIBLE |
-  > | ![Achievement icon](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/backend/src/main/resources/achievement-icons/icon-achievement-02.png) | Like a marathon         | Reach a distance of 42km.                                                            | IMPOSSIBLE |
-  > | ![Achievement icon](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/backend/src/main/resources/achievement-icons/icon-achievement-10.png) | Serious dedication      | Create at least one log each day for an entire month.                                | IMPOSSIBLE |
+  > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-03.png) | Heart monitor           | Log an exercise which uses bpm as a measurement.                                     | EASY       |
+  > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-17.png) | Let's get healthy       | Create your first log.                                                               | EASY       |
+  > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-12.png) | Reach your potential    | Complete a goal.                                                                     | EASY       |
+  > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-19.png) | Cardio enthusiast       | Do any exercise for 30 minutes.                                                      | MEDIUM     |
+  > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-08.png) | Done for today          | Create 10 logs on a single day.                                                      | MEDIUM     |
+  > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-07.png) | Full workout            | Within 24h, log an exercise for the following categories: weight, time and distance. | MEDIUM     |
+  > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-09.png) | Keep on stacking        | Have 5 concurrent logs of a single exercise that keep increasing.                    | MEDIUM     |
+  > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-20.png) | Love to lift            | Lift something weighing more than 50kg for 3 days in a row.                          | MEDIUM     |
+  > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-04.png) | On a roll               | Log an exercise 4 days in a row.                                                     | MEDIUM     |
+  > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-11.png) | On the bench            | Add 5 logs to a single session.                                                      | MEDIUM     |
+  > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-16.png) | The right mindset       | Set 5 goals and complete these within a month.                                       | MEDIUM     |
+  > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-05.png) | Think about your health | Log an exercise that burns 200 calories.                                             | MEDIUM     |
+  > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-18.png) | Feels like home         | Log an exercise 10 days in a row.                                                    | HARD       |
+  > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-13.png) | Let's go places         | Reach a distance of 20km.                                                            | HARD       |
+  > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-14.png) | Show off                | Reach the first place on an exercise leaderboard that has at least 6 participants.   | HARD       |
+  > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-15.png) | The goat                | Create a total of 100 logs.                                                          | HARD       |
+  > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-06.png) | The hulk                | Lift something weighing more than 100kg.                                             | HARD       |
+  > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-01.png) | Bodybuilder             | Add 10 logs to a single session.                                                     | IMPOSSIBLE |
+  > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-02.png) | Like a marathon         | Reach a distance of 42km.                                                            | IMPOSSIBLE |
+  > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-10.png) | Serious dedication      | Create at least one log each day for an entire month.                                | IMPOSSIBLE |
 
 </details>
 
 ## Deployment
-Follow the instructions as mentioned in the [how-to](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/how-to-run-on-docker.md).
+Follow the instructions as mentioned in the [how-to](./docs/how-to-run-on-docker.md).
 
 ## Domain
 See the domain model to view all the entities and their relationships.
-![Domain model](https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/domain.drawio.svg)
+![Domain model](./docs/domain.drawio.svg)
