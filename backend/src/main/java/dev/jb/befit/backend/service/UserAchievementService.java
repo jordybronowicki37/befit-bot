@@ -26,12 +26,8 @@ public class UserAchievementService {
         return achievementsRepository.findAllByUser(user);
     }
 
-    public Optional<UserAchievement> hasCompletedAchievement(Long userId, Achievement achievement) {
-        return achievementsRepository.findByUserIdAndAchievement(userId, achievement);
-    }
-
     public Optional<UserAchievement> hasCompletedAchievement(User user, Achievement achievement) {
-        return hasCompletedAchievement(user.getId(), achievement);
+        return achievementsRepository.findByUserAndAchievement(user, achievement);
     }
 
     public UserAchievement completeAchievement(User user, Achievement achievement) {

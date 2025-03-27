@@ -8,6 +8,7 @@ import dev.jb.befit.backend.data.models.HabitTimeRange;
 import dev.jb.befit.backend.data.models.User;
 import dev.jb.befit.backend.service.dto.HabitsByTimeRange;
 import dev.jb.befit.backend.service.exceptions.HabitNotFoundException;
+import dev.jb.befit.backend.service.exceptions.InvalidUserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +34,11 @@ public class HabitService {
     }
 
     public Optional<Habit> getHabitByUserAndId(User user, Long id) {
-        return habitRepository.findHabitByUserAndId(user, id);
+        var habit = habitRepository.findById(id);
+        if (habit.isPresent() && !habit.get().getUser().equals(user)) {
+            throw new InvalidUserException();
+        }
+        return habit;
     }
 
     public List<Habit> getHabitsByUserAndTimeRange(User user, HabitTimeRange habitTimeRange) {
@@ -74,19 +79,24 @@ public class HabitService {
     }
 
     public HabitLog flipHabitCompleted(User user, Long habitId, LocalDate date) {
-        var habitLog = habitLogRepository.findByUserAndHabitIdAndLogDate(user, habitId, date);
+        var habitLog = habitLogRepository.findByHabitIdAndLogDate(habitId, date);
+        if (habitLog.isPresent() && !habitLog.get().getUser().equals(user)) {
+            throw new InvalidUserException();
+        }
         if (habitLog.isEmpty()) {
             var habit = getHabitByUserAndId(user, habitId).orElseThrow(() -> new HabitNotFoundException(habitId));
             var newLog = new HabitLog(date, habit, user);
             return habitLogRepository.save(newLog);
-        } else {
-            habitLogRepository.delete(habitLog.get());
-            return null;
         }
+        habitLogRepository.delete(habitLog.get());
+        return null;
     }
 
     public void removeHabit(User user, Long habitId) {
-        var habit = habitRepository.findHabitByUserAndId(user, habitId).orElseThrow(() -> new HabitNotFoundException(habitId));
+        var habit = habitRepository.findById(habitId).orElseThrow(() -> new HabitNotFoundException(habitId));
+        if (!habit.getUser().equals(user)) {
+            throw new InvalidUserException();
+        }
         habit.setDeleted(true);
         habitRepository.save(habit);
     }

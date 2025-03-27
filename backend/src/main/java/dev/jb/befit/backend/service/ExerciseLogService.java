@@ -6,6 +6,7 @@ import dev.jb.befit.backend.data.UserAchievementsRepository;
 import dev.jb.befit.backend.data.models.*;
 import dev.jb.befit.backend.service.dto.LogCreationStatus;
 import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
+import dev.jb.befit.backend.service.exceptions.InvalidUserException;
 import dev.jb.befit.backend.service.exceptions.LogNotFoundException;
 import discord4j.common.util.Snowflake;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class ExerciseLogService {
     private final ExerciseSessionService exerciseSessionService;
     private final ExerciseTypeService exerciseTypeService;
     private final ExerciseRecordRepository exerciseRecordRepository;
+    private final ExerciseRecordService exerciseRecordService;
     private final GoalService goalService;
     private final UserAchievementsRepository userAchievementsRepository;
     private final UserExperienceService userExperienceService;
@@ -37,7 +39,11 @@ public class ExerciseLogService {
     }
 
     public Optional<ExerciseLog> getByUserAndId(User user, Long id) {
-        return exerciseLogRepository.findByUserAndId(user, id);
+        var log = exerciseLogRepository.findById(id);
+        if (log.isPresent() && !log.get().getUser().equals(user)) {
+            throw new InvalidUserException();
+        }
+        return log;
     }
 
     public long countAllByUser(User user) {
@@ -103,7 +109,7 @@ public class ExerciseLogService {
         var lastExerciseLog = allExistingLogs.stream().skip(allExistingLogs.isEmpty() ? 0 : allExistingLogs.size()-1).findFirst().orElse(null);
         var exerciseLog = new ExerciseLog(amount, exerciseType, user);
         exerciseLog.setFirstLogOfExercise(allExistingLogs.isEmpty());
-        var exerciseRecord = exerciseType.getExerciseRecords().stream().filter(r -> r.getUser().equals(user)).findFirst().orElse(null);
+        var exerciseRecord = exerciseRecordService.getByExercise(user, exerciseType).orElse(null);
         var earnedXp = ServiceConstants.EarnedXpLogCreated;
         var oldUserXp = user.getXp();
 
@@ -118,21 +124,17 @@ public class ExerciseLogService {
 
         // Add a record if none is found, else update the record if it is improved
         if (exerciseRecord == null) {
-            var newRecord = new ExerciseRecord(user, exerciseType, amount);
-            exerciseType.getExerciseRecords().add(newRecord);
-            exerciseRecord = exerciseRecordRepository.save(newRecord);
             earnedXp += ServiceConstants.EarnedXpNewExerciseStarted;
-        } else if (ServiceHelper.isRecordImproved(exerciseRecord, exerciseLog)) {
-            exerciseRecord.setAmount(exerciseLog.getAmount());
-            exerciseRecord = exerciseRecordRepository.save(exerciseRecord);
+        } else if (ExerciseRecordService.isRecordImproved(exerciseRecord, exerciseLog)) {
             exerciseLog.setPrImproved(true);
             earnedXp += ServiceConstants.EarnedXpRecordImproved;
         }
+        exerciseRecord = exerciseRecordService.createOrUpdate(user, exerciseLog);
 
         // Finish goal if it exists and is reached
         var goal = goalService.getActiveUserGoal(user, exerciseName).orElse(null);
         if (goal != null) {
-            if (ServiceHelper.isGoalReached(goal, exerciseLog)) {
+            if (GoalService.isGoalReached(goal, exerciseLog)) {
                 goal.setStatus(GoalStatus.COMPLETED);
                 goal.setCompletedAt(LocalDateTime.now());
                 exerciseLog.setReachedGoal(goal);
@@ -174,7 +176,7 @@ public class ExerciseLogService {
             var exerciseType = log.getExerciseType();
             var logsStream = getAllByUserAndExerciseName(user, exerciseType.getName()).stream().filter(l -> !l.equals(log)).map(ExerciseLog::getAmount);
             var oldPr = exerciseType.getGoalDirection().equals(GoalDirection.INCREASING) ? logsStream.max(Double::compareTo) : logsStream.min(Double::compareTo);
-            var record = exerciseRecordRepository.findByUserAndExerciseType(user, exerciseType);
+            var record = exerciseRecordService.getByExercise(user, exerciseType);
 
             if (oldPr.isPresent()) {
                 if (record.isPresent()) {

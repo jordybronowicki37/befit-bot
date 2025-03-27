@@ -5,10 +5,8 @@ import dev.jb.befit.backend.data.models.GoalStatus;
 import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
-import dev.jb.befit.backend.service.ExerciseLogService;
-import dev.jb.befit.backend.service.GoalService;
-import dev.jb.befit.backend.service.ServiceHelper;
-import dev.jb.befit.backend.service.UserService;
+import dev.jb.befit.backend.service.*;
+import dev.jb.befit.backend.service.exceptions.RecordNotFoundException;
 import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateFields;
@@ -29,6 +27,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ExercisesViewMyCommandHandler extends DiscordChatInputInteractionEventListener {
     private final ExerciseLogService exerciseLogService;
+    private final ExerciseRecordService exerciseRecordService;
     private final UserService userService;
     private final GoalService goalService;
 
@@ -63,11 +62,11 @@ public class ExercisesViewMyCommandHandler extends DiscordChatInputInteractionEv
                             var exercise = groupedLog.getKey();
                             var goal = goals.stream().filter(g -> g.getExerciseType().getId().equals(exercise.getId())).findFirst();
                             var logs = groupedLog.getValue();
-                            var pr = ServiceHelper.getCurrentPr(logs);
+                            var pr = exerciseRecordService.getByExercise(user, exercise).orElseThrow(RecordNotFoundException::new);
                             var descriptionBuilder = new StringBuilder();
                             descriptionBuilder.append("Logs: ").append(logs.size());
                             goal.ifPresent(g -> descriptionBuilder.append(String.format("\nGoal: %s %s", CommandHandlerHelper.formatDouble(g.getAmount()), exercise.getMeasurementType().getShortName())));
-                            descriptionBuilder.append(String.format("\nPr: %s %s", CommandHandlerHelper.formatDouble(pr), exercise.getMeasurementType().getShortName()));
+                            descriptionBuilder.append(String.format("\nPr: %s %s", CommandHandlerHelper.formatDouble(pr.getAmount()), exercise.getMeasurementType().getShortName()));
                             var leaderBoardPos = ServiceHelper.getLeaderboardPosition(user, exercise.getExerciseRecords());
                             if (leaderBoardPos != null) descriptionBuilder.append(String.format("\nPosition: %s", CommandHandlerHelper.getLeaderboardValue(leaderBoardPos)));
 

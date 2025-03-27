@@ -9,11 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface GoalRepository extends JpaRepository<Goal, Long> {
-    Optional<Goal> findByUserAndId(@NonNull User user, @NonNull Long id);
     List<Goal> findAllByUser(@NonNull User user);
     List<Goal> findAllByUserAndStatus(@NonNull User user, @NonNull GoalStatus status);
     List<Goal> findAllByUserAndCompletedAtAfterAndCompletedAtNotNull(@NonNull User user, @NonNull LocalDateTime from);

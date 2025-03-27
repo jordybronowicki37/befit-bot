@@ -10,11 +10,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface HabitRepository extends JpaRepository<Habit, Long> {
-    Optional<Habit> findHabitByUserAndId(@NonNull User user, @NonNull Long id);
     List<Habit> findAllByUserAndDeletedFalse(@NonNull User user);
     Page<Habit> findAllByUserAndDeletedFalse(@NonNull User user, @NonNull Pageable pageable);
     List<Habit> findAllByUserAndHabitTimeRangeAndDeletedFalse(@NonNull User user, @NonNull HabitTimeRange habitTimeRange);

@@ -21,6 +21,7 @@ import reactor.core.publisher.Mono;
 public class ExerciseViewOneCommandHandler extends DiscordChatInputInteractionEventListener {
     private final ExerciseTypeService exerciseService;
     private final ExerciseLogService exerciseLogService;
+    private final ExerciseRecordService exerciseRecordService;
     private final GoalService goalService;
     private final UserService userService;
 
@@ -41,6 +42,7 @@ public class ExerciseViewOneCommandHandler extends DiscordChatInputInteractionEv
         var exercise = exerciseService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
         var measurement = exercise.getMeasurementType();
         var logs = exerciseLogService.getAllByUserAndExerciseName(user, exerciseName);
+        var myRecord = exerciseRecordService.getByExercise(user, exercise);
         var records = ServiceHelper.sortLeaderboard(exercise.getExerciseRecords());
 
         var embed = EmbedCreateSpec.builder()
@@ -63,7 +65,7 @@ public class ExerciseViewOneCommandHandler extends DiscordChatInputInteractionEv
             var goal = goalService.getActiveUserGoal(user, exerciseName);
             goal.ifPresent(value -> progressDescriptionBuilder.append(String.format("\nGoal: %s %s", CommandHandlerHelper.formatDouble(value.getAmount()), measurement.getShortName())));
 
-            progressDescriptionBuilder.append(String.format("\nPr: %s %s", CommandHandlerHelper.formatDouble(ServiceHelper.getCurrentPr(logs)), measurement.getShortName()));
+            myRecord.ifPresent(exerciseRecord -> progressDescriptionBuilder.append(String.format("\nPr: %s %s", CommandHandlerHelper.formatDouble(exerciseRecord.getAmount()), measurement.getShortName())));
 
             var leaderBoardPosition = ServiceHelper.getLeaderboardPosition(user, records);
             if (leaderBoardPosition != null) progressDescriptionBuilder.append(String.format("\nPosition: %s", CommandHandlerHelper.getLeaderboardValue(leaderBoardPosition)));

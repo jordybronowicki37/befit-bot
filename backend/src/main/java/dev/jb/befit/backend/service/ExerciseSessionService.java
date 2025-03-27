@@ -4,6 +4,7 @@ import dev.jb.befit.backend.data.ExerciseSessionRepository;
 import dev.jb.befit.backend.data.models.ExerciseSession;
 import dev.jb.befit.backend.data.models.ExerciseSessionStatus;
 import dev.jb.befit.backend.data.models.User;
+import dev.jb.befit.backend.service.exceptions.InvalidUserException;
 import dev.jb.befit.backend.service.exceptions.SessionNotFoundException;
 import discord4j.common.util.Snowflake;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,11 @@ public class ExerciseSessionService {
     }
 
     public Optional<ExerciseSession> getByUserAndId(User user, Long id) {
-        return exerciseSessionRepository.findByUserAndId(user, id);
+        var session = exerciseSessionRepository.findById(id);
+        if (session.isPresent() && !session.get().getUser().equals(user)) {
+            throw new InvalidUserException();
+        }
+        return session;
     }
 
     public Page<ExerciseSession> searchByNameAndUser(User user, String name, Pageable pageable) {

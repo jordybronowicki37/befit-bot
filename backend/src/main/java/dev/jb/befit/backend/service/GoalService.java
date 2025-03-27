@@ -2,11 +2,11 @@ package dev.jb.befit.backend.service;
 
 import dev.jb.befit.backend.data.ExerciseTypeRepository;
 import dev.jb.befit.backend.data.GoalRepository;
-import dev.jb.befit.backend.data.models.Goal;
-import dev.jb.befit.backend.data.models.GoalStatus;
-import dev.jb.befit.backend.data.models.User;
+import dev.jb.befit.backend.data.models.*;
+import dev.jb.befit.backend.service.exceptions.ExerciseMismatchException;
 import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import dev.jb.befit.backend.service.exceptions.GoalNotFoundException;
+import dev.jb.befit.backend.service.exceptions.InvalidUserException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,11 @@ public class GoalService {
     private final UserExperienceService userExperienceService;
 
     public Optional<Goal> getByUserAndId(User user, Long id) {
-        return goalRepository.findByUserAndId(user, id);
+        var goal = goalRepository.findById(id);
+        if (goal.isPresent() && !goal.get().getUser().equals(user)) {
+            throw new InvalidUserException();
+        }
+        return goal;
     }
 
     public List<Goal> getAllUserGoals(User user) {
@@ -52,7 +56,7 @@ public class GoalService {
         if (activeUserGoals.isEmpty()) return Optional.empty();
         if (activeUserGoals.size() == 1) return Optional.of(activeUserGoals.get(0));
 
-        log.error("User {} has more than one goal for exercise {}", user, exerciseName);
+        log.warn("User {} has more than one goal for exercise {}, older goals will be removed", user, exerciseName);
 
         for (int i = 0; i < activeUserGoals.size(); i++) {
             var goal = activeUserGoals.get(i);
@@ -87,5 +91,15 @@ public class GoalService {
         goal.setStatus(GoalStatus.CANCELLED);
         goalRepository.save(goal);
         return goal;
+    }
+
+    public static boolean isGoalReached(Goal goal, ExerciseLog exerciseLog) {
+        if (!goal.getExerciseType().equals(exerciseLog.getExerciseType())) throw new ExerciseMismatchException();
+        if (goal.getExerciseType().getGoalDirection().equals(GoalDirection.INCREASING)) {
+            return exerciseLog.getAmount() >= goal.getAmount();
+        }
+        else {
+            return exerciseLog.getAmount() <= goal.getAmount();
+        }
     }
 }

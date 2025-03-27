@@ -15,5 +15,5 @@ public interface UserAchievementsRepository extends JpaRepository<UserAchievemen
     long countDistinctByAchievement(@NonNull Achievement achievement);
     List<UserAchievement> findAllByAchievement(@NonNull Achievement achievement);
     List<UserAchievement> findAllByUser(@NonNull User user);
-    Optional<UserAchievement> findByUserIdAndAchievement(@NonNull Long userId, @NonNull Achievement achievement);
+    Optional<UserAchievement> findByUserAndAchievement(@NonNull User user, @NonNull Achievement achievement);
 }

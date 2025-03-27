@@ -1,7 +1,6 @@
 package dev.jb.befit.backend.service;
 
 import dev.jb.befit.backend.data.ExerciseLogRepository;
-import dev.jb.befit.backend.data.ExerciseRecordRepository;
 import dev.jb.befit.backend.data.GoalRepository;
 import dev.jb.befit.backend.data.models.*;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,6 @@ import java.util.stream.Collectors;
 public class AchievementsRulesHandler {
     private final UserAchievementService userAchievementService;
     private final ExerciseLogRepository exerciseLogRepository;
-    private final ExerciseRecordRepository exerciseRecordRepository;
     private final GoalRepository goalRepository;
 
     public List<UserAchievement> checkGoalCompletedAchievements(User user, Goal goal) {
