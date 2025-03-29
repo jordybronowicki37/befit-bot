@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.jobs;
 
+import dev.jb.befit.backend.discord.commands.handlers.sessions.SessionRateButtonHandler;
 import dev.jb.befit.backend.service.ExerciseSessionService;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.spec.MessageEditSpec;
@@ -29,7 +30,11 @@ public class SessionExtendButtonRemovalJobController {
                         .flatMap(s -> client.getMessageById(s.getDiscordChannelId(), s.getDiscordMessageId())
                                 .flatMap(m -> {
                                     exerciseSessionService.updateMessage(session.getUser(), session.getId(), null);
-                                    return m.edit(MessageEditSpec.builder().addComponent(m.getComponents().get(0)).build());
+                                    var newMessage = MessageEditSpec
+                                            .builder()
+                                            .addComponent(SessionRateButtonHandler.getRatingRow(session))
+                                            .build();
+                                    return m.edit(newMessage);
                                 })
                         )
                         .doOnError(ClientException.class, e -> {
