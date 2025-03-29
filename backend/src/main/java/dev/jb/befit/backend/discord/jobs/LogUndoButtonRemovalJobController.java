@@ -5,6 +5,7 @@ import discord4j.core.GatewayDiscordClient;
 import discord4j.core.spec.MessageEditSpec;
 import discord4j.rest.http.client.ClientException;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,6 +23,7 @@ public class LogUndoButtonRemovalJobController {
     private final GatewayDiscordClient client;
     private final ExerciseLogService exerciseLogService;
 
+    @Transactional
     @Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
     public void checkLogsForUndoButtonRemoval() {
         var logs = exerciseLogService.getAllExpiredUndoSchedules();

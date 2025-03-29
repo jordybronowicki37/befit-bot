@@ -14,6 +14,7 @@ import discord4j.core.object.entity.User;
 import discord4j.core.object.entity.channel.MessageChannel;
 import discord4j.core.object.reaction.ReactionEmoji;
 import discord4j.core.spec.MessageCreateSpec;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -33,6 +34,7 @@ public class HabitJobController {
     private final HabitService habitService;
     private final UserService userService;
 
+    @Transactional
     @Scheduled(cron = "0 0 19 * * *")
     public void sendAllHabitReports() {
         var users = userService.getAllUsers();
