@@ -52,7 +52,7 @@ public class ExerciseLog {
     @Convert(converter = SnowflakeConverter.class)
     private Snowflake discordMessageId;
 
-    @OneToMany(mappedBy = "log")
+    @OneToMany(mappedBy = "log", fetch = FetchType.EAGER)
     private List<UserAchievement> achievements = new ArrayList<>();
 
     @Setter
