@@ -4,4 +4,4 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    open-in-view: true
+    open-in-view: false
