@@ -60,8 +60,8 @@ public class HabitsViewAllCommandHandler extends DiscordChatInputInteractionEven
                 .title(":pencil: Your Habits")
                 .fields(
                         habitsPage.stream().map(habit -> {
-                            var nextCheckupDate = CommandHandlerHelper.getNextCheckListTimeForTimeRange(habit.getHabitTimeRange());
-                            var amountOfCheckups = CommandHandlerHelper.getAmountOfHabitCheckUps(habit);
+                            var nextCheckupDate = HabitHelper.getNextCheckListTimeForTimeRange(habit.getHabitTimeRange());
+                            var amountOfCheckups = HabitHelper.getAmountOfHabitCheckUps(habit);
                             var amountOfChecks = habit.getHabitLogs().size();
                             var description = new StringBuilder();
                             description.append(String.format("\nTime range: %s", habit.getHabitTimeRange().name().toLowerCase()));

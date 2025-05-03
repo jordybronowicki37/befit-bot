@@ -42,7 +42,7 @@ public class HabitsAddCommandHandler extends DiscordChatInputInteractionEventLis
         var description = new StringBuilder();
         description.append(String.format("Name: %s", habit.getName()));
         description.append(String.format("\nTime range: %s", habit.getHabitTimeRange().name().toLowerCase()));
-        var nextCheck = CommandHandlerHelper.getNextCheckListTimeForTimeRange(habitTimeRange);
+        var nextCheck = HabitHelper.getNextCheckListTimeForTimeRange(habitTimeRange);
         description.append(String.format("\nNext checkup: %s", CommandHandlerHelper.discordFormatDateTime(nextCheck)));
 
         var embed = EmbedCreateSpec.builder()

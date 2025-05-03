@@ -1,7 +1,7 @@
 package dev.jb.befit.backend.data;
 
 import dev.jb.befit.backend.data.models.*;
-import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
+import dev.jb.befit.backend.discord.commands.handlers.habits.HabitHelper;
 import dev.jb.befit.backend.service.ExerciseLogService;
 import discord4j.common.util.Snowflake;
 import jakarta.transaction.Transactional;
@@ -149,7 +149,7 @@ public class DummyDataInitializer implements CommandLineRunner {
     }
 
     private void addRandomLogsToHabit(Habit habit, User user) {
-        var amountOfCheckups = CommandHandlerHelper.getAmountOfHabitCheckUps(habit);
+        var amountOfCheckups = HabitHelper.getAmountOfHabitCheckUps(habit);
         habitRepository.save(habit);
         switch (habit.getHabitTimeRange()) {
             case DAILY: {

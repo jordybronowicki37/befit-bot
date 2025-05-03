@@ -38,15 +38,15 @@ public class HabitsViewOneCommandHandler extends DiscordChatInputInteractionEven
 
         var habit = habitService.getHabitByUserAndId(user, habitId).orElseThrow(() -> new HabitNotFoundException(habitId));
 
-        var amountOfCheckups = CommandHandlerHelper.getAmountOfHabitCheckUps(habit);
+        var amountOfCheckups = HabitHelper.getAmountOfHabitCheckUps(habit);
         var amountOfChecks = habit.getHabitLogs().size();
         var description = new StringBuilder();
         description.append(String.format("Name: %s", habit.getName()));
         description.append(String.format("\nTime range: %s", habit.getHabitTimeRange().name().toLowerCase()));
         description.append(String.format("\nCreated: %s", CommandHandlerHelper.discordFormatDateTime(habit.getCreated())));
-        var nextCheck = CommandHandlerHelper.getNextCheckListTimeForTimeRange(habit.getHabitTimeRange());
+        var nextCheck = HabitHelper.getNextCheckListTimeForTimeRange(habit.getHabitTimeRange());
         description.append(String.format("\nNext checkup: %s", CommandHandlerHelper.discordFormatDateTime(nextCheck)));
-        description.append(String.format("\nTotal checkups: %s", CommandHandlerHelper.getAmountOfHabitCheckUps(habit)));
+        description.append(String.format("\nTotal checkups: %s", HabitHelper.getAmountOfHabitCheckUps(habit)));
         description.append(String.format("\nTotal checks: %d", amountOfChecks));
         description.append(String.format("\nCheck percentage: %d%%", amountOfCheckups != 0 ? amountOfChecks * 100L / amountOfCheckups : 0));
 
