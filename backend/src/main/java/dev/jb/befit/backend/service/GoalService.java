@@ -1,6 +1,5 @@
 package dev.jb.befit.backend.service;
 
-import dev.jb.befit.backend.data.ExerciseTypeRepository;
 import dev.jb.befit.backend.data.GoalRepository;
 import dev.jb.befit.backend.data.models.*;
 import dev.jb.befit.backend.service.exceptions.ExerciseMismatchException;
@@ -19,7 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GoalService {
     private final GoalRepository goalRepository;
-    private final ExerciseTypeRepository exerciseTypeRepository;
+    private final ExerciseTypeService exerciseTypeService;
     private final UserExperienceService userExperienceService;
 
     public Optional<Goal> getByUserAndId(User user, Long id) {
@@ -69,7 +68,7 @@ public class GoalService {
     }
 
     public Goal create(User user, String exerciseName, Double amount) {
-        var exerciseType = exerciseTypeRepository.findByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
+        var exerciseType = exerciseTypeService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
 
         // If a goal already exists, change the status to overwritten
         getActiveUserGoal(user, exerciseName).ifPresent(lastGoal -> {
