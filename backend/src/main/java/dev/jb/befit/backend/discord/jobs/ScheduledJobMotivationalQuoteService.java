@@ -18,13 +18,12 @@ public class ScheduledJobMotivationalQuoteService {
     private final MotivationalService motivationalService;
 
     public void publishMotivationalQuote(Snowflake motivationChannelId) {
-        var message = motivationalService.getRandomQuote();
-        log.info("Publishing quote. Message: {}, author: {}", message.message(), message.author());
+        var quote = motivationalService.getRandomQuote();
+        log.info("Publishing quote. Message: {}, author: {}", quote.message(), quote.author());
         client
                 .getChannelById(motivationChannelId)
                 .ofType(MessageChannel.class)
                 .flatMap(c -> {
-                    var quote = motivationalService.getRandomQuote();
                     var builder = EmbedCreateSpec.builder()
                             .title(":rocket: Quote of the day")
                             .description(quote.message())
