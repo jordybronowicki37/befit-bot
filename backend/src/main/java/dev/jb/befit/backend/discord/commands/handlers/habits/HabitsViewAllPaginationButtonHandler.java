@@ -28,8 +28,8 @@ public class HabitsViewAllPaginationButtonHandler extends DiscordButtonInteracti
     public Mono<Void> execute(ButtonInteractionEvent event) {
         var userId = event.getMessage().get().getInteraction().get().getUser().getId();
         var commandSplit = event.getCustomId().split("\\$");
-        var page = Integer.parseInt(commandSplit[2]);
-        var habitTimeRangeRaw = commandSplit[1];
+        var page = Integer.parseInt(commandSplit[1]);
+        var habitTimeRangeRaw = commandSplit[2];
         HabitTimeRange habitTimeRange = null;
         if (!Objects.equals(habitTimeRangeRaw, "null")) {
             habitTimeRange = HabitTimeRange.valueOf(habitTimeRangeRaw);

@@ -88,7 +88,7 @@ public class SessionViewOneCommandHandler extends DiscordChatInputInteractionEve
             default -> CommandConstants.CommandSessionsViewOne;
         };
 
-        var paginationControls = CommandHandlerHelper.getPaginationComponent(page, logsPage.getTotalPages(), String.format("%s$%d", commandName, session.getId()));
+        var paginationControls = CommandHandlerHelper.getPaginationComponent(page, logsPage.getTotalPages(), commandName, session.getId().toString());
         return InteractionReplyEditSpec.builder().addEmbed(embed.build()).addComponent(paginationControls).build();
     }
 

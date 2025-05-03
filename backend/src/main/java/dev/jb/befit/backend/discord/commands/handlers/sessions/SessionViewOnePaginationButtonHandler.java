@@ -35,8 +35,8 @@ public class SessionViewOnePaginationButtonHandler extends DiscordButtonInteract
         var userId = event.getMessage().get().getInteraction().get().getUser().getId();
         var user = userService.getOrCreateDiscordUser(userId);
         var customIdSplit = event.getCustomId().split("\\$");
-        var page = Integer.parseInt(customIdSplit[2]);
-        var sessionId = Long.parseLong(customIdSplit[1]);
+        var page = Integer.parseInt(customIdSplit[1]);
+        var sessionId = Long.parseLong(customIdSplit[2]);
         var session = exerciseSessionService.getByUserAndId(user, sessionId).orElseThrow(() -> new SessionNotFoundException(sessionId));
         var commandName = customIdSplit[0];
         var commandType = switch (commandName) {

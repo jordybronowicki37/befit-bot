@@ -1,6 +1,8 @@
 package dev.jb.befit.backend.discord.commands;
 
-import dev.jb.befit.backend.data.models.*;
+import dev.jb.befit.backend.data.models.DiscordUser;
+import dev.jb.befit.backend.data.models.User;
+import dev.jb.befit.backend.data.models.WebUser;
 import dev.jb.befit.backend.discord.commands.exceptions.OptionNotFoundException;
 import dev.jb.befit.backend.discord.commands.exceptions.ValueNotFoundException;
 import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
@@ -167,12 +169,13 @@ public final class CommandHandlerHelper {
         return (int) Math.ceil((double) items / pageSize);
     }
 
-    public static ActionRow getPaginationComponent(int pageNumber, int amountOfPages, String commandName) {
-        var previousButton = Button.secondary(String.format("%s$%d", commandName, pageNumber-1), ReactionEmoji.unicode("⬅"));
-        if (pageNumber <= 0 || amountOfPages == 0) previousButton = previousButton.disabled();
-        var reloadButton = Button.secondary(String.format("%s$%d", commandName, pageNumber), String.format("%d/%d", amountOfPages == 0 ? 0 : pageNumber+1, amountOfPages));
-        var nextButton = Button.secondary(String.format("%s$%d", commandName, pageNumber+1), ReactionEmoji.unicode("➡"));
-        if (pageNumber == amountOfPages - 1 || amountOfPages == 0) nextButton = nextButton.disabled();
+    public static ActionRow getPaginationComponent(int pageNumber, int amountOfPages, String commandName, String... options) {
+        var optionsCombined = String.join("$", options);
+        if (!optionsCombined.isEmpty()) optionsCombined = "$" + optionsCombined;
+
+        var previousButton = Button.secondary(String.format("%s$%d%s", commandName, pageNumber-1, optionsCombined), ReactionEmoji.unicode("⬅")).disabled(pageNumber <= 0 || amountOfPages == 0);
+        var reloadButton = Button.secondary(String.format("%s$%d%s", commandName, pageNumber, optionsCombined), String.format("%d/%d", amountOfPages == 0 ? 0 : pageNumber+1, amountOfPages));
+        var nextButton = Button.secondary(String.format("%s$%d%s", commandName, pageNumber+1, optionsCombined), ReactionEmoji.unicode("➡")).disabled(pageNumber == amountOfPages - 1 || amountOfPages == 0);
 
         return ActionRow.of(previousButton, reloadButton, nextButton);
     }

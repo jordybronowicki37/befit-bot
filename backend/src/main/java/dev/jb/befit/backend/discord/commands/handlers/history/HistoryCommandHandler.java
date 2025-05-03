@@ -79,7 +79,7 @@ public class HistoryCommandHandler extends DiscordChatInputInteractionEventListe
                 .color(Color.CYAN)
                 .build();
 
-        var paginationControls = CommandHandlerHelper.getPaginationComponent(page, allLogs.getTotalPages(), String.format("%s$%s", getCommandNameFilter(), exerciseNameFilter));
+        var paginationControls = CommandHandlerHelper.getPaginationComponent(page, allLogs.getTotalPages(), getCommandNameFilter(), exerciseNameFilter);
         return InteractionReplyEditSpec.builder().addEmbed(embed).addComponent(paginationControls).build();
     }
 
