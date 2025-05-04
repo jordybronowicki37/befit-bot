@@ -87,7 +87,7 @@ public class HistoryCommandHandler extends DiscordChatInputInteractionEventListe
         var exercise = log.getExerciseType();
         var measurement = exercise.getMeasurementType();
         var amount = CommandHandlerHelper.formatDouble(log.getAmount());
-        var time = CommandHandlerHelper.discordFormatTime(log.getCreated());
+        var time = CommandHandlerHelper.discordFormatDate(log.getCreated());
         stringBuilder.append(String.format("Amount: %s %s\nCreated: %s\nXp earned: %d\n", amount, measurement.getShortName(), time, log.getEarnedXp()));
     }
 
