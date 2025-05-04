@@ -1,6 +1,7 @@
 package dev.jb.befit.backend.discord.commands.handlers.habits;
 
 import dev.jb.befit.backend.discord.commands.CommandConstants;
+import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordButtonInteractionEventListener;
 import dev.jb.befit.backend.service.HabitService;
 import dev.jb.befit.backend.service.UserService;
@@ -32,7 +33,7 @@ public class HabitCheckButtonHandler extends DiscordButtonInteractionEventListen
     @Override
     @Transactional
     public Mono<Void> execute(ButtonInteractionEvent event) {
-        var userId = event.getInteraction().getUser().getId();
+        var userId = CommandHandlerHelper.getDiscordUserId(event);
         var user = userService.getOrCreateDiscordUser(userId);
 
         var customId = event.getCustomId();

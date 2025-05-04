@@ -1,6 +1,7 @@
 package dev.jb.befit.backend.discord.commands.handlers.sessions;
 
 import dev.jb.befit.backend.discord.commands.CommandConstants;
+import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ExerciseSessionService;
 import dev.jb.befit.backend.service.UserService;
@@ -27,7 +28,7 @@ public class SessionViewLastCommandHandler extends DiscordChatInputInteractionEv
     @Override
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        var userId = event.getInteraction().getUser().getId();
+        var userId = CommandHandlerHelper.getDiscordUserId(event);
         var user = userService.getOrCreateDiscordUser(userId);
         var session = exerciseSessionService.getLastByUser(user).orElseThrow(SessionNotFoundException::new);
         return event.editReply(SessionViewOneCommandHandler.getReplyEditSpec(session, SessionCommandType.VIEW, 0)).then();

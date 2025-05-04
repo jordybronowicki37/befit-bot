@@ -30,7 +30,7 @@ public class GoalAutoCompleteHandler extends DiscordChatInputAutoCompleteEventLi
     @Override
     public Mono<Void> execute(ChatInputAutoCompleteEvent event) {
         var filter = CommandHandlerHelper.getAutocompleteOptionFilter(event).toLowerCase();
-        var userId = event.getInteraction().getUser().getId();
+        var userId = CommandHandlerHelper.getDiscordUserId(event);
         var user = userService.getOrCreateDiscordUser(userId);
         var goals = goalService.getAllUserGoals(user, GoalStatus.ACTIVE);
 

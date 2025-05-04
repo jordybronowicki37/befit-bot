@@ -35,7 +35,7 @@ public class HabitsViewAllCommandHandler extends DiscordChatInputInteractionEven
     @Override
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        var userId = event.getInteraction().getUser().getId();
+        var userId = CommandHandlerHelper.getDiscordUserId(event);
         var subCommand = CommandHandlerHelper.getSubCommand(event, getCommandNameFilter());
         assert subCommand != null;
         var habitTimeRangeValue = CommandHandlerHelper.getOptionalOptionValue(subCommand, "time-range", null);

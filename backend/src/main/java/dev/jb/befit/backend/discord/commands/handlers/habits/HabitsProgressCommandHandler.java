@@ -33,7 +33,7 @@ public class HabitsProgressCommandHandler extends DiscordChatInputInteractionEve
     @Override
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        var userId = event.getInteraction().getUser().getId();
+        var userId = CommandHandlerHelper.getDiscordUserId(event);
         var user = userService.getOrCreateDiscordUser(userId);
         var subCommand = CommandHandlerHelper.getSubCommand(event, getCommandNameFilter());
         var habitTimeRange = HabitTimeRange.valueOf(CommandHandlerHelper.getOptionValue(subCommand, "time-range"));

@@ -29,7 +29,7 @@ public class SessionActiveAutoCompleteHandler extends DiscordChatInputAutoComple
 
     @Override
     public Mono<Void> execute(ChatInputAutoCompleteEvent event) {
-        var userId = event.getInteraction().getUser().getId();
+        var userId = CommandHandlerHelper.getDiscordUserId(event);
         var user = userService.getOrCreateDiscordUser(userId);
 
         var sessions = exerciseSessionService.getAllActiveByUser(user, Pageable.ofSize(CommandConstants.SearchResultsSize).withPage(0));

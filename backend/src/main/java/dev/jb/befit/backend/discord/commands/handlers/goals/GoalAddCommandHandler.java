@@ -36,7 +36,7 @@ public class GoalAddCommandHandler extends DiscordChatInputInteractionEventListe
     @Override
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        var userId = event.getInteraction().getUser().getId();
+        var userId = CommandHandlerHelper.getDiscordUserId(event);
 
         var subCommand = CommandHandlerHelper.getSubCommand(event, getCommandNameFilter());
         var exerciseName = CommandHandlerHelper.getOptionValue(subCommand, CommandConstants.AutoCompletePropExerciseName);

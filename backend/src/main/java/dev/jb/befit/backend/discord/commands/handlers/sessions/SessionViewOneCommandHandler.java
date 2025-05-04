@@ -40,7 +40,7 @@ public class SessionViewOneCommandHandler extends DiscordChatInputInteractionEve
     @Override
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        var userId = event.getInteraction().getUser().getId();
+        var userId = CommandHandlerHelper.getDiscordUserId(event);
         var subCommand = CommandHandlerHelper.getSubCommand(event, getCommandNameFilter());
         var sessionId = CommandHandlerHelper.getOptionValueAsLong(subCommand, CommandConstants.AutoCompletePropSession);
         var user = userService.getOrCreateDiscordUser(userId);

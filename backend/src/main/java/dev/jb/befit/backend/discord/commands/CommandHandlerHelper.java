@@ -165,6 +165,14 @@ public final class CommandHandlerHelper {
         return "`unknown`";
     }
 
+    public static String getDiscordUserName(InteractionCreateEvent event) {
+        return event.getInteraction().getUser().getGlobalName().orElse(null);
+    }
+
+    public static Snowflake getDiscordUserId(InteractionCreateEvent event) {
+        return event.getInteraction().getUser().getId();
+    }
+
     public static int getAmountOfPages(int items, int pageSize) {
         return (int) Math.ceil((double) items / pageSize);
     }
@@ -173,9 +181,9 @@ public final class CommandHandlerHelper {
         var optionsCombined = String.join("$", options);
         if (!optionsCombined.isEmpty()) optionsCombined = "$" + optionsCombined;
 
-        var previousButton = Button.secondary(String.format("%s$%d%s", commandName, pageNumber-1, optionsCombined), ReactionEmoji.unicode("⬅")).disabled(pageNumber <= 0 || amountOfPages == 0);
-        var reloadButton = Button.secondary(String.format("%s$%d%s", commandName, pageNumber, optionsCombined), String.format("%d/%d", amountOfPages == 0 ? 0 : pageNumber+1, amountOfPages));
-        var nextButton = Button.secondary(String.format("%s$%d%s", commandName, pageNumber+1, optionsCombined), ReactionEmoji.unicode("➡")).disabled(pageNumber == amountOfPages - 1 || amountOfPages == 0);
+        var previousButton = Button.secondary(String.format("%s$page-previous$%d%s", commandName, pageNumber-1, optionsCombined), ReactionEmoji.unicode("⬅")).disabled(pageNumber <= 0 || amountOfPages == 0);
+        var reloadButton = Button.secondary(String.format("%s$page-refresh$%d%s", commandName, pageNumber, optionsCombined), String.format("%d/%d", amountOfPages == 0 ? 0 : pageNumber+1, amountOfPages));
+        var nextButton = Button.secondary(String.format("%s$page-next$%d%s", commandName, pageNumber+1, optionsCombined), ReactionEmoji.unicode("➡")).disabled(pageNumber == amountOfPages - 1 || amountOfPages == 0);
 
         return ActionRow.of(previousButton, reloadButton, nextButton);
     }

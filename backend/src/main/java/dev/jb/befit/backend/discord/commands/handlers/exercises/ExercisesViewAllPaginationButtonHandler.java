@@ -23,7 +23,7 @@ public class ExercisesViewAllPaginationButtonHandler extends DiscordButtonIntera
     @Override
     @Transactional
     public Mono<Void> execute(ButtonInteractionEvent event) {
-        var page = Integer.parseInt(event.getCustomId().split("\\$")[1]);
+        var page = Integer.parseInt(event.getCustomId().split("\\$")[2]);
         return event.editReply(exercisesViewAllCommandHandler.getReplyEditSpec(page)).then();
     }
 }

@@ -1,6 +1,7 @@
 package dev.jb.befit.backend.discord.commands.handlers.sessions;
 
 import dev.jb.befit.backend.discord.commands.CommandConstants;
+import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordButtonInteractionEventListener;
 import dev.jb.befit.backend.service.ExerciseSessionService;
 import dev.jb.befit.backend.service.UserService;
@@ -29,10 +30,10 @@ public class SessionExtendButtonHandler extends DiscordButtonInteractionEventLis
     @Override
     @Transactional
     public Mono<Void> execute(ButtonInteractionEvent event) {
-        var userId = event.getInteraction().getUser().getId();
+        var userId = CommandHandlerHelper.getDiscordUserId(event);
         var user = userService.getOrCreateDiscordUser(userId);
         var optionsSplit = event.getCustomId().split("\\$");
-        var sessionId = Long.parseLong(optionsSplit[1]);
+        var sessionId = Long.parseLong(optionsSplit[2]);
         exerciseSessionService.extendAutomaticFinalization(user, sessionId);
 
         var replySpec = InteractionReplyEditSpec.builder()

@@ -28,7 +28,7 @@ public class SessionCreateCommandHandler extends DiscordChatInputInteractionEven
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
         var channelId = event.getInteraction().getChannelId();
-        var userId = event.getInteraction().getUser().getId();
+        var userId = CommandHandlerHelper.getDiscordUserId(event);
         var subCommand = CommandHandlerHelper.getSubCommand(event, getCommandNameFilter());
         var sessionName = CommandHandlerHelper.getOptionValue(subCommand, "name");
         var user = userService.getOrCreateDiscordUser(userId);

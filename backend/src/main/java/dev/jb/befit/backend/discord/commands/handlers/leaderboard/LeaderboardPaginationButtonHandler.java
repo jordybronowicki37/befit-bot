@@ -24,7 +24,7 @@ public class LeaderboardPaginationButtonHandler extends DiscordButtonInteraction
     @Transactional
     public Mono<Void> execute(ButtonInteractionEvent event) {
         var userId = event.getMessage().get().getInteraction().get().getUser().getId();
-        var page = Integer.parseInt(event.getCustomId().split("\\$")[1]);
+        var page = Integer.parseInt(event.getCustomId().split("\\$")[2]);
         return event.editReply(leaderboardCommandHandler.getReplyEditSpec(userId, page)).then();
     }
 }

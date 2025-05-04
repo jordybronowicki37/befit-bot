@@ -31,7 +31,7 @@ public class SessionStopCommandHandler extends DiscordChatInputInteractionEventL
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
         var channelId = event.getInteraction().getChannelId();
-        var userId = event.getInteraction().getUser().getId();
+        var userId = CommandHandlerHelper.getDiscordUserId(event);
         var subCommand = CommandHandlerHelper.getSubCommand(event, getCommandNameFilter());
         var sessionId = CommandHandlerHelper.getOptionValueAsLong(subCommand, CommandConstants.AutoCompletePropSessionActive);
         var user = userService.getOrCreateDiscordUser(userId);

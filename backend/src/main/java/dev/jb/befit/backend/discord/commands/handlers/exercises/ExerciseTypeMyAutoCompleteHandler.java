@@ -31,7 +31,7 @@ public class ExerciseTypeMyAutoCompleteHandler extends DiscordChatInputAutoCompl
     @Override
     public Mono<Void> execute(ChatInputAutoCompleteEvent event) {
         var filter = CommandHandlerHelper.getAutocompleteOptionFilter(event);
-        var userId = event.getInteraction().getUser().getId();
+        var userId = CommandHandlerHelper.getDiscordUserId(event);
         var user = userService.getOrCreateDiscordUser(userId);
         var records = exerciseRecordService.getFiltered(user, filter);
         var suggestions = records.stream()

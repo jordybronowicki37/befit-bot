@@ -29,7 +29,7 @@ public class LogUndoButtonHandler extends DiscordButtonInteractionEventListener 
     public Mono<Void> execute(ButtonInteractionEvent event) {
         var userId = event.getMessage().get().getInteraction().get().getUser().getId();
         var user = userService.getOrCreateDiscordUser(userId);
-        var logId = Long.parseLong(event.getCustomId().split("\\$")[1]);
+        var logId = Long.parseLong(event.getCustomId().split("\\$")[2]);
         var log = exerciseLogService.undoLogCreation(user, logId);
 
         // TODO give some more info on the log being removed

@@ -37,7 +37,7 @@ public class ProgressCommandHandler extends DiscordChatInputInteractionEventList
         try {
             File progressImage;
             if (viewMode.equals("own") || viewMode.isEmpty()) {
-                var userId = event.getInteraction().getUser().getId();
+                var userId = CommandHandlerHelper.getDiscordUserId(event);
                 progressImage = progressImageService.createPersonalProgressChart(userId, exerciseName);
             }
             else if (viewMode.equals("all")) {

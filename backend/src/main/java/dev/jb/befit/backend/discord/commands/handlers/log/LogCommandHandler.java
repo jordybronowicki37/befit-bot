@@ -40,7 +40,7 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
     @Override
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        var userId = event.getInteraction().getUser().getId();
+        var userId = CommandHandlerHelper.getDiscordUserId(event);
 
         var exerciseName = CommandHandlerHelper.getOptionValue(event, CommandConstants.AutoCompletePropExerciseName);
         var exerciseAmount = CommandHandlerHelper.getOptionValueAsDouble(event, "amount");
@@ -139,7 +139,7 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
             embed.image("attachment://level-xp-bar.png");
         }
 
-        var undoButton = ActionRow.of(Button.secondary(String.format("%s$%d", CommandConstants.CommandLogUndo, exerciseLog.getId()), "Undo log"));
+        var undoButton = ActionRow.of(Button.secondary(String.format("%s$action$%d", CommandConstants.CommandLogUndo, exerciseLog.getId()), "Undo log"));
         return event
                 .editReply(InteractionReplyEditSpec.builder().addEmbed(embed.build()).addFile("level-xp-bar.png", inputStream).addComponent(undoButton).build())
                 .flatMap(m -> Mono.just(logService.scheduleUndoExpiry(user, exerciseLog.getId(), m.getChannelId(), m.getId())))

@@ -39,7 +39,7 @@ public class ExercisesViewMyCommandHandler extends DiscordChatInputInteractionEv
     @Override
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        var userId = event.getInteraction().getUser().getId();
+        var userId = CommandHandlerHelper.getDiscordUserId(event);
         return event.editReply(getReplyEditSpec(userId, 0)).then();
     }
 

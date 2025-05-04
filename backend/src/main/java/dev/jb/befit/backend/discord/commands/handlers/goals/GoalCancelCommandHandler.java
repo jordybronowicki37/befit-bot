@@ -30,7 +30,7 @@ public class GoalCancelCommandHandler extends DiscordChatInputInteractionEventLi
     @Override
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        var userId = event.getInteraction().getUser().getId();
+        var userId = CommandHandlerHelper.getDiscordUserId(event);
 
         var subCommand = CommandHandlerHelper.getSubCommand(event, getCommandNameFilter());
         var goalId = CommandHandlerHelper.getOptionValueAsLong(subCommand, CommandConstants.AutoCompletePropGoal);

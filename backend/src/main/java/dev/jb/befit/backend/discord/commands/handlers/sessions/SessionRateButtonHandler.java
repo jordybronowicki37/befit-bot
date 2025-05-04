@@ -4,6 +4,7 @@ import dev.jb.befit.backend.data.models.Achievement;
 import dev.jb.befit.backend.data.models.ExerciseSession;
 import dev.jb.befit.backend.data.models.UserAchievement;
 import dev.jb.befit.backend.discord.commands.CommandConstants;
+import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.commands.exceptions.InvalidValueException;
 import dev.jb.befit.backend.discord.listeners.DiscordButtonInteractionEventListener;
 import dev.jb.befit.backend.discord.registration.EmojiRegistrarService;
@@ -42,12 +43,12 @@ public class SessionRateButtonHandler extends DiscordButtonInteractionEventListe
     @Override
     @Transactional
     public Mono<Void> execute(ButtonInteractionEvent event) {
-        var userId = event.getInteraction().getUser().getId();
+        var userId = CommandHandlerHelper.getDiscordUserId(event);
         var user = userService.getOrCreateDiscordUser(userId);
         var optionsSplit = event.getCustomId().split("\\$");
-        var rating = Integer.parseInt(optionsSplit[2]);
+        var rating = Integer.parseInt(optionsSplit[3]);
         if (rating < 1 || rating > 5) throw new InvalidValueException("Rating", String.valueOf(rating), "Rating must be from 1 to 5");
-        var sessionId = Long.parseLong(optionsSplit[1]);
+        var sessionId = Long.parseLong(optionsSplit[2]);
         var session = exerciseSessionService.updateRating(user, sessionId, rating);
 
         var replySpec = InteractionReplyEditSpec.builder()
@@ -109,7 +110,7 @@ public class SessionRateButtonHandler extends DiscordButtonInteractionEventListe
         var components = new ArrayList<ActionComponent>();
 
         for (int i = 0; i < 5; i++) {
-            var customId = String.format("%s$%d$%d", CommandConstants.CommandSessionsRate, session.getId(), i+1);
+            var customId = String.format("%s$action$%d$%d", CommandConstants.CommandSessionsRate, session.getId(), i+1);
             if (session.getRating() == null || session.getRating() <= i) {
                 components.add(Button.secondary(customId, unselectedStarEmoji));
             }
@@ -123,7 +124,7 @@ public class SessionRateButtonHandler extends DiscordButtonInteractionEventListe
 
     public static ActionRow getExtendSessionRow(ExerciseSession session) {
         return ActionRow.of(
-                Button.secondary(String.format("%s$%d", CommandConstants.CommandSessionsExtend, session.getId()), "Not done yet? Extend session")
+                Button.secondary(String.format("%s$action$%d", CommandConstants.CommandSessionsExtend, session.getId()), "Not done yet? Extend session")
         );
     }
 

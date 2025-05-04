@@ -33,7 +33,7 @@ public class HabitsViewOneCommandHandler extends DiscordChatInputInteractionEven
         var subCommand = CommandHandlerHelper.getSubCommand(event, getCommandNameFilter());
         var habitId = CommandHandlerHelper.getOptionValueAsLong(subCommand, "habit");
 
-        var userId = event.getInteraction().getUser().getId();
+        var userId = CommandHandlerHelper.getDiscordUserId(event);
         var user = userService.getOrCreateDiscordUser(userId);
 
         var habit = habitService.getHabitByUserAndId(user, habitId).orElseThrow(() -> new HabitNotFoundException(habitId));

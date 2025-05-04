@@ -43,7 +43,7 @@ public class LeaderboardCommandHandler extends DiscordChatInputInteractionEventL
     @Override
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
-        var user = event.getInteraction().getUser().getId();
+        var user = CommandHandlerHelper.getDiscordUserId(event);
         return event.editReply(getReplyEditSpec(user, 0)).then();
     }
 

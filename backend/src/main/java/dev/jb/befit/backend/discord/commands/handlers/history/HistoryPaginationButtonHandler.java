@@ -25,8 +25,8 @@ public class HistoryPaginationButtonHandler extends DiscordButtonInteractionEven
     public Mono<Void> execute(ButtonInteractionEvent event) {
         var userId = event.getMessage().get().getInteraction().get().getUser().getId();
         var splitCommand = event.getCustomId().split("\\$");
-        var page = Integer.parseInt(splitCommand[1]);
-        var exerciseNameFilter = splitCommand[2];
+        var page = Integer.parseInt(splitCommand[2]);
+        var exerciseNameFilter = splitCommand[3];
         if (exerciseNameFilter.isEmpty()) exerciseNameFilter = null;
         return event.editReply(historyCommandHandler.getReplyEditSpec(userId, page, exerciseNameFilter)).then();
     }

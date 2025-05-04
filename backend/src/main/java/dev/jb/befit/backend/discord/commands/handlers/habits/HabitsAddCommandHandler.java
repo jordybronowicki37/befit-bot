@@ -34,7 +34,7 @@ public class HabitsAddCommandHandler extends DiscordChatInputInteractionEventLis
         var habitName = CommandHandlerHelper.getOptionValue(subCommand, "name");
         var habitTimeRange = HabitTimeRange.valueOf(CommandHandlerHelper.getOptionValue(subCommand, "time-range"));
 
-        var userId = event.getInteraction().getUser().getId();
+        var userId = CommandHandlerHelper.getDiscordUserId(event);
         var user = userService.getOrCreateDiscordUser(userId);
 
         var habit = habitService.createHabit(user, habitName, habitTimeRange);

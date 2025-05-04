@@ -30,7 +30,7 @@ public class HabitsRemoveCommandHandler extends DiscordChatInputInteractionEvent
         var subCommand = CommandHandlerHelper.getSubCommand(event, getCommandNameFilter());
         var habitId = CommandHandlerHelper.getOptionValueAsLong(subCommand, "habit");
 
-        var userId = event.getInteraction().getUser().getId();
+        var userId = CommandHandlerHelper.getDiscordUserId(event);
         var user = userService.getOrCreateDiscordUser(userId);
 
         habitService.removeHabit(user, habitId);

@@ -45,7 +45,7 @@ public class HistoryCommandHandler extends DiscordChatInputInteractionEventListe
     @Transactional
     public Mono<Void> execute(ChatInputInteractionEvent event) {
         var exerciseName = CommandHandlerHelper.getOptionalOptionValue(event, CommandConstants.AutoCompletePropMyExerciseName, null);
-        var userId = event.getInteraction().getUser().getId();
+        var userId = CommandHandlerHelper.getDiscordUserId(event);
         return event.editReply(getReplyEditSpec(userId, 0, exerciseName)).then();
     }
 
