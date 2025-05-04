@@ -21,12 +21,12 @@ public interface ExerciseLogRepository extends JpaRepository<ExerciseLog, Long> 
     long countDistinctExerciseTypeByUser(@NonNull @Param("user") User user);
     List<ExerciseLog> findAllByUser(@NonNull User user);
     Page<ExerciseLog> findAllByUserOrderByCreatedDesc(@NonNull User user, @NonNull Pageable pageable);
+    List<ExerciseLog> findAllByUserAndExerciseTypeIdOrderByCreatedAsc(@NonNull User user, @NonNull Long exerciseTypeId);
     Page<ExerciseLog> findAllByUserAndExerciseTypeIdOrderByCreatedDesc(@NonNull User user, @NonNull Long exerciseTypeId, @NonNull Pageable pageable);
+    List<ExerciseLog> findAllByUserAndExerciseTypeNameOrderByCreatedAsc(@NonNull User user, @NonNull String exerciseTypeName);
     List<ExerciseLog> findAllByCreatedBeforeAndDiscordChannelIdNotNullAndDiscordMessageIdNotNull(@NonNull LocalDateTime dateBefore);
     List<ExerciseLog> findAllByUserAndCreatedAfter(@NonNull User user, @NonNull LocalDateTime from);
     List<ExerciseLog> findAllByExerciseTypeId(@NonNull Long exerciseTypeId);
     List<ExerciseLog> findAllByExerciseTypeName(@NonNull String exerciseTypeName);
-    List<ExerciseLog> findAllByUserAndExerciseTypeId(@NonNull User user, @NonNull Long exerciseTypeId);
-    List<ExerciseLog> findAllByUserAndExerciseTypeName(@NonNull User user, @NonNull String exerciseTypeName);
     Optional<ExerciseLog> findTopByUserOrderByIdDesc(@NonNull User user);
 }

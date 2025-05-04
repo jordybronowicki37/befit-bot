@@ -77,7 +77,7 @@ public class AchievementsRulesHandler {
         }
 
         if (checkUserAchievementLocked(user, Achievement.KEEP_ON_STACKING)) {
-            var logs = exerciseLogRepository.findAllByUserAndExerciseTypeId(user, exerciseType.getId());
+            var logs = exerciseLogRepository.findAllByUserAndExerciseTypeIdOrderByCreatedAsc(user, exerciseType.getId());
             logs.add(exerciseLog);
             if (logs.size() >= 5) {
                 var recentLogs = logs.stream().skip(logs.size() - 5).map(ExerciseLog::getAmount).toList();

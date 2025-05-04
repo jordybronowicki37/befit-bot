@@ -83,9 +83,9 @@ public class ExerciseLogService {
         if (exerciseName.startsWith("#")) {
             var idString = exerciseName.substring(1);
             var id = Long.parseLong(idString);
-            return exerciseLogRepository.findAllByUserAndExerciseTypeId(user, id);
+            return exerciseLogRepository.findAllByUserAndExerciseTypeIdOrderByCreatedAsc(user, id);
         }
-        return exerciseLogRepository.findAllByUserAndExerciseTypeName(user, exerciseName);
+        return exerciseLogRepository.findAllByUserAndExerciseTypeNameOrderByCreatedAsc(user, exerciseName);
     }
 
     public ExerciseLog scheduleUndoExpiry(User user, Long id, Snowflake channelId, Snowflake messageId) {
