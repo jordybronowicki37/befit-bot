@@ -19,11 +19,12 @@ public class ListenerRegistrar <T extends Event> implements CommandLineRunner {
     public final List<DiscordEventListener<T>> eventListeners;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         log.info("Registering listeners");
         for(DiscordEventListener<T> listener : eventListeners) {
             discordClient.on(listener.getEventType())
                     .filter(listener::acceptExecution)
+                    .doOnNext(listener::logExecution)
                     .flatMap(listener::preExecute)
                     .flatMap(e -> Mono.defer(() -> listener.execute(e)).onErrorResume(t -> listener.replyWithErrorMessage(t, e)))
                     .onErrorResume(listener::handleError)

@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.listeners;
 
+import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.service.exceptions.MyException;
 import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.event.domain.interaction.DeferrableInteractionEvent;
@@ -8,6 +9,8 @@ import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
+
+import java.util.Arrays;
 
 @Slf4j
 public abstract class DiscordButtonInteractionEventListener implements DiscordEventListener<ButtonInteractionEvent> {
@@ -19,6 +22,18 @@ public abstract class DiscordButtonInteractionEventListener implements DiscordEv
 
     public boolean acceptExecution(ButtonInteractionEvent event) {
         return event.getCustomId().startsWith(getCommandNameFilter()+'$');
+    }
+
+    public void logExecution(ButtonInteractionEvent event) {
+        var customIdSplit = event.getCustomId().split("\\$");
+        log.info(
+                "Executing button handler: {}, discord user id: {}, username: {}, type: {}, options: [{}]",
+                getCommandNameFilter(),
+                CommandHandlerHelper.getDiscordUserId(event).asString(),
+                CommandHandlerHelper.getDiscordUserName(event),
+                customIdSplit[1],
+                String.join(", ", Arrays.copyOfRange(customIdSplit, 2, customIdSplit.length))
+        );
     }
 
     public Mono<ButtonInteractionEvent> preExecute(ButtonInteractionEvent event) {

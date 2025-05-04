@@ -5,8 +5,10 @@ import dev.jb.befit.backend.data.models.User;
 import dev.jb.befit.backend.data.models.WebUser;
 import dev.jb.befit.backend.discord.commands.exceptions.OptionNotFoundException;
 import dev.jb.befit.backend.discord.commands.exceptions.ValueNotFoundException;
+import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
+import discord4j.core.event.domain.interaction.InteractionCreateEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.object.component.ActionRow;
@@ -71,6 +73,17 @@ public final class CommandHandlerHelper {
 
     public static boolean checkCommandName(ChatInputInteractionEvent event, String commandName) {
         return getCommandName(event).equals(commandName);
+    }
+
+    public static List<ApplicationCommandInteractionOption> getOptions(ChatInputInteractionEvent event, String commandName) {
+        if (!commandName.contains(" ")) {
+            return event.getOptions();
+        }
+        else {
+            var subCommand = getSubCommand(event, commandName);
+            if (subCommand == null) return List.of();
+            return subCommand.getOptions();
+        }
     }
 
     public static ApplicationCommandInteractionOption getSubCommand(ChatInputInteractionEvent event, String commandName) {

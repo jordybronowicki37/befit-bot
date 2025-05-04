@@ -3,6 +3,8 @@ package dev.jb.befit.backend.discord.listeners;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.service.exceptions.MyException;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
+import discord4j.core.object.command.ApplicationCommandInteractionOption;
+import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionReplyEditSpec;
 import discord4j.rest.util.Color;
@@ -10,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+
+import static dev.jb.befit.backend.discord.commands.CommandHandlerHelper.getOptions;
 
 @Slf4j
 public abstract class DiscordChatInputInteractionEventListener implements DiscordEventListener<ChatInputInteractionEvent> {
@@ -21,6 +25,21 @@ public abstract class DiscordChatInputInteractionEventListener implements Discor
 
     public boolean acceptExecution(ChatInputInteractionEvent event) {
         return CommandHandlerHelper.checkCommandName(event, getCommandNameFilter());
+    }
+
+    public void logExecution(ChatInputInteractionEvent event) {
+        var options = getOptions(event, getCommandNameFilter());
+        var optionValues = options.stream()
+                .map(ApplicationCommandInteractionOption::getValue)
+                .map(v -> v.map(ApplicationCommandInteractionOptionValue::getRaw).orElse(""))
+                .toArray(String[]::new);
+        log.info(
+                "Executing command handler: {}, discord user id: {}, username: {}, options: [{}]",
+                getCommandNameFilter(),
+                CommandHandlerHelper.getDiscordUserId(event).asString(),
+                CommandHandlerHelper.getDiscordUserName(event),
+                String.join(", ", optionValues)
+        );
     }
 
     public Mono<ChatInputInteractionEvent> preExecute(ChatInputInteractionEvent event) {

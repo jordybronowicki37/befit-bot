@@ -7,6 +7,7 @@ public interface DiscordEventListener<T extends Event> {
     Class<T> getEventType();
     boolean acceptExecution(T event);
     Mono<T> preExecute(T event);
+    void logExecution(T event);
     Mono<Void> execute(T event);
     Mono<Void> handleError(Throwable error);
     Mono<Void> replyWithErrorMessage(Throwable error, T initialEvent);

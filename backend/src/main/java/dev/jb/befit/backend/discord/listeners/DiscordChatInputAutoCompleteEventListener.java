@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.discord.listeners;
 
+import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
@@ -14,6 +15,16 @@ public abstract class DiscordChatInputAutoCompleteEventListener implements Disco
 
     public boolean acceptExecution(ChatInputAutoCompleteEvent event) {
         return event.getFocusedOption().getName().equals(getCommandNameFilter());
+    }
+
+    public void logExecution(ChatInputAutoCompleteEvent event) {
+        log.info(
+                "Executing autocomplete handler: {}, discord user id: {}, username: {}, filter: {}",
+                getCommandNameFilter(),
+                CommandHandlerHelper.getDiscordUserId(event).asString(),
+                CommandHandlerHelper.getDiscordUserName(event),
+                CommandHandlerHelper.getAutocompleteOptionFilter(event)
+        );
     }
 
     public Mono<ChatInputAutoCompleteEvent> preExecute(ChatInputAutoCompleteEvent event) {
