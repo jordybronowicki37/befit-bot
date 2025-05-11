@@ -29,4 +29,5 @@ public interface ExerciseLogRepository extends JpaRepository<ExerciseLog, Long> 
     List<ExerciseLog> findAllByExerciseTypeId(@NonNull Long exerciseTypeId);
     List<ExerciseLog> findAllByExerciseTypeName(@NonNull String exerciseTypeName);
     Optional<ExerciseLog> findTopByUserOrderByIdDesc(@NonNull User user);
+    Optional<ExerciseLog> findTopByUserOrderByIdDesc(@NonNull User user, @NonNull String exerciseTypeName);
 }

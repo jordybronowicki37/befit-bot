@@ -58,6 +58,10 @@ public class ExerciseLogService {
         return exerciseLogRepository.findTopByUserOrderByIdDesc(user);
     }
 
+    public Optional<ExerciseLog> getLastByUserAndExercise(User user, String exerciseName) {
+        return exerciseLogRepository.findTopByUserOrderByIdDesc(user);
+    }
+
     public Page<ExerciseLog> getAllRecentByUser(User user, Pageable pageable) {
         return exerciseLogRepository.findAllByUserOrderByCreatedDesc(user, pageable);
     }

@@ -3,10 +3,8 @@ package dev.jb.befit.backend.discord.commands.handlers.goals;
 import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
-import dev.jb.befit.backend.service.GoalService;
-import dev.jb.befit.backend.service.ServiceConstants;
-import dev.jb.befit.backend.service.UserExperienceService;
-import dev.jb.befit.backend.service.UserService;
+import dev.jb.befit.backend.service.*;
+import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import dev.jb.befit.backend.service.visuals.UserExperienceImageService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
@@ -27,6 +25,9 @@ import java.io.FileNotFoundException;
 public class GoalAddCommandHandler extends DiscordChatInputInteractionEventListener {
     private final UserService userService;
     private final GoalService goalService;
+    private final ExerciseTypeService exerciseTypeService;
+    private final ExerciseLogService exerciseLogService;
+    private final ExerciseRecordService exerciseRecordService;
 
     @Override
     public String getCommandNameFilter() {
@@ -43,7 +44,11 @@ public class GoalAddCommandHandler extends DiscordChatInputInteractionEventListe
         var exerciseAmount = CommandHandlerHelper.getOptionValueAsDouble(subCommand, "amount");
 
         var user = userService.getOrCreateDiscordUser(userId);
+        var exerciseType = exerciseTypeService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
+        var oldGoal = goalService.getActiveUserGoal(user, exerciseName);
         var goal = goalService.create(user, exerciseName, exerciseAmount);
+        var pr = exerciseRecordService.getByExercise(user, exerciseName);
+        var lastLog = exerciseLogService.getLastByUser()
 
         var embed = EmbedCreateSpec.builder()
                 .title(":dart: New goal set")
