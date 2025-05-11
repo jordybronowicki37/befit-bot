@@ -28,4 +28,13 @@ public final class ServiceHelper {
         if (userRecord.isEmpty()) return null;
         return recordsSorted.indexOf(userRecord.get()) + 1;
     }
+
+    public static Long getIdFromExerciseString(String exerciseString) {
+        if (exerciseString.startsWith("#")) {
+            var endIndex = exerciseString.indexOf(" ");
+            var idString = exerciseString.substring(1, endIndex == -1 ? exerciseString.length() : endIndex);
+            return Long.parseLong(idString);
+        }
+        return 0L;
+    }
 }

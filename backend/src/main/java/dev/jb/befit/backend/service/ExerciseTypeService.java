@@ -35,8 +35,7 @@ public class ExerciseTypeService {
 
     public Optional<ExerciseType> getByName(String name) {
         if (name.startsWith("#")) {
-            var idString = name.substring(1);
-            var id = Long.parseLong(idString);
+            var id = ServiceHelper.getIdFromExerciseString(name);
             return exerciseTypeRepository.findById(id);
         }
         return exerciseTypeRepository.findByName(name);

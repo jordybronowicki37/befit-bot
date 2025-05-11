@@ -39,7 +39,7 @@ public class ExerciseTypeMyAutoCompleteHandler extends DiscordChatInputAutoCompl
                 .map(ExerciseRecord::getExerciseType)
                 .map(e ->
                         ApplicationCommandOptionChoiceData.builder()
-                                .name(String.format("%s - %s %s", e.getName(), e.getMeasurementType().getLongName(), e.getGoalDirection().equals(GoalDirection.INCREASING) ? "⇑" : "️⇓"))
+                                .name(String.format("#%d %s - %s %s", e.getId(), e.getName(), e.getMeasurementType().getLongName(), e.getGoalDirection().equals(GoalDirection.INCREASING) ? "⇑" : "️⇓"))
                                 .value(String.format("#%d", e.getId()))
                                 .build()
                 )

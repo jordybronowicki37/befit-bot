@@ -81,8 +81,7 @@ public class ExerciseLogService {
 
     public List<ExerciseLog> getAllByUserAndExerciseName(User user, String exerciseName) {
         if (exerciseName.startsWith("#")) {
-            var idString = exerciseName.substring(1);
-            var id = Long.parseLong(idString);
+            var id = ServiceHelper.getIdFromExerciseString(exerciseName);
             return exerciseLogRepository.findAllByUserAndExerciseTypeIdOrderByCreatedAsc(user, id);
         }
         return exerciseLogRepository.findAllByUserAndExerciseTypeNameOrderByCreatedAsc(user, exerciseName);
