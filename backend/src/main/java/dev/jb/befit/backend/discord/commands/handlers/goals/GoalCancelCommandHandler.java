@@ -21,6 +21,7 @@ import reactor.core.publisher.Mono;
 public class GoalCancelCommandHandler extends DiscordChatInputInteractionEventListener {
     private final UserService userService;
     private final GoalService goalService;
+    private final GoalsViewCommandHandler goalsViewCommandHandler;
 
     @Override
     public String getCommandNameFilter() {
@@ -40,7 +41,7 @@ public class GoalCancelCommandHandler extends DiscordChatInputInteractionEventLi
 
         var embed = EmbedCreateSpec.builder()
                 .title(":no_entry_sign: Goal cancelled")
-                .addField(GoalsViewCommandHandler.getGoalField(goal))
+                .addField(goalsViewCommandHandler.getGoalField(goal))
                 .color(Color.GREEN)
                 .build();
 

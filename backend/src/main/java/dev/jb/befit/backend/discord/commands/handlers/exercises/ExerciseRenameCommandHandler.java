@@ -4,7 +4,6 @@ import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.ExerciseTypeService;
-import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionReplyEditSpec;
@@ -34,7 +33,7 @@ public class ExerciseRenameCommandHandler extends DiscordChatInputInteractionEve
         var oldExerciseName = CommandHandlerHelper.getOptionValue(subCommand, CommandConstants.AutoCompletePropExerciseName);
         var newExerciseName = CommandHandlerHelper.getOptionValue(subCommand, "new-name");
 
-        var oldName = exerciseService.getByName(oldExerciseName).orElseThrow(() -> new ExerciseNotFoundException(oldExerciseName)).getName();
+        var oldName = exerciseService.findByName(oldExerciseName).getName();
         exerciseService.rename(oldExerciseName, newExerciseName);
 
         var embed = EmbedCreateSpec.builder()

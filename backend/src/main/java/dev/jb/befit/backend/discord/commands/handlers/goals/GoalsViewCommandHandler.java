@@ -5,6 +5,8 @@ import dev.jb.befit.backend.data.models.GoalStatus;
 import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
+import dev.jb.befit.backend.service.ExerciseLogService;
+import dev.jb.befit.backend.service.ExerciseRecordService;
 import dev.jb.befit.backend.service.GoalService;
 import dev.jb.befit.backend.service.UserService;
 import discord4j.common.util.Snowflake;
@@ -27,6 +29,8 @@ import java.util.Comparator;
 public class GoalsViewCommandHandler extends DiscordChatInputInteractionEventListener {
     private final UserService userService;
     private final GoalService goalService;
+    private final ExerciseLogService exerciseLogService;
+    private final ExerciseRecordService exerciseRecordService;
 
     @Override
     public String getCommandNameFilter() {
@@ -52,7 +56,7 @@ public class GoalsViewCommandHandler extends DiscordChatInputInteractionEventLis
         if (goals.isEmpty()) embed.description(String.format("No goals yet, try creating a goal by using the command: `/%s`", CommandConstants.CommandGoalsAdd));
 
         goals.stream().skip((long) pageSize * page).limit(pageSize)
-                .sorted(Comparator.comparing(g -> g.getExerciseType().getName()))
+                .sorted(Comparator.comparing(Goal::getCreated).reversed())
                 .forEach(g -> embed.addField(getGoalField(g)));
 
         var amountOfPages = CommandHandlerHelper.getAmountOfPages(goals.size(), pageSize);
@@ -61,15 +65,33 @@ public class GoalsViewCommandHandler extends DiscordChatInputInteractionEventLis
         return InteractionReplyEditSpec.builder().addEmbed(embed.build()).addComponent(controls).build();
     }
 
-    public static EmbedCreateFields.Field getGoalField(Goal goal) {
+    public EmbedCreateFields.Field getGoalField(Goal goal) {
         var exerciseType = goal.getExerciseType();
+        var measurement = exerciseType.getMeasurementType().getShortName();
         var title = String.format("#%d %s", exerciseType.getId(), exerciseType.getName());
-        var description = String.format("Created: %s\nAmount: %s %s\nStatus: %s",
-                CommandHandlerHelper.discordTimeAgoText(goal.getCreated()),
+        var pr = exerciseRecordService.getByExercise(goal.getUser(), exerciseType.getName());
+        var lastLog = exerciseLogService.getLastByUserAndExercise(goal.getUser(), exerciseType.getId());
+
+        var description = new StringBuilder();
+        description.append(String.format("Status: %s\n", goal.getStatus().name().toLowerCase()));
+        description.append(String.format("Created: %s\n", CommandHandlerHelper.discordTimeAgoText(goal.getCreated())));
+        description.append(String.format(
+                "Amount: %s %s\n",
                 CommandHandlerHelper.formatDouble(goal.getAmount()),
-                exerciseType.getMeasurementType().getShortName(),
-                goal.getStatus().name().toLowerCase()
-        );
-        return EmbedCreateFields.Field.of(title, description, false);
+                measurement
+        ));
+        lastLog.map(l -> description.append(String.format(
+                "Last log: %s %s - %s\n",
+                CommandHandlerHelper.formatDouble(l.getAmount()),
+                measurement,
+                CommandHandlerHelper.discordTimeAgoText(l.getCreated())
+        )));
+        pr.map(p -> description.append(String.format(
+                "Pr: %s %s\n",
+                CommandHandlerHelper.formatDouble(p.getAmount()),
+                measurement
+        )));
+
+        return EmbedCreateFields.Field.of(title, description.toString(), false);
     }
 }

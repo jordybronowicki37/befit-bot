@@ -3,7 +3,6 @@ package dev.jb.befit.backend.service;
 import dev.jb.befit.backend.data.ExerciseRecordRepository;
 import dev.jb.befit.backend.data.models.*;
 import dev.jb.befit.backend.service.exceptions.ExerciseMismatchException;
-import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,7 +31,7 @@ public class ExerciseRecordService {
     }
 
     public Optional<ExerciseRecord> getByExercise(User user, String exerciseName) {
-        var exercise = exerciseTypeService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
+        var exercise = exerciseTypeService.findByName(exerciseName);
         return getByExercise(user, exercise);
     }
 

@@ -10,7 +10,6 @@ import dev.jb.befit.backend.discord.registration.EmojiRegistrarService;
 import dev.jb.befit.backend.service.ExerciseLogService;
 import dev.jb.befit.backend.service.ExerciseTypeService;
 import dev.jb.befit.backend.service.UserService;
-import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateFields;
@@ -55,7 +54,7 @@ public class HistoryCommandHandler extends DiscordChatInputInteractionEventListe
         if (exerciseNameFilter == null || exerciseNameFilter.equals("null")) {
             allLogs = exerciseLogService.getAllRecentByUser(user, Pageable.ofSize(CommandConstants.PageSize).withPage(page));
         } else {
-            var exercise = exerciseTypeService.getByName(exerciseNameFilter).orElseThrow(() -> new ExerciseNotFoundException(exerciseNameFilter));
+            var exercise = exerciseTypeService.findByName(exerciseNameFilter);
             allLogs = exerciseLogService.getAllRecentByUser(user, exercise.getId(), Pageable.ofSize(CommandConstants.PageSize).withPage(page));
         }
 

@@ -1,5 +1,6 @@
 package dev.jb.befit.backend.data;
 
+import dev.jb.befit.backend.data.models.ExerciseType;
 import dev.jb.befit.backend.data.models.Goal;
 import dev.jb.befit.backend.data.models.GoalStatus;
 import dev.jb.befit.backend.data.models.User;
@@ -15,7 +16,6 @@ public interface GoalRepository extends JpaRepository<Goal, Long> {
     List<Goal> findAllByUser(@NonNull User user);
     List<Goal> findAllByUserAndStatus(@NonNull User user, @NonNull GoalStatus status);
     List<Goal> findAllByUserAndCompletedAtAfterAndCompletedAtNotNull(@NonNull User user, @NonNull LocalDateTime from);
-    List<Goal> findAllByExerciseTypeName(@NonNull String exerciseTypeName);
-    List<Goal> findAllByUserAndExerciseTypeId(@NonNull User user, @NonNull Long exerciseTypeId);
-    List<Goal> findAllByUserAndExerciseTypeName(@NonNull User user, @NonNull String exerciseTypeName);
+    List<Goal> findAllByExerciseType(@NonNull ExerciseType exerciseType);
+    List<Goal> findAllByUserAndExerciseType(@NonNull User user, @NonNull ExerciseType exerciseType);
 }

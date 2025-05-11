@@ -4,7 +4,6 @@ import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.*;
-import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import dev.jb.befit.backend.service.visuals.UserExperienceImageService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
@@ -26,8 +25,7 @@ public class GoalAddCommandHandler extends DiscordChatInputInteractionEventListe
     private final UserService userService;
     private final GoalService goalService;
     private final ExerciseTypeService exerciseTypeService;
-    private final ExerciseLogService exerciseLogService;
-    private final ExerciseRecordService exerciseRecordService;
+    private final GoalsViewCommandHandler goalsViewCommandHandler;
 
     @Override
     public String getCommandNameFilter() {
@@ -44,15 +42,13 @@ public class GoalAddCommandHandler extends DiscordChatInputInteractionEventListe
         var exerciseAmount = CommandHandlerHelper.getOptionValueAsDouble(subCommand, "amount");
 
         var user = userService.getOrCreateDiscordUser(userId);
-        var exerciseType = exerciseTypeService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
+        var exerciseType = exerciseTypeService.findByName(exerciseName);
         var oldGoal = goalService.getActiveUserGoal(user, exerciseName);
         var goal = goalService.create(user, exerciseName, exerciseAmount);
-        var pr = exerciseRecordService.getByExercise(user, exerciseName);
-        var lastLog = exerciseLogService.getLastByUser()
 
         var embed = EmbedCreateSpec.builder()
                 .title(":dart: New goal set")
-                .addField(GoalsViewCommandHandler.getGoalField(goal))
+                .addField(goalsViewCommandHandler.getGoalField(goal))
                 .color(Color.GREEN);
 
         // Add user xp field

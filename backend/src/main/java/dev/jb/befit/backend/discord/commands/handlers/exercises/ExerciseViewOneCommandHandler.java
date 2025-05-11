@@ -4,7 +4,6 @@ import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.*;
-import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionReplyEditSpec;
@@ -39,7 +38,7 @@ public class ExerciseViewOneCommandHandler extends DiscordChatInputInteractionEv
         var subCommand = CommandHandlerHelper.getSubCommand(event, getCommandNameFilter());
         var exerciseName = CommandHandlerHelper.getOptionValue(subCommand, CommandConstants.AutoCompletePropExerciseName);
 
-        var exercise = exerciseService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
+        var exercise = exerciseService.findByName(exerciseName);
         var measurement = exercise.getMeasurementType();
         var logs = exerciseLogService.getAllByUserAndExerciseName(user, exerciseName);
         var myRecord = exerciseRecordService.getByExercise(user, exercise);

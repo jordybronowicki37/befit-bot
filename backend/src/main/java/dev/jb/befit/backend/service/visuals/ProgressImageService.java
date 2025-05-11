@@ -8,7 +8,6 @@ import dev.jb.befit.backend.service.ExerciseLogService;
 import dev.jb.befit.backend.service.ExerciseTypeService;
 import dev.jb.befit.backend.service.GoalService;
 import dev.jb.befit.backend.service.UserService;
-import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import dev.jb.befit.backend.service.exceptions.NoProgressMadeException;
 import dev.jb.befit.backend.service.exceptions.NotEnoughProgressException;
 import discord4j.common.util.Snowflake;
@@ -60,7 +59,7 @@ public class ProgressImageService {
     public File createPersonalProgressChart(Snowflake userId, String exerciseName) {
         var user = userService.getOrCreateDiscordUser(userId);
         var goal = goalService.getActiveUserGoal(user, exerciseName);
-        var exerciseType = exerciseTypeService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
+        var exerciseType = exerciseTypeService.findByName(exerciseName);
 
         var allExerciseLogs = logService.getAllByUserAndExerciseName(user, exerciseName);
         if (allExerciseLogs.isEmpty()) throw new NoProgressMadeException(exerciseType);
@@ -90,7 +89,7 @@ public class ProgressImageService {
     }
 
     public File createGlobalProgressChart(String exerciseName) {
-        var exerciseType = exerciseTypeService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
+        var exerciseType = exerciseTypeService.findByName(exerciseName);
 
         var allExerciseLogs = logService.getAllByExerciseName(exerciseName);
         if (allExerciseLogs.isEmpty()) throw new NoProgressMadeException(exerciseType);

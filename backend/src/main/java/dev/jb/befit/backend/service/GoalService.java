@@ -3,7 +3,6 @@ package dev.jb.befit.backend.service;
 import dev.jb.befit.backend.data.GoalRepository;
 import dev.jb.befit.backend.data.models.*;
 import dev.jb.befit.backend.service.exceptions.ExerciseMismatchException;
-import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import dev.jb.befit.backend.service.exceptions.GoalNotFoundException;
 import dev.jb.befit.backend.service.exceptions.InvalidUserException;
 import lombok.RequiredArgsConstructor;
@@ -38,15 +37,13 @@ public class GoalService {
     }
 
     public List<Goal> getAllByExerciseName(String exerciseName) {
-        return goalRepository.findAllByExerciseTypeName(exerciseName);
+        var exercise = exerciseTypeService.findByName(exerciseName);
+        return goalRepository.findAllByExerciseType(exercise);
     }
 
     public List<Goal> getAllByUserAndExerciseName(User user, String exerciseName) {
-        if (exerciseName.startsWith("#")) {
-            var id = ServiceHelper.getIdFromExerciseString(exerciseName);
-            return goalRepository.findAllByUserAndExerciseTypeId(user, id);
-        }
-        return goalRepository.findAllByUserAndExerciseTypeName(user, exerciseName);
+        var exercise = exerciseTypeService.findByName(exerciseName);
+        return goalRepository.findAllByUserAndExerciseType(user, exercise);
     }
 
     public Optional<Goal> getActiveUserGoal(User user, String exerciseName) {
@@ -54,7 +51,7 @@ public class GoalService {
         if (activeUserGoals.isEmpty()) return Optional.empty();
         if (activeUserGoals.size() == 1) return Optional.of(activeUserGoals.get(0));
 
-        log.warn("User {} has more than one goal for exercise {}, older goals will be removed", user, exerciseName);
+        log.warn("User {} has more than one goal for exercise {}, older goals will be removed", user, activeUserGoals.get(0).getExerciseType().getName());
 
         for (int i = 0; i < activeUserGoals.size(); i++) {
             var goal = activeUserGoals.get(i);
@@ -67,7 +64,7 @@ public class GoalService {
     }
 
     public Goal create(User user, String exerciseName, Double amount) {
-        var exerciseType = exerciseTypeService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
+        var exerciseType = exerciseTypeService.findByName(exerciseName);
 
         // If a goal already exists, change the status to overwritten
         getActiveUserGoal(user, exerciseName).ifPresent(lastGoal -> {

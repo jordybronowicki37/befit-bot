@@ -5,7 +5,6 @@ import dev.jb.befit.backend.data.ExerciseRecordRepository;
 import dev.jb.befit.backend.data.UserAchievementsRepository;
 import dev.jb.befit.backend.data.models.*;
 import dev.jb.befit.backend.service.dto.LogCreationStatus;
-import dev.jb.befit.backend.service.exceptions.ExerciseNotFoundException;
 import dev.jb.befit.backend.service.exceptions.InvalidUserException;
 import dev.jb.befit.backend.service.exceptions.LogNotFoundException;
 import discord4j.common.util.Snowflake;
@@ -58,8 +57,8 @@ public class ExerciseLogService {
         return exerciseLogRepository.findTopByUserOrderByIdDesc(user);
     }
 
-    public Optional<ExerciseLog> getLastByUserAndExercise(User user, String exerciseName) {
-        return exerciseLogRepository.findTopByUserOrderByIdDesc(user);
+    public Optional<ExerciseLog> getLastByUserAndExercise(User user, Long exerciseId) {
+        return exerciseLogRepository.findTopByUserAndExerciseTypeIdOrderByIdDesc(user, exerciseId);
     }
 
     public Page<ExerciseLog> getAllRecentByUser(User user, Pageable pageable) {
@@ -107,7 +106,7 @@ public class ExerciseLogService {
 
     public LogCreationStatus create(User user, String exerciseName, Double amount) {
         var achievements = new LinkedList<UserAchievement>();
-        var exerciseType = exerciseTypeService.getByName(exerciseName).orElseThrow(() -> new ExerciseNotFoundException(exerciseName));
+        var exerciseType = exerciseTypeService.findByName(exerciseName);
         var allExistingLogs = getAllByUserAndExerciseName(user, exerciseName);
         var lastExerciseLog = allExistingLogs.stream().skip(allExistingLogs.isEmpty() ? 0 : allExistingLogs.size()-1).findFirst().orElse(null);
         var exerciseLog = new ExerciseLog(amount, exerciseType, user);

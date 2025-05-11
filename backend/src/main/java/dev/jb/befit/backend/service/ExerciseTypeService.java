@@ -41,6 +41,10 @@ public class ExerciseTypeService {
         return exerciseTypeRepository.findByName(name);
     }
 
+    public ExerciseType findByName(String name) {
+        return getByName(name).orElseThrow(() -> new ExerciseNotFoundException(name));
+    }
+
     public ExerciseType create(String name, MeasurementType measurementType, GoalDirection goalDirection) {
         if (name.startsWith("#")) throw new InvalidExerciseNameException("An exercise name can not start with '#'");
         var exerciseType = new ExerciseType(name, measurementType, goalDirection);
@@ -49,7 +53,7 @@ public class ExerciseTypeService {
 
     public ExerciseType rename(String name, String newName) {
         if (newName.startsWith("#")) throw new InvalidExerciseNameException("An exercise name can not start with '#'");
-        var exerciseType = getByName(name).orElseThrow(() -> new ExerciseNotFoundException(name));
+        var exerciseType = findByName(name);
         exerciseType.setName(newName);
         return exerciseTypeRepository.save(exerciseType);
     }
