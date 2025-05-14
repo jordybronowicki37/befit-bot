@@ -59,12 +59,23 @@ public class ExerciseViewOneCommandHandler extends DiscordChatInputInteractionEv
             progressDescriptionBuilder.append(String.format("Logs: %d", logs.size()));
 
             var lastLog = logs.get(logs.size() - 1);
-            progressDescriptionBuilder.append(String.format("\nLast: %s %s - %s", CommandHandlerHelper.formatDouble(lastLog.getAmount()), measurement.getShortName(), CommandHandlerHelper.discordFormatDate(lastLog.getCreated())));
+            progressDescriptionBuilder.append(String.format(
+                    "\nLast: %s %s - %s",
+                    CommandHandlerHelper.formatDouble(lastLog.getAmount()),
+                    measurement.getShortName(),
+                    CommandHandlerHelper.discordFormatDate(lastLog.getCreated())
+            ));
+
+            myRecord.ifPresent(exerciseRecord ->
+                    progressDescriptionBuilder.append(String.format(
+                            "\nPr: %s %s - %s",
+                            CommandHandlerHelper.formatDouble(exerciseRecord.getAmount()),
+                            measurement.getShortName(),
+                            CommandHandlerHelper.discordTimeAgoText(exerciseRecord.getExerciseLog().getCreated())
+                    )));
 
             var goal = goalService.getActiveUserGoal(user, exerciseName);
             goal.ifPresent(value -> progressDescriptionBuilder.append(String.format("\nGoal: %s %s", CommandHandlerHelper.formatDouble(value.getAmount()), measurement.getShortName())));
-
-            myRecord.ifPresent(exerciseRecord -> progressDescriptionBuilder.append(String.format("\nPr: %s %s", CommandHandlerHelper.formatDouble(exerciseRecord.getAmount()), measurement.getShortName())));
 
             var leaderBoardPosition = ServiceHelper.getLeaderboardPosition(user, records);
             if (leaderBoardPosition != null) progressDescriptionBuilder.append(String.format("\nPosition: %s", CommandHandlerHelper.getLeaderboardValue(leaderBoardPosition)));

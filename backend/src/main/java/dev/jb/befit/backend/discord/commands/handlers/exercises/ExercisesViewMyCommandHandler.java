@@ -62,11 +62,24 @@ public class ExercisesViewMyCommandHandler extends DiscordChatInputInteractionEv
                             var exercise = groupedLog.getKey();
                             var goal = goals.stream().filter(g -> g.getExerciseType().getId().equals(exercise.getId())).findFirst();
                             var logs = groupedLog.getValue();
+                            var last = exerciseLogService.getLastByUserAndExercise(user, exercise.getId());
                             var pr = exerciseRecordService.getByExercise(user, exercise).orElseThrow(RecordNotFoundException::new);
+                            var measurementName = exercise.getMeasurementType().getShortName();
                             var descriptionBuilder = new StringBuilder();
                             descriptionBuilder.append("Logs: ").append(logs.size());
-                            goal.ifPresent(g -> descriptionBuilder.append(String.format("\nGoal: %s %s", CommandHandlerHelper.formatDouble(g.getAmount()), exercise.getMeasurementType().getShortName())));
-                            descriptionBuilder.append(String.format("\nPr: %s %s", CommandHandlerHelper.formatDouble(pr.getAmount()), exercise.getMeasurementType().getShortName()));
+                            goal.ifPresent(g -> descriptionBuilder.append(String.format("\nGoal: %s %s", CommandHandlerHelper.formatDouble(g.getAmount()), measurementName)));
+                            last.ifPresent(l -> descriptionBuilder.append(String.format(
+                                    "\nLast: %s %s - %s",
+                                    CommandHandlerHelper.formatDouble(l.getAmount()),
+                                    measurementName,
+                                    CommandHandlerHelper.discordTimeAgoText(l.getCreated())
+                            )));
+                            descriptionBuilder.append(String.format(
+                                    "\nPr: %s %s - %s",
+                                    CommandHandlerHelper.formatDouble(pr.getAmount()),
+                                    measurementName,
+                                    CommandHandlerHelper.discordTimeAgoText(pr.getExerciseLog().getCreated())
+                            ));
                             var leaderBoardPos = ServiceHelper.getLeaderboardPosition(user, exercise.getExerciseRecords());
                             if (leaderBoardPos != null) descriptionBuilder.append(String.format("\nPosition: %s", CommandHandlerHelper.getLeaderboardValue(leaderBoardPos)));
 

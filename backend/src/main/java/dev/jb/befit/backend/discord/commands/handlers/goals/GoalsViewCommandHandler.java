@@ -87,9 +87,10 @@ public class GoalsViewCommandHandler extends DiscordChatInputInteractionEventLis
                 CommandHandlerHelper.discordTimeAgoText(l.getCreated())
         )));
         pr.map(p -> description.append(String.format(
-                "Pr: %s %s\n",
+                "Pr: %s %s - %s\n",
                 CommandHandlerHelper.formatDouble(p.getAmount()),
-                measurement
+                measurement,
+                CommandHandlerHelper.discordTimeAgoText(p.getExerciseLog().getCreated())
         )));
 
         return EmbedCreateFields.Field.of(title, description.toString(), false);

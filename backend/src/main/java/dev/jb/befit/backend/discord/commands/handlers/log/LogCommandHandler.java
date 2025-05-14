@@ -72,16 +72,26 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
             // Add last log value
             if (logCreationStatus.lastLog() != null) {
                 var previousLog = logCreationStatus.lastLog();
-                descriptionBuilder.append(String.format("Last: %s %s - %s\n", CommandHandlerHelper.formatDouble(previousLog.getAmount()), measurementName, CommandHandlerHelper.discordTimeAgoText(previousLog.getCreated())));
-            }
-            // Add goal if it is present and not yet reached
-            if (goal != null && !exerciseLog.isGoalReached()) {
-                descriptionBuilder.append(String.format("Goal: %s %s\n", CommandHandlerHelper.formatDouble(goal.getAmount()), measurementName));
+                descriptionBuilder.append(String.format(
+                        "Last: %s %s - %s\n",
+                        CommandHandlerHelper.formatDouble(previousLog.getAmount()),
+                        measurementName,
+                        CommandHandlerHelper.discordTimeAgoText(previousLog.getCreated())
+                ));
             }
             // Add current pr
             var currentPr = logCreationStatus.record();
             if (currentPr != null) {
-                descriptionBuilder.append(String.format("Pr: %s %s\n", CommandHandlerHelper.formatDouble(currentPr.getAmount()), measurementName));
+                descriptionBuilder.append(String.format(
+                        "Pr: %s %s - %s\n",
+                        CommandHandlerHelper.formatDouble(currentPr.getAmount()),
+                        measurementName,
+                        CommandHandlerHelper.discordTimeAgoText(currentPr.getExerciseLog().getCreated())
+                ));
+            }
+            // Add goal if it is present and not yet reached
+            if (goal != null && !exerciseLog.isGoalReached()) {
+                descriptionBuilder.append(String.format("Goal: %s %s\n", CommandHandlerHelper.formatDouble(goal.getAmount()), measurementName));
             }
             var leaderboardPos = ServiceHelper.getLeaderboardPosition(user, exerciseType.getExerciseRecords());
             if (leaderboardPos != null)
