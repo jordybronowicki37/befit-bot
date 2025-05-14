@@ -26,6 +26,11 @@ public class ExerciseRecord {
 
     @NonNull
     @Setter
+    @OneToOne
+    private ExerciseLog exerciseLog;
+
+    @NonNull
+    @Setter
     private Double amount;
 
     @Embeddable

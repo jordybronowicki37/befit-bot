@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -131,7 +132,6 @@ public class ExerciseLogService {
             exerciseLog.setPrImproved(true);
             earnedXp += ServiceConstants.EarnedXpRecordImproved;
         }
-        exerciseRecord = exerciseRecordService.createOrUpdate(user, exerciseLog);
 
         // Finish goal if it exists and is reached
         var goal = goalService.getActiveUserGoal(user, exerciseName).orElse(null);
@@ -161,6 +161,7 @@ public class ExerciseLogService {
         var newExerciseLog = exerciseLogRepository.save(exerciseLog);
         achievements.forEach(a -> a.setLog(newExerciseLog));
         userAchievementsRepository.saveAll(achievements);
+        exerciseRecord = exerciseRecordService.createOrUpdate(user, exerciseLog);
 
         return new LogCreationStatus(
                 newExerciseLog,
@@ -176,16 +177,17 @@ public class ExerciseLogService {
 
         if (log.isPrImproved()) {
             var exerciseType = log.getExerciseType();
-            var logsStream = getAllByUserAndExerciseName(user, exerciseType.getName()).stream().filter(l -> !l.equals(log)).map(ExerciseLog::getAmount);
-            var oldPr = exerciseType.getGoalDirection().equals(GoalDirection.INCREASING) ? logsStream.max(Double::compareTo) : logsStream.min(Double::compareTo);
+            var logsStream = getAllByUserAndExerciseName(user, exerciseType.getName()).stream().filter(l -> !l.equals(log));
+            var oldPr = exerciseType.getGoalDirection().equals(GoalDirection.INCREASING) ? logsStream.max(Comparator.comparing(ExerciseLog::getAmount)) : logsStream.min(Comparator.comparing(ExerciseLog::getAmount));
             var record = exerciseRecordService.getByExercise(user, exerciseType);
 
             if (oldPr.isPresent()) {
                 if (record.isPresent()) {
-                    record.get().setAmount(oldPr.get());
+                    record.get().setExerciseLog(oldPr.get());
+                    record.get().setAmount(oldPr.get().getAmount());
                     exerciseRecordRepository.save(record.get());
                 } else {
-                    exerciseRecordRepository.save(new ExerciseRecord(user, exerciseType, oldPr.get()));
+                    exerciseRecordRepository.save(new ExerciseRecord(user, exerciseType, oldPr.get(), oldPr.get().getAmount()));
                 }
             } else {
                 record.ifPresent(exerciseRecordRepository::delete);

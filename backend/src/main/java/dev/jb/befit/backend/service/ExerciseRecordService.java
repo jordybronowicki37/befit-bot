@@ -43,9 +43,10 @@ public class ExerciseRecordService {
         var exerciseType = exerciseLog.getExerciseType();
         var record = getByExercise(user, exerciseType).orElse(null);
         if (record == null) {
-            record = exerciseRecordRepository.save(new ExerciseRecord(user, exerciseType, exerciseLog.getAmount()));
+            record = exerciseRecordRepository.save(new ExerciseRecord(user, exerciseType, exerciseLog, exerciseLog.getAmount()));
         } else if (isRecordImproved(record, exerciseLog)) {
             record.setAmount(exerciseLog.getAmount());
+            record.setExerciseLog(exerciseLog);
             record = exerciseRecordRepository.save(record);
         }
         return record;
