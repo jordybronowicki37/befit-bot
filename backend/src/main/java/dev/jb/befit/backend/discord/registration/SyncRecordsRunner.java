@@ -22,6 +22,7 @@ public class SyncRecordsRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        log.info("Started syncing records");
         var records = exerciseRecordRepository.findAll();
         records.forEach(record -> {
             var exercise = record.getExerciseType();
@@ -36,5 +37,6 @@ public class SyncRecordsRunner implements CommandLineRunner {
                 exerciseRecordRepository.delete(record);
             });
         });
+        log.info("Finished syncing records");
     }
 }
