@@ -37,4 +37,9 @@ public final class ServiceHelper {
         }
         return 0L;
     }
+
+    public static Boolean compareDoublesWithTolerance(Double a, Double b) {
+        if (a == null || b == null) return false;
+        return Math.abs(a - b) < 0.001;
+    }
 }

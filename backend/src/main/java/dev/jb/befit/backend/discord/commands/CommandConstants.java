@@ -52,4 +52,6 @@ public final class CommandConstants {
     public static final Integer PageSize = 5;
     public static final Integer PageSizeSmallItems = 10;
     public static final Integer SearchResultsSize = 25;
+
+    public static final String DiscordLineSpacing = "\u200B ";
 }

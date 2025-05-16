@@ -1,6 +1,7 @@
 package dev.jb.befit.backend.discord.commands;
 
 import dev.jb.befit.backend.data.models.DiscordUser;
+import dev.jb.befit.backend.data.models.ExerciseLog;
 import dev.jb.befit.backend.data.models.User;
 import dev.jb.befit.backend.data.models.WebUser;
 import dev.jb.befit.backend.discord.commands.exceptions.OptionNotFoundException;
@@ -165,11 +166,7 @@ public final class CommandHandlerHelper {
     }
 
     public static String getRatingString(Integer rating) {
-        var string = new StringBuilder();
-        for (int i = 0; i < rating; i++) {
-            string.append(":star2:");
-        }
-        return string.toString();
+        return ":star2:".repeat(rating+1);
     }
 
     public static String getUserStringValue(User user) {
@@ -239,5 +236,39 @@ public final class CommandHandlerHelper {
         var end = Math.min((start + pageRequest.getPageSize()), list.size());
         var pageContent = list.subList(start, end);
         return new PageImpl<>(pageContent, pageRequest, list.size());
+    }
+
+    public static String addCongratulationsString(ExerciseLog log, Integer spacing, Boolean includeTitle) {
+        var itemSpacing = CommandConstants.DiscordLineSpacing.repeat(spacing);
+        var congratulations = new StringBuilder();
+        // Add new exercise started congratulations
+        if (log.isFirstLogOfExercise()) {
+            congratulations.append(itemSpacing).append(":sparkles: New exercise started!\n");
+        }
+        // Add new pr reached congratulations
+        if (log.isPrImproved()) {
+            congratulations.append(itemSpacing).append(":rocket: New PR reached!\n");
+        }
+        // Add on pr congratulations
+        if (log.isOnPr()) {
+            congratulations.append(itemSpacing).append(":fire: You are on your Pr!\n");
+        }
+        // Add goal reached congratulations
+        if (log.isGoalReached()) {
+            congratulations.append(itemSpacing).append(":chart_with_upwards_trend: Goal completed!\n");
+        }
+        // Add new level reached congratulations
+        if (log.isLevelCompleted()) {
+            congratulations.append(itemSpacing).append(":star2: Level completed!\n");
+        }
+        if (!congratulations.isEmpty()) {
+            var returnStringBuilder = new StringBuilder();
+            if (includeTitle) {
+                returnStringBuilder.append("Congratulations:\n");
+            }
+            returnStringBuilder.append(congratulations);
+            return returnStringBuilder.toString();
+        }
+        return "";
     }
 }

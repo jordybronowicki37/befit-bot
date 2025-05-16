@@ -84,6 +84,7 @@ public class ExerciseRecordService {
 
     public static boolean isRecordImproved(ExerciseRecord exerciseRecord, ExerciseLog exerciseLog) {
         if (!exerciseRecord.getExerciseType().equals(exerciseLog.getExerciseType())) throw new ExerciseMismatchException();
+        if (ServiceHelper.compareDoublesWithTolerance(exerciseLog.getAmount(), exerciseRecord.getAmount())) return false;
 
         if (exerciseRecord.getExerciseType().getGoalDirection().equals(GoalDirection.INCREASING)) {
             return exerciseLog.getAmount() > exerciseRecord.getAmount();

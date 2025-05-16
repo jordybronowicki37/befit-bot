@@ -100,26 +100,8 @@ public class LogCommandHandler extends DiscordChatInputInteractionEventListener 
         }
 
         // Add user congratulations
-        {
-            var descriptionBuilder = new StringBuilder();
-            // Add new exercise started congratulations
-            if (exerciseLog.isFirstLogOfExercise()) {
-                descriptionBuilder.append(":sparkles: New exercise started!\n");
-            }
-            // Add new pr reached congratulations
-            if (exerciseLog.isPrImproved()) {
-                descriptionBuilder.append(":rocket: New PR reached!\n");
-            }
-            // Add goal reached congratulations
-            if (exerciseLog.isGoalReached()) {
-                descriptionBuilder.append(":chart_with_upwards_trend: Goal completed!\n");
-            }
-            // Add new level reached congratulations
-            if (exerciseLog.isLevelCompleted()) {
-                descriptionBuilder.append(":star2: Level completed!\n");
-            }
-            if (!descriptionBuilder.isEmpty()) embed.addField("Congratulations", descriptionBuilder.toString(), false);
-        }
+        var congratulations = CommandHandlerHelper.addCongratulationsString(exerciseLog, 0, false);
+        if (!congratulations.isEmpty()) embed.addField("Congratulations", congratulations, false);
 
         // Add user achievements
         if (!exerciseLog.getAchievements().isEmpty()) {

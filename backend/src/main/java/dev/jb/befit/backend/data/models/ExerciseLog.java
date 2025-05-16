@@ -65,6 +65,10 @@ public class ExerciseLog {
 
     @Setter
     @Column(columnDefinition="BOOLEAN DEFAULT FALSE")
+    private boolean onPr = false;
+
+    @Setter
+    @Column(columnDefinition="BOOLEAN DEFAULT FALSE")
     private boolean levelCompleted = false;
 
     @Setter

@@ -58,7 +58,7 @@ public class SessionViewOneCommandHandler extends DiscordChatInputInteractionEve
             logsPage.stream().sorted(Comparator.comparing(ExerciseLog::getCreated)).forEach(log -> {
                 addGeneralLogString(logsDescriptionBuilder, log);
                 addAchievementsString(logsDescriptionBuilder, log.getAchievements().stream().map(UserAchievement::getAchievement).toList());
-                addCongratulationsString(logsDescriptionBuilder, log);
+                logsDescriptionBuilder.append(CommandHandlerHelper.addCongratulationsString(log, 2, false));
                 logsDescriptionBuilder.append("\n");
             });
         }
@@ -106,26 +106,5 @@ public class SessionViewOneCommandHandler extends DiscordChatInputInteractionEve
         for (var achievement : achievements) {
             stringBuilder.append(itemSpacing).append(String.format("<:%s:%s> %s \n", achievement.getDisplayName(), EmojiRegistrarService.getEmojiId(achievement, false).asString(), achievement.getTitle()));
         }
-    }
-
-    private static void addCongratulationsString(StringBuilder stringBuilder, ExerciseLog log) {
-        var congratulations = new StringBuilder();
-        // Add exercise started congratulations
-        if (log.isFirstLogOfExercise()) {
-            congratulations.append(itemSpacing).append(":sparkles: New exercise started!\n");
-        }
-        // Add new pr reached congratulations
-        if (log.isPrImproved()) {
-            congratulations.append(itemSpacing).append(":rocket: New PR reached!\n");
-        }
-        // Add goal reached congratulations
-        if (log.isGoalReached()) {
-            congratulations.append(itemSpacing).append(":chart_with_upwards_trend: Goal completed!\n");
-        }
-        // Add new level reached congratulations
-        if (log.isLevelCompleted()) {
-            congratulations.append(itemSpacing).append(":star2: Level completed!\n");
-        }
-        if (!congratulations.isEmpty()) stringBuilder.append("Congratulations:\n").append(congratulations);
     }
 }

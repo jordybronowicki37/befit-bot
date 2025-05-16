@@ -67,7 +67,7 @@ public class HistoryCommandHandler extends DiscordChatInputInteractionEventListe
                             var description = new StringBuilder();
                             addGeneralLogString(description, log);
                             addAchievementsString(description, log.getAchievements().stream().map(UserAchievement::getAchievement).toList());
-                            addCongratulationsString(description, log);
+                            description.append(CommandHandlerHelper.addCongratulationsString(log, 2, true));
                             description.append("\n");
                             return EmbedCreateFields.Field.of(
                                     String.format("#%d %s", exercise.getId(), exercise.getName()),
@@ -96,26 +96,5 @@ public class HistoryCommandHandler extends DiscordChatInputInteractionEventListe
         for (var achievement : achievements) {
             stringBuilder.append(itemSpacing).append(String.format("<:%s:%s> %s \n", achievement.getDisplayName(), EmojiRegistrarService.getEmojiId(achievement, false).asString(), achievement.getTitle()));
         }
-    }
-
-    private static void addCongratulationsString(StringBuilder stringBuilder, ExerciseLog log) {
-        var congratulations = new StringBuilder();
-        // Add new exercise started congratulations
-        if (log.isFirstLogOfExercise()) {
-            congratulations.append(itemSpacing).append(":sparkles: New exercise started!\n");
-        }
-        // Add new pr reached congratulations
-        if (log.isPrImproved()) {
-            congratulations.append(itemSpacing).append(":rocket: New PR reached!\n");
-        }
-        // Add goal reached congratulations
-        if (log.isGoalReached()) {
-            congratulations.append(itemSpacing).append(":chart_with_upwards_trend: Goal completed!\n");
-        }
-        // Add new level reached congratulations
-        if (log.isLevelCompleted()) {
-            congratulations.append(itemSpacing).append(":star2: Level completed!\n");
-        }
-        if (!congratulations.isEmpty()) stringBuilder.append("Congratulations:\n").append(congratulations);
     }
 }

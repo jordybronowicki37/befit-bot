@@ -131,6 +131,9 @@ public class ExerciseLogService {
         } else if (ExerciseRecordService.isRecordImproved(exerciseRecord, exerciseLog)) {
             exerciseLog.setPrImproved(true);
             earnedXp += ServiceConstants.EarnedXpRecordImproved;
+        } else if (ServiceHelper.compareDoublesWithTolerance(exerciseLog.getAmount(), exerciseRecord.getAmount())) {
+            exerciseLog.setOnPr(true);
+            earnedXp += ServiceConstants.EarnedXpRecordReached;
         }
 
         // Finish goal if it exists and is reached
