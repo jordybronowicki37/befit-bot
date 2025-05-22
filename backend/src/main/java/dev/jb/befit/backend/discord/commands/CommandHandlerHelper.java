@@ -166,7 +166,7 @@ public final class CommandHandlerHelper {
     }
 
     public static String getRatingString(Integer rating) {
-        return ":star2:".repeat(rating+1);
+        return ":star2:".repeat(rating);
     }
 
     public static String getUserStringValue(User user) {
