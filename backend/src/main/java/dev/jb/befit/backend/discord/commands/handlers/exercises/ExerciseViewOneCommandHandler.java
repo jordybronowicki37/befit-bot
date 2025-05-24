@@ -4,6 +4,7 @@ import dev.jb.befit.backend.discord.commands.CommandConstants;
 import dev.jb.befit.backend.discord.commands.CommandHandlerHelper;
 import dev.jb.befit.backend.discord.listeners.DiscordChatInputInteractionEventListener;
 import dev.jb.befit.backend.service.*;
+import dev.jb.befit.backend.service.visuals.ProgressImageService;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionReplyEditSpec;
@@ -14,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.io.FileInputStream;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -21,6 +24,7 @@ public class ExerciseViewOneCommandHandler extends DiscordChatInputInteractionEv
     private final ExerciseTypeService exerciseService;
     private final ExerciseLogService exerciseLogService;
     private final ExerciseRecordService exerciseRecordService;
+    private final ProgressImageService progressImageService;
     private final GoalService goalService;
     private final UserService userService;
 
@@ -98,6 +102,17 @@ public class ExerciseViewOneCommandHandler extends DiscordChatInputInteractionEv
             embed.addField("Leaderboard", recordsDescriptionBuilder.toString(), false);
         }
 
-        return event.editReply(InteractionReplyEditSpec.builder().addEmbed(embed.build()).build()).then();
+        var reply = InteractionReplyEditSpec.builder();
+
+        try {
+            var progressImage = progressImageService.createGlobalProgressChart(userId, exerciseName);
+            var inputStream = new FileInputStream(progressImage);
+            reply.addFile("progress.png", inputStream);
+            embed.image("attachment://progress.png");
+        } catch (Exception ignored) {}
+
+        reply.addEmbed(embed.build());
+
+        return event.editReply(reply.build()).then();
     }
 }

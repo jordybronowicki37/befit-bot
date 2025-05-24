@@ -1,9 +1,6 @@
 package dev.jb.befit.backend.service.visuals;
 
-import dev.jb.befit.backend.data.models.DiscordUser;
-import dev.jb.befit.backend.data.models.ExerciseLog;
-import dev.jb.befit.backend.data.models.User;
-import dev.jb.befit.backend.data.models.WebUser;
+import dev.jb.befit.backend.data.models.*;
 import dev.jb.befit.backend.service.ExerciseLogService;
 import dev.jb.befit.backend.service.ExerciseTypeService;
 import dev.jb.befit.backend.service.GoalService;
@@ -18,7 +15,9 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.entity.StandardEntityCollection;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.ui.RectangleInsets;
 import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.TimeSeries;
@@ -36,10 +35,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -64,31 +61,26 @@ public class ProgressImageService {
         var allExerciseLogs = logService.getAllByUserAndExerciseName(user, exerciseName);
         if (allExerciseLogs.isEmpty()) throw new NoProgressMadeException(exerciseType);
         if (allExerciseLogs.size() == 1) throw new NotEnoughProgressException(exerciseType);
-        allExerciseLogs = allExerciseLogs.stream().sorted(Comparator.comparing(ExerciseLog::getCreated)).toList();
+        var sortedLogs = allExerciseLogs.stream().sorted(Comparator.comparing(ExerciseLog::getCreated)).toList();
 
         Map<User, TimeSeries> userTimeSeriesMap = new HashMap<>();
 
         // Calculate the progress
         var progressSeries = new TimeSeries("Your progress");
-        for (var exerciseLog : allExerciseLogs) {
+        for (var exerciseLog : sortedLogs) {
             progressSeries.add(getMillisecond(exerciseLog.getCreated()), exerciseLog.getAmount());
         }
         userTimeSeriesMap.put(user, progressSeries);
 
         // Add goal line if a goal is set
-        if (goal.isPresent()) {
-            var goalSeries = new TimeSeries("Your goal");
-            var goalStartDate = allExerciseLogs.get(0).getCreated();
-            var goalEndDate = allExerciseLogs.get(allExerciseLogs.size() - 1).getCreated();
-            goalSeries.add(getMillisecond(goalStartDate), goal.get().getAmount());
-            goalSeries.add(getMillisecond(goalEndDate), goal.get().getAmount());
-            userTimeSeriesMap.put(null, goalSeries);
-        }
+        goal.ifPresent(value -> userTimeSeriesMap.put(null, getGoalTimeSeries(value, sortedLogs)));
 
         return createChart(userTimeSeriesMap, String.format("Exercise: %s", exerciseType.getName()), exerciseType.getMeasurementType().getLongName());
     }
 
-    public File createGlobalProgressChart(String exerciseName) {
+    public File createGlobalProgressChart(Snowflake userId, String exerciseName) {
+        var user = userService.getOrCreateDiscordUser(userId);
+        var goal = goalService.getActiveUserGoal(user, exerciseName);
         var exerciseType = exerciseTypeService.findByName(exerciseName);
 
         var allExerciseLogs = logService.getAllByExerciseName(exerciseName);
@@ -108,28 +100,70 @@ public class ProgressImageService {
             userTimeSeriesMap.put(userExerciseLogGroup.getKey(), progressSeries);
         }
 
+        if (userTimeSeriesMap.isEmpty()) throw new NoProgressMadeException(exerciseType);
+
+        // Add goal line if a goal is set
+        goal.ifPresent(value -> userTimeSeriesMap.put(null, getGoalTimeSeries(value, allExerciseLogs)));
+
         return createChart(userTimeSeriesMap, String.format("Exercise: %s", exerciseType.getName()), exerciseType.getMeasurementType().getLongName());
+    }
+
+    private TimeSeries getGoalTimeSeries(Goal goal, List<ExerciseLog> allExerciseLogs) {
+        var goalSeries = new TimeSeries("Your goal");
+        var goalStartDate = allExerciseLogs.get(0).getCreated();
+        var goalEndDate = allExerciseLogs.get(allExerciseLogs.size() - 1).getCreated();
+        goalSeries.add(getMillisecond(goalStartDate), goal.getAmount());
+        goalSeries.add(getMillisecond(goalEndDate), goal.getAmount());
+        return goalSeries;
     }
 
     public File createChart(Map<User, TimeSeries> userTimeSeriesMap, String title, String xAxisLabel) {
         var dataset = new TimeSeriesCollection();
         userTimeSeriesMap.values().forEach(dataset::addSeries);
 
-        // Create chart and style it
+        // Create a chart and style it
         var chart = ChartFactory.createTimeSeriesChart(title, "Time", xAxisLabel, dataset, true, true, false);
         chart.setPadding(new RectangleInsets(0, 0, 0, 20));
-        chart.setBackgroundPaint(Color.white);
-        chart.getTitle().setPaint(Color.black);
+        chart.setBackgroundPaint(colorBlack);
+        chart.getTitle().setPaint(Color.WHITE);
 
-        // Customize axis
+        // Style the legend
+        var legend = chart.getLegend();
+        if (legend != null) {
+            legend.setItemPaint(Color.WHITE);
+            legend.setBackgroundPaint(colorBlack);
+            legend.setFrame(new BlockBorder(colorBlack));
+        }
+
+        // Customize plot
         var plot = chart.getXYPlot();
+        plot.setBackgroundPaint(colorGrey);
+        plot.setDomainGridlinePaint(Color.BLACK);
+        plot.setRangeGridlinePaint(Color.BLACK);
+
+        // Axis styling
         var domainAxis = (DateAxis) plot.getDomainAxis();
         domainAxis.setDateFormatOverride(new SimpleDateFormat("dd-MM"));
+        domainAxis.setLabelPaint(Color.WHITE);
+        domainAxis.setTickLabelPaint(Color.WHITE);
+        plot.getRangeAxis().setLabelPaint(Color.WHITE);
+        plot.getRangeAxis().setTickLabelPaint(Color.WHITE);
 
-        // Create an image from the chart
-        var image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+        // Customize series renderers
+        var renderer = new XYLineAndShapeRenderer();
+        for (int i = 0; i < userTimeSeriesMap.size(); i++) {
+            int colorIndex = i % neonColors.length;
+            renderer.setSeriesPaint(i, neonColors[colorIndex]);
+            renderer.setSeriesStroke(i, new BasicStroke(2.5f)); // Thicker lines
+            renderer.setSeriesShapesVisible(i, true); // Show data points
+            renderer.setSeriesShape(i, new Ellipse2D.Double(-3, -3, 6, 6)); // Circle
+        }
+        plot.setRenderer(renderer);
+
+        // Draw chart to image
+        var image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
         var graphics = image.createGraphics();
-        graphics.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         var chartArea = new Rectangle2D.Double(0, 0, WIDTH, HEIGHT);
         var chartRenderingInfo = new ChartRenderingInfo(new StandardEntityCollection());
         chart.draw(graphics, chartArea, chartRenderingInfo);
@@ -137,7 +171,7 @@ public class ProgressImageService {
         // Add user avatars
         userTimeSeriesMap.entrySet().forEach(v -> insertUserAvatar(chart, chartRenderingInfo, graphics, v));
 
-        // Save the image to file
+        // Save image
         try {
             var imageFile = File.createTempFile("progress-chart", "png");
             ImageIO.write(image, "png", imageFile);
@@ -212,4 +246,18 @@ public class ProgressImageService {
     private Millisecond getMillisecond(LocalDateTime dateTime) {
         return new Millisecond(Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant()));
     }
+
+    // Bright neon colors list
+    private final Color[] neonColors = new Color[]{
+            new Color(57, 255, 20),   // Neon green
+            new Color(0, 255, 255),   // Neon cyan
+            new Color(255, 0, 255),   // Neon magenta
+            new Color(255, 255, 0),   // Neon yellow
+            new Color(255, 105, 180), // Hot pink
+            new Color(0, 255, 127),   // Spring green
+            new Color(0, 191, 255),   // Deep sky blue
+            new Color(255, 69, 0)     // Neon red-orange
+    };
+    private final Color colorBlack = new Color(18, 18, 20);
+    private final Color colorGrey = new Color(36, 36, 41);
 }

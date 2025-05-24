@@ -33,15 +33,15 @@ public class ProgressCommandHandler extends DiscordChatInputInteractionEventList
     public Mono<Void> execute(ChatInputInteractionEvent event) {
         var exerciseName = CommandHandlerHelper.getOptionValue(event, CommandConstants.AutoCompletePropExerciseName);
         var viewMode = CommandHandlerHelper.getOptionalOptionValue(event, "view-mode", "own");
+        var userId = CommandHandlerHelper.getDiscordUserId(event);
 
         try {
             File progressImage;
             if (viewMode.equals("own") || viewMode.isEmpty()) {
-                var userId = CommandHandlerHelper.getDiscordUserId(event);
                 progressImage = progressImageService.createPersonalProgressChart(userId, exerciseName);
             }
             else if (viewMode.equals("all")) {
-                progressImage = progressImageService.createGlobalProgressChart(exerciseName);
+                progressImage = progressImageService.createGlobalProgressChart(userId, exerciseName);
             }
             else {
                 throw new InvalidValueException("view-mode", viewMode);
