@@ -249,19 +249,6 @@ This cool bot can help you with improving your fitness. It can track your progre
 </details>
 
 <details>
-  <summary>View your progress on an exercise</summary>
-  
-  > With this command you can get a progress chart of a single exercise. By using the view mode you can specify if you 
-  > only want to view your own data or of all participants. To view the progress of an exercise you must have made at 
-  > least two logs for that specific exercise.
-  >
-  > Format: `/progress {exercise} ?{view-mode}` \
-  > Example: \
-  > ![Progress command response example](./docs/examples/progressCommandExample.png)
-
-</details>
-
-<details>
   <summary>Create session</summary>
 
   > With this command you can create a session. With a session you can group subsequent logs and get an overview of your

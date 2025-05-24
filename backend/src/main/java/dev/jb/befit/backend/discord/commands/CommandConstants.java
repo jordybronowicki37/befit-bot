@@ -30,7 +30,6 @@ public final class CommandConstants {
     public static final String CommandManagementJobsAdd = "management jobs add";
     public static final String CommandManagementJobsRemove = "management jobs remove";
     public static final String CommandMotivation = "motivation";
-    public static final String CommandProgress = "progress";
     public static final String CommandSessionsCreate = "sessions create";
     public static final String CommandSessionsRate = "sessions rate";
     public static final String CommandSessionsExtend = "sessions extend";

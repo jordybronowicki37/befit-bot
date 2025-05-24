@@ -237,25 +237,6 @@
       "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/motivationCommandExample.png"
     },
     {
-      "command": "progress",
-      "arguments": [
-        {
-          "name": "exercise",
-          "description": "The name of the exercise type.",
-          "required": true,
-          "autocomplete": true
-        },
-        {
-          "name": "view-mode",
-          "description": "The visualisation mode.",
-          "required": false,
-          "choices": true
-        }
-      ],
-      "description": "With this command you can get a progress chart of a single exercise. By using the view mode you can specify if you only want to view your own data or of all participants. To view the progress of an exercise you must have made at least two logs for that specific exercise.",
-      "image": "https://raw.githubusercontent.com/jordybronowicki37/befit-bot/refs/heads/main/docs/examples/progressCommandExample.png"
-    },
-    {
       "command": "sessions create",
       "arguments": [
         {
