@@ -14,7 +14,7 @@ public enum MeasurementType {
     M("m", "meters", DISTANCE),
     CM("cm", "centimeters", DISTANCE),
     KMH("km/h", "kilometers per hour", SPEED),
-    AMOUNT("x", "times", MeasurementCategory.AMOUNT),
+    AMOUNT("x", "amount", MeasurementCategory.AMOUNT),
     HOURS("hrs", "hours", TIME),
     MINUTES("min", "minutes", TIME),
     SECONDS("sec", "seconds", TIME),
