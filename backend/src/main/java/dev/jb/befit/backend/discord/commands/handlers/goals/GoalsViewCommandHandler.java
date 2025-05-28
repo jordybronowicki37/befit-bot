@@ -53,7 +53,7 @@ public class GoalsViewCommandHandler extends DiscordChatInputInteractionEventLis
                 .title(":dart: Your goals")
                 .color(Color.GREEN);
 
-        if (goals.isEmpty()) embed.description(String.format("No goals yet, try creating a goal by using the command: `/%s`", CommandConstants.CommandGoalsAdd));
+        if (goals.isEmpty()) embed.description(String.format("No goals yet. Use the %s command to add a goal.", CommandHandlerHelper.getCommandReference(CommandConstants.CommandGoalsAdd)));
 
         goals.stream().skip((long) pageSize * page).limit(pageSize)
                 .sorted(Comparator.comparing(Goal::getCreated).reversed())

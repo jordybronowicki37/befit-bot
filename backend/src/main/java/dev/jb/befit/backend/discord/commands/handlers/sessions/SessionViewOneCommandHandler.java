@@ -53,7 +53,7 @@ public class SessionViewOneCommandHandler extends DiscordChatInputInteractionEve
         var logsPage = CommandHandlerHelper.getPageForList(page, CommandConstants.PageSize, logs);
         var logsDescriptionBuilder = new StringBuilder();
 
-        if (logsPage.isEmpty()) logsDescriptionBuilder.append("_You have not added any logs yet._");
+        if (logsPage.isEmpty()) logsDescriptionBuilder.append(String.format("_You have not added any logs yet.\nUse the %s command to add a log._", CommandHandlerHelper.getCommandReference(CommandConstants.CommandLog)));
         else {
             logsPage.stream().sorted(Comparator.comparing(ExerciseLog::getCreated)).forEach(log -> {
                 addGeneralLogString(logsDescriptionBuilder, log);

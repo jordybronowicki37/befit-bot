@@ -45,13 +45,12 @@ public class HelpCommandHandler extends DiscordChatInputInteractionEventListener
                 .title("About this bot")
                 .description("This bot helps you track your gym progress and motivates you into a better lifestyle.\n\n### Useful commands:")
                 .addFields(
-                        Field.of("/log", "Create a new log for an exercise. The more logs you create the better the bot can help you improve.", false),
-                        Field.of("/exercises create", "Don't see your favourite exercise inside of our catalogue? Just add it and track your progress for it!", false),
-                        Field.of("/exercises view ...", "View all the exercises, your own exercises or detailed information about a single exercise.", false),
-                        Field.of("/goals add", "Set goals for you to reach and work towards them.", false),
-                        Field.of("/progress", "Get a progress chart on a single exercise.", false),
-                        Field.of("/achievements", "See which achievements you have completed and which are still locked.", false),
-                        Field.of("/motivation", "If you are looking for motivation, just use this command and get some.", false)
+                        Field.of(CommandHandlerHelper.getCommandReference(CommandConstants.CommandLog), "Create a new log for an exercise. The more logs you create the better the bot can help you improve.", false),
+                        Field.of(CommandHandlerHelper.getCommandReference(CommandConstants.CommandExercisesCreate), "Don't see your favourite exercise inside of our catalogue? Just add it and track your progress for it!", false),
+                        Field.of(CommandHandlerHelper.getCommandReference(CommandConstants.CommandExercisesViewAll, CommandConstants.CommandExercisesViewMy, CommandConstants.CommandExercisesViewOne), "View all the exercises, your own exercises or detailed information about a single exercise.", false),
+                        Field.of(CommandHandlerHelper.getCommandReference(CommandConstants.CommandGoalsAdd), "Set goals for you to reach and work towards them.", false),
+                        Field.of(CommandHandlerHelper.getCommandReference(CommandConstants.CommandAchievements), "See which achievements you have completed and which are still locked.", false),
+                        Field.of(CommandHandlerHelper.getCommandReference(CommandConstants.CommandMotivation), "If you are looking for motivation, just use this command and get some.", false)
                 )
                 .color(Color.GRAY)
                 .build();
@@ -75,14 +74,12 @@ public class HelpCommandHandler extends DiscordChatInputInteractionEventListener
 
         var fields = command.arguments()
                 .stream()
-                .map(a -> {
-                    return Field.of(a.name(), a.description(), false);
-                })
+                .map(a -> Field.of(a.name(), a.description(), false))
                 .toList();
 
         var embed = EmbedCreateSpec.builder()
                 .author("Befit bot", "https://github.com/jordybronowicki37/befit-bot", avatarUrl)
-                .title(capitalizeFirstLetter(commandName))
+                .title(CommandHandlerHelper.getCommandReference(commandName))
                 .description(description.toString())
                 .fields(fields)
                 .color(Color.GRAY);

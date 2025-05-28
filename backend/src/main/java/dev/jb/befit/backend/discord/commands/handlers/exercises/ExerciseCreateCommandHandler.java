@@ -41,9 +41,11 @@ public class ExerciseCreateCommandHandler extends DiscordChatInputInteractionEve
                 .title("Your new exercise")
                 .addField(
                         String.format("#%d %s", exercise.getId(), exercise.getName()),
-                        String.format("Measurement: %s\nGoal direction: %s",
+                        String.format("Measurement: %s\nGoal direction: %s\n\n_Use %s to add a log for this exercise._\n_Use %s to add a goal for this exercise._",
                                 exercise.getMeasurementType().getLongName(),
-                                exercise.getGoalDirection().name().toLowerCase()
+                                exercise.getGoalDirection().name().toLowerCase(),
+                                CommandHandlerHelper.getCommandReference(CommandConstants.CommandLog),
+                                CommandHandlerHelper.getCommandReference(CommandConstants.CommandGoalsAdd)
                         ),
                         false)
                 .color(Color.GREEN)

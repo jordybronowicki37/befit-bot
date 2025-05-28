@@ -41,6 +41,7 @@ public class GoalCancelCommandHandler extends DiscordChatInputInteractionEventLi
 
         var embed = EmbedCreateSpec.builder()
                 .title(":no_entry_sign: Goal cancelled")
+                .description(String.format("Why would you cancel a goal you are working so hard for? :thinking:\nIf you would like to change the target value of a goal you can just replace it by using the %s command again.", CommandHandlerHelper.getCommandReference(CommandConstants.CommandGoalsAdd)))
                 .addField(goalsViewCommandHandler.getGoalField(goal))
                 .color(Color.GREEN)
                 .build();

@@ -6,6 +6,7 @@ import dev.jb.befit.backend.data.models.User;
 import dev.jb.befit.backend.data.models.WebUser;
 import dev.jb.befit.backend.discord.commands.exceptions.OptionNotFoundException;
 import dev.jb.befit.backend.discord.commands.exceptions.ValueNotFoundException;
+import dev.jb.befit.backend.discord.registration.CommandRegistrarService;
 import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.interaction.ChatInputAutoCompleteEvent;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -270,5 +271,14 @@ public final class CommandHandlerHelper {
             return returnStringBuilder.toString();
         }
         return "";
+    }
+
+    public static String getCommandReference(String... commandNames) {
+        var reference = new StringBuilder();
+        for (int i = 0; i < commandNames.length; i++) {
+            var commandName = commandNames[i];
+            reference.append(String.format("</%s:%d> ", commandName, CommandRegistrarService.getCommandId(commandName)));
+        }
+        return reference.toString();
     }
 }

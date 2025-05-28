@@ -71,7 +71,7 @@ public class HabitsViewAllCommandHandler extends DiscordChatInputInteractionEven
                             return EmbedCreateFields.Field.of(habit.getName(), description.toString(), false);
                         }).toList()
                 );
-        if (habitsPage.isEmpty()) embed.description("You have no habits yet, try adding some!");
+        if (habitsPage.isEmpty()) embed.description(String.format("You have no habits yet, try adding some by using the command %s!", CommandHandlerHelper.getCommandReference(CommandConstants.CommandHabitsAdd)));
         var paginationControls = CommandHandlerHelper.getPaginationComponent(page, habitsPage.getTotalPages(), getCommandNameFilter(), String.valueOf(habitTimeRange));
         return InteractionReplyEditSpec.builder().addEmbed(embed.build()).addComponent(paginationControls).build();
     }

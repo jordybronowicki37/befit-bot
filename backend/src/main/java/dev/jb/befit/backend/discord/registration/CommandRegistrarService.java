@@ -18,7 +18,9 @@ import reactor.core.publisher.Flux;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -34,6 +36,8 @@ public class CommandRegistrarService {
 
     @Value("${discord.guilds.management}")
     private Long managementGuildId;
+
+    private static Map<String, Long> commandIds = new HashMap<>();
 
     private final GatewayDiscordClient discordClient;
     private final ResourceLoader resourceLoader;
@@ -81,9 +85,18 @@ public class CommandRegistrarService {
         assert applicationId != null;
 
         applicationService.bulkOverwriteGlobalApplicationCommand(applicationId, commands)
-                .doOnNext(cmd -> log.debug("Successfully updated global command: {}", cmd.name()))
+                .doOnNext(cmd -> {
+                    log.debug("Successfully updated global command: {}", cmd.name());
+                    commandIds.put(cmd.name(), cmd.id().asLong());
+                })
                 .doOnError(e -> log.error("Failed to update global command: ", e))
                 .subscribe();
+    }
+
+    public static Long getCommandId(String commandName) {
+        var parentName = commandName.split(" ")[0];
+        if (commandIds.containsKey(parentName)) return commandIds.get(parentName);
+        return null;
     }
 
     public ApplicationCommandRequest getCommandConfigFile(String fileName) throws IOException {
