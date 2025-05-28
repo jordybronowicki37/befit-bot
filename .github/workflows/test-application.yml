@@ -1,0 +1,20 @@
+name: Test the application
+on:
+  workflow_call:
+
+jobs:
+  test-application:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Run maven test
+        run: mvn test
