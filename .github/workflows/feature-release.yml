@@ -8,8 +8,11 @@ jobs:
   test-application:
     uses: ./.github/workflows/test-application.yml
 
-  update-dependency-graph:
-    uses: advanced-security/maven-dependency-submission-action@v5
+  security-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update dependency graph
+        uses: advanced-security/maven-dependency-submission-action@v5
 
   bump-tag-version:
     needs: test-application
