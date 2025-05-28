@@ -8,25 +8,16 @@ jobs:
   test-application:
     uses: ./.github/workflows/test-application.yml
 
-  security-checks:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Update dependency graph
-        uses: advanced-security/maven-dependency-submission-action@v5
-        with:
-          directory: backend
-          token: '${{ github.token }}'
-
   bump-tag-version:
     needs:
       - test-application
-      - security-checks
     permissions:
       contents: write
     uses: ./.github/workflows/bump-tag.yml
 
   build-and-publish:
-    needs: bump-tag-version
+    needs:
+      - bump-tag-version
     permissions:
       packages: write
       contents: read

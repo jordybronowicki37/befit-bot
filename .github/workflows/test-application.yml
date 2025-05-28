@@ -19,3 +19,9 @@ jobs:
       - name: Run maven test
         run: mvn test
         working-directory: backend
+
+      - name: Update dependency graph
+        uses: advanced-security/maven-dependency-submission-action@v5
+        with:
+          directory: backend
+          token: '${{ github.token }}'
