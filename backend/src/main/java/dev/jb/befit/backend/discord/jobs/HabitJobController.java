@@ -114,6 +114,6 @@ public class HabitJobController {
 
     private static String getButtonId(Habit habit) {
         var date = LocalDate.now();
-        return String.format("%s$%d/%d/%d/%d", CommandConstants.CommandHabitsCheck, habit.getId(), date.getYear(), date.getMonthValue(), date.getDayOfMonth());
+        return String.format("%s$action$%d/%d/%d/%d", CommandConstants.CommandHabitsCheck, habit.getId(), date.getYear(), date.getMonthValue(), date.getDayOfMonth());
     }
 }

@@ -37,7 +37,7 @@ public class HabitCheckButtonHandler extends DiscordButtonInteractionEventListen
         var user = userService.getOrCreateDiscordUser(userId);
 
         var customId = event.getCustomId();
-        var data = customId.split("\\$")[1].split("/");
+        var data = customId.replace("$action", "").split("\\$")[1].split("/");
         var habitId = Long.parseLong(data[0]);
 
         var dateYear = Integer.parseInt(data[1]);
