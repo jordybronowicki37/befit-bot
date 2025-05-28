@@ -18,3 +18,4 @@ jobs:
 
       - name: Run maven test
         run: mvn test
+        working-directory: backend

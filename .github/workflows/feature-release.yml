@@ -13,9 +13,14 @@ jobs:
     steps:
       - name: Update dependency graph
         uses: advanced-security/maven-dependency-submission-action@v5
+        with:
+          directory: backend
+          token: '${{ github.token }}'
 
   bump-tag-version:
-    needs: test-application
+    needs:
+      - test-application
+      - security-checks
     permissions:
       contents: write
     uses: ./.github/workflows/bump-tag.yml
