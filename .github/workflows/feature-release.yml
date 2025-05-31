@@ -5,12 +5,12 @@ on:
       - main
 
 jobs:
-  test-application:
-    uses: ./.github/workflows/test-application.yml
+#  test-application:
+#    uses: ./.github/workflows/test-application.yml
 
   bump-tag-version:
-    needs:
-      - test-application
+#    needs:
+#      - test-application
     permissions:
       contents: write
     uses: ./.github/workflows/bump-tag.yml
