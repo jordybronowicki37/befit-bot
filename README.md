@@ -176,8 +176,6 @@ This cool bot can help you with improving your fitness. It can track your progre
 > Format: `/habits progress {time-range}` \
 > Example: \
 > ![Habit daily progress command response example](./docs/examples/habitsProgressDailyCommandExample.png)
-> ![Habit weekly progress command response example](./docs/examples/habitsProgressWeeklyCommandExample.png)
-> ![Habit monthly progress command response example](./docs/examples/habitsProgressMonthlyCommandExample.png)
 
 </details>
 
@@ -450,5 +448,6 @@ There are 20 achievements for you to complete. Each increasing in difficulty. Ar
 Follow the instructions as mentioned in the [how-to](./docs/how-to-run-on-docker.md).
 
 ## Domain
-See the domain model to view all the entities and their relationships.
+See the domain model to view all the entities and their relationships. 
+There might be inconsistencies between the domain model and the actual situation!
 ![Domain model](./docs/domain.drawio.svg)
