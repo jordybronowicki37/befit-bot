@@ -53,6 +53,10 @@ public class HabitService {
         return habitRepository.findAllByUserAndNameIgnoreCaseContainingAndDeletedFalseOrderByCreatedDesc(user, filter, pageable);
     }
 
+    public List<HabitLog> getHabitLogsFrom(User user, HabitTimeRange habitTimeRange, LocalDate from) {
+        return habitLogRepository.findByUserAndHabitHabitTimeRangeAndLogDateAfter(user, habitTimeRange, from);
+    }
+
     public HabitsByTimeRange getHabitsForToday(User user) {
         var date = LocalDate.now();
         var isEndOfWeek = date.getDayOfWeek() == DayOfWeek.SUNDAY;

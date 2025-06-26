@@ -56,16 +56,12 @@ public class HabitImageService {
         var habits = habitService.getHabitsByUserAndTimeRange(user, habitTimeRange);
         if (habits.isEmpty()) throw new NoHabitsFoundException();
 
-        var firstHabitDate = startDate != null ? startDate : habits.stream().map(Habit::getCreated).min(LocalDateTime::compareTo).get().toLocalDate();
-        var logs = habits.stream()
-                .flatMap(h -> h.getHabitLogs().stream())
-                .filter(l -> startDate == null || l.getLogDate().isAfter(startDate))
-                .toList();
+        var logs = habitService.getHabitLogsFrom(user, habitTimeRange, startDate);
         var logsGrouped = logs.stream().collect(Collectors.groupingBy(HabitLog::getLogDate));
 
         // Completed habits dataset
         var habitsSeries = new TimeSeries("Completed habits");
-        habitsSeries.add(getMillisecond(firstHabitDate), 0);
+        habitsSeries.add(getMillisecond(startDate), 0);
         for (var logGroup : logsGrouped.entrySet()) {
             habitsSeries.addOrUpdate(getMillisecond(logGroup.getKey()), logGroup.getValue().size());
         }
