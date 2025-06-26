@@ -99,8 +99,8 @@ public class HabitImageService {
         );
 
         // Colors
-        var colorBlack = new Color(15, 15, 15);
-        var colorGrey = new Color(30, 30, 30);
+        var colorBlack = new Color(18, 18, 20);
+        var colorGrey = new Color(36, 36, 41);
         var neonCyan = new Color(0, 255, 255);
         var neonGreen = new Color(57, 255, 20);
 
