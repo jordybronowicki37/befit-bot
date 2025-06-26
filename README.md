@@ -2,6 +2,7 @@
 [![Newest Version](https://img.shields.io/github/v/tag/jordybronowicki37/befit-bot?style=for-the-badge&logo=github&logoColor=fff&labelColor=555&color=94398d)](https://github.com/jordybronowicki37/befit-bot/tags)
 [![GitHub Profile](https://img.shields.io/static/v1.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=jordybronowicki37&message=GitHub&logo=github)](https://github.com/jordybronowicki37)
 [![Docker image](https://img.shields.io/static/v1.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=Docker&message=latest&logo=docker)](https://github.com/jordybronowicki37/befit-bot/pkgs/container/befit)
+![Download count](https://img.shields.io/badge/Downloads-75%2B-94398d?style=for-the-badge)
 
 ```
 ██████╗ ███████╗███████╗██╗████████╗   ██████╗  ██████╗ ████████╗
@@ -251,7 +252,7 @@ This cool bot can help you with improving your fitness. It can track your progre
 <details>
   <summary>Create session</summary>
 
-  > With this command you can create a session. With a session you can group subsequent logs and get an overview of your
+  > With this command you can create a session. With a session, you can group sequential logs and get an overview of your
   > entire workout. A session will get automatically finished when there is no log created for at least an hour.
   > See [session-status](#session-status) for the possible states that a session can be in.
   >
@@ -420,8 +421,8 @@ There are 20 achievements for you to complete. Each increasing in difficulty. Ar
 
   > ![Achievements](./docs/achievements.png)
   > 
-  > | Icon                                                                                                                                                                    | Title                   | Description                                                                          | Difficulty |
-  > |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------|--------------------------------------------------------------------------------------|------------|
+  > | Icon                                                                                        | Title                   | Description                                                                          | Difficulty |
+  > |---------------------------------------------------------------------------------------------|-------------------------|--------------------------------------------------------------------------------------|------------|
   > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-03.png) | Heart monitor           | Log an exercise which uses bpm as a measurement.                                     | EASY       |
   > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-17.png) | Let's get healthy       | Create your first log.                                                               | EASY       |
   > | ![Achievement icon](./backend/src/main/resources/achievement-icons/icon-achievement-12.png) | Reach your potential    | Complete a goal.                                                                     | EASY       |

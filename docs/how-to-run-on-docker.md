@@ -4,7 +4,7 @@
 1. Copy the file `example.env` and rename it as `.env`. Inside the file you must fill in all values.
 2. Build the project
    ```shell
-   docker-compose up -d -f docker-compose.yml
+   docker compose -f docker-compose.yml up -d
    ```
 
 ## Run production using separately deployed containers
@@ -49,5 +49,5 @@
 1. Copy the file `example.env.local` and rename it as `.env.local`. Inside the file you must fill in all values.
 2. Build the project
    ```shell
-   docker-compose up -f docker-compose-local.yml
+   docker compose -f docker-compose-local.yml up
    ```
